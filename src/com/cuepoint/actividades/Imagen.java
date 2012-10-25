@@ -68,7 +68,6 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	{
 		boolean sdDisponible = false;
 		boolean sdAccesoEscritura = false;
-		String path = "";
 		 
 		//Comprobamos el estado de la memoria externa (tarjeta SD)
 		String estado = Environment.getExternalStorageState();
