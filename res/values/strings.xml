@@ -8,5 +8,6 @@
     <string name="nombre_lugar">Nombre Lugar</string>
     <string name="descripcion">Descripcion</string>
     <string name="marcar_ubicacion">Marque su ubicación en el mapa</string>
+    <string name="enviarSMS">Enviar SMS</string>
 
 </resources>
