@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">Cue Point</string>
+    <string name="menu_settings">Opciones</string>
+    <string name="title_activity_main">Menú Principal</string>
+    <string name="button_send">Enviar</string>
+    <string name="plano_seleccion">Seleccione un plano</string>
+    <string name="nombre_lugar">Nombre Lugar</string>
+    <string name="descripcion">Descripcion</string>
+    <string name="marcar_ubicacion">Marque su ubicación en el mapa</string>
+
+</resources>
