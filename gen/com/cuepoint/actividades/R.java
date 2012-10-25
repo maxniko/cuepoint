@@ -35,7 +35,8 @@ public final class R {
         public static final int activity_splash=0x7f030000;
         public static final int imagen=0x7f030001;
         public static final int lista_planos=0x7f030002;
-        public static final int planos=0x7f030003;
+        public static final int p00_bienvenida=0x7f030003;
+        public static final int planos=0x7f030004;
     }
     public static final class menu {
         public static final int activity_splash=0x7f060000;
