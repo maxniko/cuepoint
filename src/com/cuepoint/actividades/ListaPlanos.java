@@ -1,7 +1,6 @@
 package com.cuepoint.actividades;
 
 import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,8 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
-import com.cuepoint.actividades.*;
 import Clases.Plano;
 
 public class ListaPlanos extends Activity {

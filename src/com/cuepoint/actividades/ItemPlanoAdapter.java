@@ -4,9 +4,7 @@
 package com.cuepoint.actividades;
 
 import java.util.ArrayList;
-import com.cuepoint.actividades.*;
 import Clases.Plano;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -50,10 +48,6 @@ public class ItemPlanoAdapter extends BaseAdapter{
 	    }
 	             
 	    Plano item = items.get(position);
-	         
-	    //ImageView image = (ImageView) vi.findViewById(R.id.imagen);
-	    //int imageResource = activity.getResources().getIdentifier(item.getRutaImagen(), null, activity.getPackageName());
-	    //image.setImageDrawable(activity.getResources().getDrawable(imageResource));
 	         
 	    TextView nombre = (TextView) vi.findViewById(R.id.nombre);
 	    nombre.setText(item.getNombre());

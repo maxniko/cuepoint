@@ -4,12 +4,14 @@
 package com.cuepoint.actividades;
 
 import java.io.File;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -59,24 +61,57 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
         mSeekBar = (SeekBar)findViewById(R.id.seekBarZoom);
         mSeekBar.setOnSeekBarChangeListener(this);
         
-        Bundle b = getIntent().getExtras();
-
-        String path = "/"+b.getString("path");
-        
-        File imgFile = new File(getFilesDir(),path);;
-        try {
-            if(imgFile.exists()){
-
-                myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
-                ImageView myImage = (ImageView) findViewById(R.id.imageViewPlano);
-                myImage.setOnTouchListener(this);
-                myImage.setImageBitmap(myBitmap);
-            }	
-        } catch (Exception e) {
-            Log.e("Error reading file", e.toString());
-        }
+        leerImagenesSD();
     }
+	
+	public void leerImagenesSD()
+	{
+		boolean sdDisponible = false;
+		boolean sdAccesoEscritura = false;
+		String path = "";
+		 
+		//Comprobamos el estado de la memoria externa (tarjeta SD)
+		String estado = Environment.getExternalStorageState();
+		 
+		if (estado.equals(Environment.MEDIA_MOUNTED))
+		{
+		    sdDisponible = true;
+		    sdAccesoEscritura = true;
+		}
+		else if (estado.equals(Environment.MEDIA_MOUNTED_READ_ONLY))
+		{
+		    sdDisponible = true;
+		    sdAccesoEscritura = false;
+		}
+		else
+		{
+		    sdDisponible = false;
+		    sdAccesoEscritura = false;
+		}
+		
+		try
+		{
+			if (sdDisponible & sdAccesoEscritura)
+			{
+				//Obtenemos la ruta a la tarjeta SD
+			    File ruta_sd = Environment.getExternalStorageDirectory();
+			    Bundle b = getIntent().getExtras();
+			    File imgFile = new File(ruta_sd.getAbsolutePath(), b.getString("path"));
+			    
+			    if(imgFile.exists()){
+	                myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+	                
+	                ImageView myImage = (ImageView) findViewById(R.id.imageViewPlano);
+	                myImage.setOnTouchListener(this);
+	                myImage.setImageBitmap(myBitmap);
+	            }
+			}
+		}
+		catch (Exception ex)
+		{
+		    Log.e("Ficheros", "Error al escribir fichero a tarjeta SD");
+		}
+	}
 	
 
 	   
