@@ -1,10 +1,12 @@
 /**
  * 
  */
-package com.cuepoint.actividades;
+package com.cuepoint.datos;
 
 import java.util.ArrayList;
-import Clases.Plano;
+
+import com.cuepoint.actividades.R;
+import com.cuepoint.clases.Plano;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;

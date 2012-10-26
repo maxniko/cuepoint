@@ -1,6 +1,12 @@
-package com.cuepoint.actividades;
+package com.cuepoint.controladores;
 
 import java.util.ArrayList;
+
+import com.cuepoint.actividades.R;
+import com.cuepoint.clases.Plano;
+import com.cuepoint.datos.ItemPlanoAdapter;
+import com.cuepoint.datos.PlanosSQLite;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,7 +15,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import Clases.Plano;
 
 public class ListaPlanos extends Activity {
     /** Called when the activity is first created. */

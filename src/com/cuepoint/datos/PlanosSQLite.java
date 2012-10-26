@@ -1,4 +1,4 @@
-package com.cuepoint.actividades;
+package com.cuepoint.datos;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

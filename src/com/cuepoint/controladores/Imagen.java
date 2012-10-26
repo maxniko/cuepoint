@@ -1,10 +1,9 @@
 /**
  * 
  */
-package com.cuepoint.actividades;
+package com.cuepoint.controladores;
 
 import java.io.File;
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import com.cuepoint.actividades.R;
 
 /**
  * @author Silvio
@@ -29,8 +29,8 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
     static final int ZOOM_MAX = 10;
     static final int ZOOM_MIN = 0;
     private int ZOOM_ACTUAL = 1;
-    private float scaleIn = 1.0f/0.8f;
-    private float scaleOut = 1.0f/1.2f;
+    private float scaleIn = 1.169f;
+    private float scaleOut = 0.85f;
     
     int touchInitialTime = 0;
     
@@ -56,7 +56,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.imagen);
+        setContentView(R.layout.p02_plano);
         
         mSeekBar = (SeekBar)findViewById(R.id.seekBarZoom);
         mSeekBar.setOnSeekBarChangeListener(this);
@@ -215,38 +215,36 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		
 		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch)
 		 {/*
-			 if (progress%10 == 0)
+			 if (progress%5 == 0)
 			 {
-				 if (ZOOM_ACTUAL < progress/10)
+				 if (ZOOM_ACTUAL < progress/5)
 				 {
 					 if (ZOOM_ACTUAL < ZOOM_MAX)
 					 	{
-					 		ZOOM_ACTUAL++;
+					 		ZOOM_ACTUAL = progress/5;
 							savedMatrix.set(matrix);
-							float scale = 1.2f;
-							matrix.postScale(scale, scale);
-							//matrix.postScale(scale, scale, view.getWidth(), view.getHeight());
+							matrix.postScale(scaleIn, scaleIn);
 							ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
 							iv.setImageMatrix(matrix);
+							Log.e("zoomActual", Integer.toString(ZOOM_ACTUAL)+","+Integer.toString(progress));
 					 	}
 				 }
-				 else if (ZOOM_ACTUAL > progress/10)
+				 else if (ZOOM_ACTUAL > progress/5)
 				 {
 					 if(ZOOM_ACTUAL > ZOOM_MIN)
 						{
-							ZOOM_ACTUAL--;
+							ZOOM_ACTUAL = progress/5;
 							savedMatrix.set(matrix);
-							float scale = 0.8f;
-							matrix.postScale(scale, scale);
+							matrix.postScale(scaleOut, scaleOut);
 							ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
 							iv.setImageMatrix(matrix);
+							Log.e("zoomActual", Integer.toString(ZOOM_ACTUAL)+","+Integer.toString(progress));
 						}
 				 }
 			 }*/
 		 }
 
-		public void onStartTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
+		public void onStartTrackingTouch(SeekBar seekBar) {
 			
 		}
 

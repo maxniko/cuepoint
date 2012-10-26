@@ -20,7 +20,7 @@
             </intent-filter>
         </receiver>
         <activity
-            android:name="com.cuepoint.actividades.Splash"
+            android:name="com.cuepoint.controladores.Splash"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,12 +28,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:label="@string/plano_seleccion"
-            android:name=".ListaPlanos" >
+            android:label="@string/app_name"
+            android:name="com.cuepoint.controladores.MenuPrincipal" >
         </activity>
         <activity
             android:label="@string/app_name"
-            android:name=".Imagen" >
+            android:name="com.cuepoint.controladores.ListaContactos" >
+        </activity>
+        <activity
+            android:label="@string/plano_seleccion"
+            android:name="com.cuepoint.controladores.ListaPlanos" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name="com.cuepoint.controladores.Imagen" >
         </activity>
     </application>
 

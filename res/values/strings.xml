@@ -9,5 +9,13 @@
     <string name="descripcion">Descripcion</string>
     <string name="marcar_ubicacion">Marque su ubicación en el mapa</string>
     <string name="enviarSMS">Enviar SMS</string>
+    <string name="bienvenido_a">Bienvenido a</string>
+    <string name="touch_para_entrar">Touch para entrar</string>
+    <string name="design">Creado por Max Nikolaus y Silvio Kucharski</string>
+    <string name="enviar_solicitud">Enviar solicitud</string>
+    <string name="enviar_posicion">Enviar posición</string>
+    <string name="boletin">Ver boletín</string>
+    <string name="actualizar_boletin">Actualizar boletin</string>
+    <string name="ayuda">Ayuda</string>
 
 </resources>

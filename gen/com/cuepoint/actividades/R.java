@@ -18,39 +18,61 @@ public final class R {
         public static final int zoom_out=0x7f020004;
     }
     public static final class id {
-        public static final int btSMS=0x7f070001;
-        public static final int button1=0x7f070000;
-        public static final int imageView1=0x7f07000a;
-        public static final int imageViewPlano=0x7f070003;
-        public static final int listView=0x7f070007;
-        public static final int menu_settings=0x7f07000b;
-        public static final int nombre=0x7f070008;
-        public static final int seekBarZoom=0x7f070005;
-        public static final int textView1=0x7f070002;
-        public static final int tipo=0x7f070009;
-        public static final int zoomin=0x7f070006;
-        public static final int zoomout=0x7f070004;
+        public static final int button1=0x7f070006;
+        public static final int button2=0x7f070007;
+        public static final int button3=0x7f070008;
+        public static final int button4=0x7f070009;
+        public static final int button5=0x7f07000a;
+        public static final int button6=0x7f07000b;
+        public static final int imageView1=0x7f070012;
+        public static final int imageViewPlano=0x7f07000c;
+        public static final int imagenEntrada=0x7f070003;
+        public static final int listView=0x7f070000;
+        public static final int menu_settings=0x7f070013;
+        public static final int nombre=0x7f070010;
+        public static final int seekBarZoom=0x7f07000e;
+        public static final int textView1=0x7f070001;
+        public static final int textView2=0x7f070002;
+        public static final int textView3=0x7f070004;
+        public static final int textView4=0x7f070005;
+        public static final int tipo=0x7f070011;
+        public static final int zoomin=0x7f07000f;
+        public static final int zoomout=0x7f07000d;
     }
     public static final class layout {
-        public static final int activity_splash=0x7f030000;
-        public static final int imagen=0x7f030001;
-        public static final int lista_planos=0x7f030002;
-        public static final int p00_bienvenida=0x7f030003;
-        public static final int planos=0x7f030004;
+        public static final int lista_planos=0x7f030000;
+        public static final int p00_bienvenida=0x7f030001;
+        public static final int p01_principal=0x7f030002;
+        public static final int p02_plano=0x7f030003;
+        public static final int p03_contactos=0x7f030004;
+        public static final int p04_configuraciones=0x7f030005;
+        public static final int p05_enviar=0x7f030006;
+        public static final int p06_boletin=0x7f030007;
+        public static final int p07_mensajes=0x7f030008;
+        public static final int p08_ayuda=0x7f030009;
+        public static final int planos=0x7f03000a;
     }
     public static final class menu {
         public static final int activity_splash=0x7f060000;
     }
     public static final class string {
+        public static final int actualizar_boletin=0x7f04000f;
         public static final int app_name=0x7f040000;
+        public static final int ayuda=0x7f040010;
+        public static final int bienvenido_a=0x7f040009;
+        public static final int boletin=0x7f04000e;
         public static final int button_send=0x7f040003;
         public static final int descripcion=0x7f040006;
+        public static final int design=0x7f04000b;
         public static final int enviarSMS=0x7f040008;
+        public static final int enviar_posicion=0x7f04000d;
+        public static final int enviar_solicitud=0x7f04000c;
         public static final int marcar_ubicacion=0x7f040007;
         public static final int menu_settings=0x7f040001;
         public static final int nombre_lugar=0x7f040005;
         public static final int plano_seleccion=0x7f040004;
         public static final int title_activity_main=0x7f040002;
+        public static final int touch_para_entrar=0x7f04000a;
     }
     public static final class style {
         public static final int AppTheme=0x7f050000;

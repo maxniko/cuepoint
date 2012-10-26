@@ -1,4 +1,4 @@
-package Clases;
+package com.cuepoint.clases;
 
 public class Plano{
 	protected String nombre = "";
