@@ -19,11 +19,12 @@
         android:layout_height="wrap_content"
         android:onClick="enviarSolicitudClick"
         android:text="@string/enviar_solicitud" />
-
+
     <Button
         android:id="@+id/button2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:onClick="enviarPosicionClick"
         android:text="@string/enviar_posicion" />
 
     <Button
@@ -37,11 +38,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/actualizar_boletin" />
-
+
     <Button
         android:id="@+id/button5"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:onClick="opcionesClick"
         android:text="@string/menu_settings" />
 
     <Button

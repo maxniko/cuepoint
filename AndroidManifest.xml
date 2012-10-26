@@ -36,6 +36,10 @@
             android:name="com.cuepoint.controladores.ListaContactos" >
         </activity>
         <activity
+            android:label="@string/preferencias"
+            android:name="com.cuepoint.controladores.Preferencias" >
+        </activity>
+        <activity
             android:label="@string/plano_seleccion"
             android:name="com.cuepoint.controladores.ListaPlanos" >
         </activity>

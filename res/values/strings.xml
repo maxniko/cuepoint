@@ -17,5 +17,6 @@
     <string name="boletin">Ver boletín</string>
     <string name="actualizar_boletin">Actualizar boletin</string>
     <string name="ayuda">Ayuda</string>
+    <string name="preferencias">Preferencias</string>
 
 </resources>

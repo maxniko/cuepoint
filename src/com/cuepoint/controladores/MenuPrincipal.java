@@ -21,5 +21,19 @@ public class MenuPrincipal extends Activity {
     	intent.setComponent(new ComponentName(this, ListaContactos.class));
     	startActivity(intent);
 	}
+	
+	public void enviarPosicionClick(View v)
+	{
+		Intent intent = new Intent();
+    	intent.setComponent(new ComponentName(this, Imagen.class));
+    	startActivity(intent);
+	}
+	
+	public void opcionesClick(View v)
+	{
+		Intent intent = new Intent();
+    	intent.setComponent(new ComponentName(this, Preferencias.class));
+    	startActivity(intent);
+	}
 
 }

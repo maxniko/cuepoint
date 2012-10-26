@@ -1,0 +1,19 @@
+<resources>
+   <string-array name="marcadores">
+      <item>Circulo</item>
+      <item>Cruz</item>
+   </string-array>
+   <string-array name="idmarcador">
+      <item>1</item>
+      <item>2</item>
+   </string-array>
+   
+   <string-array name="planos">
+      <item>Templo UAP</item>
+      <item>Biblioteca</item>
+   </string-array>
+   <string-array name="idplano">
+      <item>1</item>
+      <item>2</item>
+   </string-array>
+</resources>
