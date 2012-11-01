@@ -12,11 +12,18 @@
     <string name="bienvenido_a">Bienvenido a</string>
     <string name="touch_para_entrar">Touch para entrar</string>
     <string name="design">Creado por Max Nikolaus y Silvio Kucharski</string>
-    <string name="enviar_solicitud">Enviar solicitud</string>
+    <string name="enviar_solicitud">Solicitar ubicación</string>
     <string name="enviar_posicion">Enviar posición</string>
     <string name="boletin">Ver boletín</string>
     <string name="actualizar_boletin">Actualizar boletin</string>
     <string name="ayuda">Ayuda</string>
     <string name="preferencias">Preferencias</string>
+    <string name="seleccionar_contacto">Seleccione un contacto</string>
+    <string name="enviar_sms">Solicitar ubicación</string>
+    <string name="cambiar">Cambiar</string>
+    <string name="mensaje">Mensaje (opcional)</string>
+    <string name="enviar">Enviar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="caracteres">Caracteres restantes: 60</string>
 
 </resources>
