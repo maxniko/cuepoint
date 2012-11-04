@@ -24,28 +24,29 @@ public final class R {
         public static final int zoom_out=0x7f020004;
     }
     public static final class id {
+        public static final int Button01=0x7f09000a;
         public static final int button1=0x7f090006;
         public static final int button2=0x7f090007;
         public static final int button3=0x7f090008;
         public static final int button4=0x7f090009;
-        public static final int button5=0x7f09000a;
-        public static final int button6=0x7f09000b;
-        public static final int imageView1=0x7f090014;
-        public static final int imageViewPlano=0x7f09000c;
+        public static final int button5=0x7f09000b;
+        public static final int button6=0x7f09000c;
+        public static final int imageView1=0x7f090015;
+        public static final int imageViewPlano=0x7f09000d;
         public static final int imagenEntrada=0x7f090003;
         public static final int listView=0x7f090000;
-        public static final int mensaje=0x7f090011;
-        public static final int menu_settings=0x7f090015;
-        public static final int nombre=0x7f090010;
-        public static final int seekBarZoom=0x7f09000e;
+        public static final int mensaje=0x7f090012;
+        public static final int menu_settings=0x7f090016;
+        public static final int nombre=0x7f090011;
+        public static final int seekBarZoom=0x7f09000f;
         public static final int textView1=0x7f090001;
         public static final int textView2=0x7f090002;
         public static final int textView3=0x7f090004;
         public static final int textView4=0x7f090005;
-        public static final int textViewContador=0x7f090012;
-        public static final int tipo=0x7f090013;
-        public static final int zoomin=0x7f09000f;
-        public static final int zoomout=0x7f09000d;
+        public static final int textViewContador=0x7f090013;
+        public static final int tipo=0x7f090014;
+        public static final int zoomin=0x7f090010;
+        public static final int zoomout=0x7f09000e;
     }
     public static final class layout {
         public static final int lista_planos=0x7f030000;
@@ -82,6 +83,7 @@ public final class R {
         public static final int enviar_solicitud=0x7f06000c;
         public static final int marcar_ubicacion=0x7f060007;
         public static final int mensaje=0x7f060015;
+        public static final int mensajes=0x7f060019;
         public static final int menu_settings=0x7f060001;
         public static final int nombre_lugar=0x7f060005;
         public static final int plano_seleccion=0x7f060004;

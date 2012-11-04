@@ -25,5 +25,6 @@
     <string name="enviar">Enviar</string>
     <string name="cancelar">Cancelar</string>
     <string name="caracteres">Caracteres restantes: 60</string>
+    <string name="mensajes">Mensajes enviados/recibidos</string>
 
 </resources>
