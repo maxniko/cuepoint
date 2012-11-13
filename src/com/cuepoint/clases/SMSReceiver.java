@@ -42,11 +42,11 @@ public class SMSReceiver extends BroadcastReceiver {
 		{
 			if (msj.substring(0, 11).equalsIgnoreCase(codigo)) 
 			{				
-				Bundle b = new Bundle();
-		        b.putString("numero", nroOrigen);
+				//Bundle b = new Bundle();
+		        //b.putString("numero", nroOrigen);
 				
 				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.putExtras(bundle);
+				//i.putExtras(bundle);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				i.setClass(context, com.cuepoint.controladores.SMSRecibido.class);
 		    	context.startActivity(i);

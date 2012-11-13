@@ -4,12 +4,17 @@
 package com.cuepoint.controladores;
 
 import java.io.File;
+
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,6 +27,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+
 import com.cuepoint.actividades.R;
 
 /**
@@ -181,7 +187,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 		int touchFinalTime = (int) event.getEventTime();
 		 		if (mode != NONE && (touchFinalTime - touchInitialTime > 1000))
 		 		{
-		 			dibujarMarca((int)event.getX(), (int)event.getY());
+		 			dibujarMarca((int)event.getX(), (int)event.getY(), v);
 		 		}
 		 		break;
 		 		
@@ -196,10 +202,37 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 return true; // indicate event was handled  
 	 }
 	 
-	 private void dibujarMarca(int x, int y)
+	 private void dibujarMarca(int x, int y, View v)
 	 {
-		 
+		ImageView imagen = (ImageView) v;
+		
 	 }
+	 
+	 private static class CircleView extends View {
+		 private int anchoPantalla;
+		 private int altoPantalla;
+	        private Paint mPaint = new Paint();
+
+	        public CircleView(Context context) {
+	            super(context);
+	        }
+	        
+	        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+	            // TODO Auto-generated method stub
+	            super.onSizeChanged(w, h, oldw, oldh);
+	            anchoPantalla = w;
+	            altoPantalla = h;
+	        }
+	        
+	        @Override protected void onDraw(Canvas canvas) {
+	            Paint paint = mPaint;
+	             
+	            paint.setColor(Color.GREEN);
+	            paint.setStrokeWidth(3);
+	            
+	            canvas.drawCircle(anchoPantalla/2, altoPantalla/2, 10, paint);
+	        }
+	    }
 	  
 	 /** Show an event in the LogCat view, for debugging */  
 	 private void dumpEvent(MotionEvent event) {

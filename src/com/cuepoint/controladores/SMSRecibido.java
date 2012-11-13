@@ -19,15 +19,15 @@ public class SMSRecibido extends Activity {
 	private static final int DIALOGO_CONFIRMACION = 2;
 	private static final int DIALOGO_SELECCION = 3;
 	String nombre = "";
-	String numero = "1-542-584-00";
+	String numero = "5556";
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        Bundle bundle = getIntent().getExtras();
-        numero = bundle.getString("numero");
-        Log.d("Numero SMSRecibido", numero);
+        //Bundle bundle = getIntent().getExtras();
+       // numero = bundle.getString("numero");
+        //Log.d("Numero SMSRecibido", numero);
         
         // Query: contacto con el numero de telefono ingresado
         //lanzamos una query al Content provider por medio del "contentresolver"

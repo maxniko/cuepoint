@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cuepoint.actividades.R;
+import com.cuepoint.clases.EditText_SMS;
 
 public class EnviarSMS extends Activity {
 	
@@ -55,7 +56,9 @@ public class EnviarSMS extends Activity {
 	
 	public void enviarClick(View button)
 	{
-		String text = "<cuepoint/>";
+		EditText_SMS et = (EditText_SMS) findViewById(R.id.mensaje);
+		String msj = et.getText().toString();
+		String text = "<cuepoint/>" + msj;
     	//String phoneNumber = "5556";
     	
     	//PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, EnviarSMS.class), 0);
