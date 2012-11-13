@@ -1,11 +1,11 @@
 package com.cuepoint.controladores;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +24,6 @@ public class EnviarSMS extends Activity {
         
         Bundle bundle = getIntent().getExtras();
         setNombreYNumero(bundle.getString("nombre"), bundle.getString("numero"));
-
     }
 	
 	public void setNombreYNumero(String nombre, String numero)
@@ -54,11 +53,11 @@ public class EnviarSMS extends Activity {
 	public void enviarClick(View button)
 	{
 		String text = "<cuepoint/>";
-    	String phoneNumber = "5556";
+    	//String phoneNumber = "5556";
     	
     	//PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, EnviarSMS.class), 0);
     	SmsManager sms = SmsManager.getDefault();
-    	sms.sendTextMessage(phoneNumber, null, text, null, null);
+    	sms.sendTextMessage(numero, null, text, null, null);
     	
     	finish();
     	
