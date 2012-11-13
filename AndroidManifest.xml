@@ -6,7 +6,7 @@
     <uses-permission android:name='android.permission.SEND_SMS'/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-sdk
         android:minSdkVersion="10"
@@ -58,6 +58,10 @@
         <activity
             android:label="@string/app_name"
             android:name="com.cuepoint.controladores.Imagen" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name="com.cuepoint.controladores.Boletin" >
         </activity>
     </application>
 

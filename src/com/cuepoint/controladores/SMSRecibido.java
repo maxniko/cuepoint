@@ -25,9 +25,9 @@ public class SMSRecibido extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        //Bundle bundle = getIntent().getExtras();
-        //numero = bundle.getString("numero");
-        //Log.d("Numero SMSRecibido", numero);
+        Bundle bundle = getIntent().getExtras();
+        numero = bundle.getString("numero");
+        Log.d("Numero SMSRecibido", numero);
         
         // Query: contacto con el numero de telefono ingresado
         //lanzamos una query al Content provider por medio del "contentresolver"

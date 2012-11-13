@@ -5,6 +5,8 @@ package com.cuepoint.controladores;
 
 import java.io.File;
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -12,6 +14,9 @@ import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -35,6 +40,8 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
     int touchInitialTime = 0;
     
     SeekBar mSeekBar;
+    
+    private static final int REQUEST_CHOOSE_PHONE = 1;
     
 	 // These matrices will be used to move and zoom image  
 	 Matrix matrix = new Matrix();  
@@ -63,6 +70,45 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
         
         leerImagenesSD();
     }
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater mi = getMenuInflater();
+		mi.inflate(R.menu.enviar, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.enviar:
+			Intent i = new Intent();
+			i.setComponent(new ComponentName(this, ListaContactos.class));
+			startActivityForResult(i, REQUEST_CHOOSE_PHONE);
+			return true;
+		case R.id.cancelar:
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if ((requestCode == REQUEST_CHOOSE_PHONE) && (resultCode == Activity.RESULT_OK)) {
+			try {
+				Intent i = new Intent();
+				
+				Bundle bundle = new Bundle();
+		        bundle.putString("nombre", data.getStringExtra("nombre"));
+		        bundle.putString("numero", data.getStringExtra("numero"));
+		        i.putExtras(bundle);
+				i.setComponent(new ComponentName(this, EnviarSMS.class));
+				startActivity(i);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	public void leerImagenesSD()
 	{
@@ -249,7 +295,18 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		}
 
 		public void onStopTrackingTouch(SeekBar arg0) {
-			// TODO Auto-generated method stub
 			
 		}
+		/*
+		  @Override
+		    protected void onSaveInstanceState(Bundle outState) {
+		    	super.onSaveInstanceState(outState);
+		        outState.putAll(outState);
+		    }
+		 
+		    private void restoreMe(Bundle state){
+		    	if (state!=null) {
+		    		super.onRestoreInstanceState(state);
+		    	}
+		     }*/
 }

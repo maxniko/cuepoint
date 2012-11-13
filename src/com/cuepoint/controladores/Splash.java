@@ -26,7 +26,7 @@ public class Splash extends Activity implements OnTouchListener{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_splash, menu);
+        
         return true;
     }
     
@@ -50,7 +50,6 @@ public class Splash extends Activity implements OnTouchListener{
 		toast.show();
     }
 
-	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{

@@ -45,7 +45,7 @@ public class MenuPrincipal extends Activity {
 	public void enviarPosicionClick(View v)
 	{
 		Intent intent = new Intent();
-    	intent.setComponent(new ComponentName(this, Imagen.class));
+    	intent.setComponent(new ComponentName(this, ListaPlanos.class));
     	startActivity(intent);
 	}
 	
@@ -53,6 +53,13 @@ public class MenuPrincipal extends Activity {
 	{
 		Intent intent = new Intent();
     	intent.setComponent(new ComponentName(this, Preferencias.class));
+    	startActivity(intent);
+	}
+	
+	public void verBoletinClick(View v)
+	{
+		Intent intent = new Intent();
+    	intent.setComponent(new ComponentName(this, Boletin.class));
     	startActivity(intent);
 	}
 

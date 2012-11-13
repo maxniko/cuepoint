@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/enviar"
+        android:title="Enviar"
+        android:icon="@drawable/enviar"></item>
+    <item
+        android:id="@+id/cancelar"
+        android:title="Cancelar"
+        android:icon="@drawable/cancelar"></item>
+</menu>

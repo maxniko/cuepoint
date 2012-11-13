@@ -26,12 +26,13 @@
         android:layout_height="wrap_content"
         android:onClick="enviarPosicionClick"
         android:text="@string/enviar_posicion" />
-
+
     <Button
         android:id="@+id/button3"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/boletin" />
+        android:onClick="verBoletinClick"
+        android:text="@string/ver_boletin" />
 
     <Button
         android:id="@+id/button4"
