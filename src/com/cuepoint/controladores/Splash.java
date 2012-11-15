@@ -29,30 +29,11 @@ public class Splash extends Activity implements OnTouchListener{
         
         return true;
     }
-    
-    public void onClicEnviar (View button)
-    {
-    	Intent intent = new Intent();
-    	intent.setComponent(new ComponentName(this, ListaPlanos.class));
-    	startActivity(intent);
-    }
-    
-    public void onClickEnviarSMS (View button)
-    {
-    	String text = "mi posicion";
-    	String phoneNumber = "5556";
-    	
-    	PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, Splash.class), 0);
-    	SmsManager sms = SmsManager.getDefault();
-    	sms.sendTextMessage(phoneNumber, null, text, pi, null);
-    	
-    	Toast toast = Toast.makeText(this, "SMS Enviado", Toast.LENGTH_LONG);
-		toast.show();
-    }
 
 	public boolean onTouch(View v, MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN)
 		{
+			System.gc();
 			Intent intent = new Intent();
 	    	intent.setComponent(new ComponentName(this, MenuPrincipal.class));
 	    	startActivity(intent);

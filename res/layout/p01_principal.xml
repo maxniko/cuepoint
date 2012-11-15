@@ -12,51 +12,59 @@
         android:padding="5sp"
         android:text="@string/title_activity_main"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
+
     <Button
         android:id="@+id/button1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="enviarSolicitudClick"
-        android:text="@string/enviar_solicitud" />
-
+        android:text="@string/enviar_solicitud"
+        android:textSize="15sp" />
+
     <Button
         android:id="@+id/button2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="enviarPosicionClick"
-        android:text="@string/enviar_posicion" />
-
+        android:text="@string/enviar_posicion"
+        android:textSize="15sp" />
+
     <Button
         android:id="@+id/button3"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="verBoletinClick"
-        android:text="@string/ver_boletin" />
-
+        android:text="@string/ver_boletin"
+        android:textSize="15sp" />
+
     <Button
         android:id="@+id/button4"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/actualizar_boletin" />
-
+        android:text="@string/actualizar_boletin"
+        android:textSize="15sp" />
+
     <Button
         android:id="@+id/Button01"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/mensajes" />
-
+        android:onClick="mensajesClick"
+        android:text="@string/mensajes"
+        android:textSize="15sp" />
+
     <Button
         android:id="@+id/button5"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:onClick="opcionesClick"
-        android:text="@string/menu_settings" />
-
+        android:text="@string/menu_settings"
+        android:textSize="15sp" />
+
     <Button
         android:id="@+id/button6"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/ayuda" />
+        android:text="@string/ayuda"
+        android:textSize="15sp" />
 
 </LinearLayout>

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import com.cuepoint.actividades.R;
 
@@ -60,6 +59,13 @@ public class MenuPrincipal extends Activity {
 	{
 		Intent intent = new Intent();
     	intent.setComponent(new ComponentName(this, Boletin.class));
+    	startActivity(intent);
+	}
+	
+	public void mensajesClick(View v)
+	{
+		Intent intent = new Intent();
+    	intent.setComponent(new ComponentName(this, Mensajes.class));
     	startActivity(intent);
 	}
 

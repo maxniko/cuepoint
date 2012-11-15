@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="preferencias" >
-    <PreferenceCategory android:title="Planos">
-        <ListPreference
-		   android:key="plano"
-		   android:title="Plano por defecto"
-		   android:summary="Se muestra al momento de ubicar el marcador"
-		   android:dialogTitle="Seleccionar plano"
-		   android:entries="@array/planos"
-		   android:entryValues="@array/idplano" />
+    <PreferenceCategory android:title="Marcadores de ubicación">
         <ListPreference
 		   android:key="marcador"
-		   android:title="Marcadores"
-		   android:summary="Indica la posicion en el plano"
+		   android:title="Tipo de marcador"
+		   android:summary="Cambiar el tipo de marcador"
 		   android:dialogTitle="Seleccionar marcador"
 		   android:entries="@array/marcadores"
 		   android:entryValues="@array/idmarcador" />
+        <ListPreference
+		   android:key="color"
+		   android:title="Color del marcador"
+		   android:summary="Cambiar el color del marcador"
+		   android:dialogTitle="Seleccionar un color"
+		   android:entries="@array/colores"
+		   android:entryValues="@array/idcolor" />
     </PreferenceCategory> 
 </PreferenceScreen>

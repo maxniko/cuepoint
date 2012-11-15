@@ -7,4 +7,8 @@
         android:id="@+id/cancelar"
         android:title="Cancelar"
         android:icon="@drawable/cancelar"></item>
+    <item
+        android:id="@+id/opciones"
+        android:title="Opciones"
+        android:icon="@drawable/opciones"></item>
 </menu>

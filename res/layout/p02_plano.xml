@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayoutImagen"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/textView1"
@@ -10,14 +12,14 @@
         android:text="@string/marcar_ubicacion"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="20sp" />
-
+
     <ImageView
         android:id="@+id/imageViewPlano"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dip"
         android:layout_gravity="center|center_horizontal"
         android:layout_weight="0.16"
-        android:adjustViewBounds="true"
+        android:adjustViewBounds="false"
         android:contentDescription="@string/plano_seleccion"
         android:duplicateParentState="true"
         android:minHeight="100sp"
@@ -27,28 +29,29 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
-        <ImageView
-            android:id="@+id/zoomout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onClickZoomOut"
-            android:src="@drawable/zoom_out" />
+
+	    <ImageView
+	        android:id="@+id/zoomout"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:contentDescription="@string/zoom"
+	        android:src="@drawable/zoom_out" />
+	
+		<SeekBar
+		    android:id="@+id/seekBarZoom"
+		    android:layout_width="242dp"
+		    android:layout_height="wrap_content"
+		    android:max="100"
+		    android:progress="10" />
 
-<SeekBar
-            android:id="@+id/seekBarZoom"
-            android:layout_width="242dp"
-            android:layout_height="wrap_content"
-            android:progress="10" />
-
-        <ImageView
-            android:id="@+id/zoomin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onClickZoomIn"
-            android:src="@drawable/zoom_in" />
+		<ImageView
+		    android:id="@+id/zoomin"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:contentDescription="@string/zoom"
+		    android:src="@drawable/zoom_in" />
 
     </LinearLayout>
 

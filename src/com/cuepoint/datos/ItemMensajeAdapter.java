@@ -1,34 +1,25 @@
-/**
- * 
- */
 package com.cuepoint.datos;
 
 import java.util.ArrayList;
 
-import com.cuepoint.actividades.R;
-import com.cuepoint.clases.Plano;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-//import android.widget.ImageView;
 import android.widget.TextView;
+import com.cuepoint.actividades.R;
+import com.cuepoint.clases.Mensaje;
 
-/**
- * @author Silvio
- * Clase que se encarga de rellenar el ListView
- *
- */
-public class ItemPlanoAdapter extends BaseAdapter{
+public class ItemMensajeAdapter extends BaseAdapter{
 	protected Activity activity;
-	protected ArrayList<Plano> items;
+	protected ArrayList<Mensaje> items;
 
 	/**
 	 * 
 	 */
-	public ItemPlanoAdapter(Activity activity, ArrayList<Plano> items) {
+	public ItemMensajeAdapter(Activity activity, ArrayList<Mensaje> items) {
 	    this.activity = activity;
 	    this.items = items;
 	}
@@ -49,13 +40,13 @@ public class ItemPlanoAdapter extends BaseAdapter{
 	      vi = inflater.inflate(R.layout.planos, null);
 	    }
 	             
-	    Plano item = items.get(position);
+	    Mensaje item = items.get(position);
 	         
 	    TextView nombre = (TextView) vi.findViewById(R.id.nombre);
-	    nombre.setText(item.getNombre());
+	    nombre.setText(Integer.toString(item.getNroOrigen()));
 	    
 	    TextView descr = (TextView) vi.findViewById(R.id.descripcion);
-	    descr.setText(item.getDescripcion());
+	    descr.setText(item.getFechaFormateada());
 	 
 	    return vi;
 	  }

@@ -2,6 +2,7 @@ package com.cuepoint.clases;
 
 public class Plano{
 	protected String nombre = "";
+	protected String descripcion = "";
 	protected String rutaImagen = "";
 	
 	public Plano(String nombre, String rutaImagen)
@@ -22,6 +23,20 @@ public class Plano{
 	 */
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+	
+	/**
+	 * @return Nombre del plano
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	/**
+	 * @param Nombre del plano
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	/**

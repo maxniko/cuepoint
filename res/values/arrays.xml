@@ -8,12 +8,14 @@
       <item>2</item>
    </string-array>
    
-   <string-array name="planos">
-      <item>Templo UAP</item>
-      <item>Biblioteca</item>
+   <string-array name="colores">
+      <item>Azul</item>
+      <item>Rojo</item>
+      <item>Verde</item>
    </string-array>
-   <string-array name="idplano">
+   <string-array name="idcolor">
       <item>1</item>
       <item>2</item>
+      <item>3</item>
    </string-array>
 </resources>

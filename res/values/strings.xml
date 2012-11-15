@@ -27,5 +27,6 @@
     <string name="caracteres">60</string>
     <string name="mensajes">Mensajes enviados/recibidos</string>
     <string name="boletin">Boletin</string>
+    <string name="zoom">Zoom</string>
 
 </resources>

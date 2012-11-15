@@ -1,21 +1,10 @@
 package com.cuepoint.clases;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.ContactsContract.Data;
-import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.telephony.SmsMessage;
-import android.util.Log;
-import android.widget.ListAdapter;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
-
-import com.cuepoint.controladores.ListaPlanos;
-import com.cuepoint.controladores.SMSRecibido;
 
 public class SMSReceiver extends BroadcastReceiver {
 

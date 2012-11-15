@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="wrap_content" >
-     
+     
+
   <TextView
       android:id="@+id/nombre"
       android:layout_width="wrap_content"
@@ -9,9 +10,10 @@
       android:layout_alignParentTop="true"
       android:text="@string/nombre_lugar"
       android:textAppearance="?android:attr/textAppearanceLarge" />
- 
+ 
+
   <TextView
-      android:id="@+id/tipo"
+      android:id="@+id/descripcion"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_below="@+id/nombre"

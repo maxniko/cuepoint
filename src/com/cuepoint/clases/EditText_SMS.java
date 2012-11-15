@@ -37,6 +37,7 @@ public class EditText_SMS extends EditText
 		
 		p2 = new Paint(Paint.ANTI_ALIAS_FLAG);
 		p2.setColor(Color.WHITE);
+		p2.setTextSize(20f);
 	}
 	
 	@Override
@@ -47,7 +48,7 @@ public class EditText_SMS extends EditText
 	
 		//Dibujamos el fondo negro del contador
 		//canvas.drawRect(this.getWidth()-30, 5, this.getWidth()-5, 20, p1);
-		canvas.drawRect(this.getWidth()-30, 5, this.getWidth()-5, 32, p1);
+		canvas.drawRect(this.getWidth()-30, 5, this.getWidth()-5, 30, p1);
 				
 		//Dibujamos el número de caracteres sobre el contador
 		int con = cantidad_max_caracteres - this.getText().toString().length();

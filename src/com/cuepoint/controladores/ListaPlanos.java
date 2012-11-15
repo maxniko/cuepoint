@@ -21,7 +21,7 @@ public class ListaPlanos extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lista_planos);
+        setContentView(R.layout.p09_planos);
         
         ListView lv = (ListView)findViewById(R.id.listView);
         
@@ -64,17 +64,21 @@ public class ListaPlanos extends Activity {
     	*/
         
         //Leer datos de la base de datos
-        Cursor c = db.rawQuery("SELECT nombre,path FROM Planos", null);
+        Cursor c = db.rawQuery("SELECT nombre,descripcion,path FROM Planos", null);
         
         //Nos aseguramos de que existe al menos un registro
         if (c.moveToFirst()) {
             //Recorremos el cursor hasta que no haya más registros
             do {
                  String nombre = c.getString(0);
-                 String path = c.getString(1);
-                 items.add(new Plano(nombre,path));
+                 String desc = c.getString(1);
+                 String path = c.getString(2);
+                 Plano p = new Plano(nombre, path);
+                 p.setDescripcion(desc);
+                 items.add(p);
             } while(c.moveToNext());
        }
+       db.close();
        return items;
     }
 }
