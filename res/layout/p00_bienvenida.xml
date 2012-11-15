@@ -22,7 +22,7 @@
     <ImageView
         android:id="@+id/imagenEntrada"
         android:layout_width="280dp"
-        android:layout_height="260dp"
+        android:layout_height="0dip"
         android:layout_weight="1"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher" />
