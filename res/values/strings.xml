@@ -28,5 +28,6 @@
     <string name="mensajes">Mensajes</string>
     <string name="boletin">Boletin</string>
     <string name="zoom">Zoom</string>
+    <string name="abrir">Abrir</string>
 
 </resources>

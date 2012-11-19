@@ -1,5 +1,11 @@
 package com.cuepoint.clases;
 
+/**
+ * 
+ * @author Silvio
+ * Clase que aloja la definicion de un plano
+ *
+ */
 public class Plano{
 	protected String nombre = "";
 	protected String descripcion = "";
@@ -26,14 +32,14 @@ public class Plano{
 	}
 	
 	/**
-	 * @return Nombre del plano
+	 * @return Descripcion del plano
 	 */
 	public String getDescripcion() {
 		return descripcion;
 	}
 
 	/**
-	 * @param Nombre del plano
+	 * @param Descripcion del plano
 	 */
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;

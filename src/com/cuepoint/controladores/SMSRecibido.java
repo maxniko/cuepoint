@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Data;
 import android.util.Log;
@@ -19,15 +21,22 @@ public class SMSRecibido extends Activity {
 	private static final int DIALOGO_CONFIRMACION = 2;
 	private static final int DIALOGO_SELECCION = 3;
 	String nombre = "";
-	String numero = "5556";
+	String numero = "";
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        //Bundle bundle = getIntent().getExtras();
-       // numero = bundle.getString("numero");
-        //Log.d("Numero SMSRecibido", numero);
+        Intent i = getIntent();
+        try
+        {
+        	numero = i.getStringExtra("NumeroOrigen");
+        }
+        catch(Exception e)
+        {
+        	Log.e("Numero SMSRecibido", "No se pudo leer el numero");
+        }
+        
         
         // Query: contacto con el numero de telefono ingresado
         //lanzamos una query al Content provider por medio del "contentresolver"
@@ -58,8 +67,9 @@ public class SMSRecibido extends Activity {
                     numero = mCursor.getString(numberIndex);
                 } while (mCursor.moveToNext());
             }
-            Log.d("numero", numero);
-        
+          //El vibrador del dispositivo
+            Vibrator vibrator =(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            vibrator.vibrate(2000);
         showDialog(DIALOGO_CONFIRMACION);
     }
 	
@@ -117,7 +127,6 @@ public class SMSRecibido extends Activity {
     	}
     	builder.setPositiveButton("Aceptar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Log.i("Dialogos", "Confirmacion Aceptada.");
 				Intent intent = new Intent();
 		    	intent.setComponent(new ComponentName(SMSRecibido.this, ListaPlanos.class));
 		    	startActivity(intent);

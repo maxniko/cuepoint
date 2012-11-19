@@ -9,8 +9,6 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -29,7 +27,6 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-
 import com.cuepoint.actividades.R;
 
 /**
@@ -37,7 +34,7 @@ import com.cuepoint.actividades.R;
  *
  */
 public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekBarChangeListener{
-	
+	//variables para la escala
     static final int ZOOM_MAX = 20;
     static final int ZOOM_MIN = 0;
     private int ZOOM_ACTUAL = 2;
@@ -46,13 +43,15 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
     private float desplazZoomIn = -50f;
     private float desplazZoomOut = 50f;
     
+    //variable que tendrá el tiempo de una pulsación en la pantalla
     int touchInitialTime = 0;
     
+    //barra que actua de zoom
     SeekBar mSeekBar;
     
     private static final int REQUEST_CHOOSE_PHONE = 1;
     
-	 // These matrices will be used to move and zoom image  
+	 // Estas matrices serán usadas para el zoom y mover la imagen
 	 Matrix matrix = new Matrix();  
 	 Matrix savedMatrix = new Matrix();  
 	  
@@ -66,7 +65,11 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	 PointF start = new PointF();  
 	 PointF mid = new PointF();  
 	 float oldDist = 1f;  
-	  
+	 
+	 private static int anchoPantalla;
+	 private static int altoPantalla;
+	 private static float XX;
+	 private static float YY;
     
     
 	@Override
@@ -81,22 +84,28 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
     }
 	
 	 @Override
-	 protected void onDestroy() {
-	 	    super.onDestroy();
-	 	    this.liberarMemoria(findViewById(R.id.LinearLayoutImagen));
-	 	    System.gc();
-	 }
-	 public void liberarMemoria(View view){
-		    if (view.getBackground() != null) {
-		        view.getBackground().setCallback(null);
-		    }
-		    if (view instanceof ViewGroup) {
-		        for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-		        	liberarMemoria(((ViewGroup) view).getChildAt(i));
-		        }
-		        ((ViewGroup) view).removeAllViews();
-		    }
+	protected void onDestroy()
+	{
+		 super.onDestroy();
+	 	 this.liberarMemoria(findViewById(R.id.LinearLayoutImagen));
+	 	 System.gc();
+	}
+	 
+	public void liberarMemoria(View view)
+	{
+		if (view.getBackground() != null)
+		{
+			view.getBackground().setCallback(null);
 		}
+		if (view instanceof ViewGroup)
+		{
+			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++)
+			{
+				liberarMemoria(((ViewGroup) view).getChildAt(i));
+		    }
+		    ((ViewGroup) view).removeAllViews();
+		}
+	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -174,15 +183,13 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 				//Obtenemos la ruta a la tarjeta SD
 			    File ruta_sd = Environment.getExternalStorageDirectory();
 			    Bundle b = getIntent().getExtras();
+			    //Obtenemos la ruta al archivo del plano
 			    File imgFile = new File(ruta_sd.getAbsolutePath(), b.getString("path"));
 			    
 			    if(imgFile.exists()){
-	                //myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 	                Drawable d = Drawable.createFromPath(imgFile.getAbsolutePath());
-			    	
 	                ImageView myImage = (ImageView) findViewById(R.id.imageViewPlano);
 	                myImage.setOnTouchListener(this);
-	                //myImage.setImageBitmap(myBitmap);
 	                myImage.setImageDrawable(d);
 	                savedMatrix.set(matrix);
 	                matrix.postTranslate(-(d.getIntrinsicWidth()/2), -(d.getIntrinsicHeight()/2));
@@ -193,12 +200,12 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		}
 		catch (Exception ex)
 		{
-		    Log.e("Ficheros", "Error al escribir fichero a tarjeta SD");
+		    Log.e("Ficheros", "Error al abrir el fichero de la tarjeta SD");
 		}
 		System.gc();
 	}
 	   
-	 public boolean onTouch(View v, MotionEvent event)
+	public boolean onTouch(View v, MotionEvent event)
 	 {
 		 ImageView view = (ImageView) v;
 		 
@@ -217,7 +224,9 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 		int touchFinalTime = (int) event.getEventTime();
 		 		if (mode != NONE && (touchFinalTime - touchInitialTime > 1000))
 		 		{
-		 			dibujarMarca((int)event.getX(), (int)event.getY(), v);
+		 			XX = event.getX();
+		 			YY = event.getY();
+		 			dibujarMarca(XX, YY, v);
 		 		}
 		 		break;
 		 		
@@ -232,119 +241,112 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 return true; // indicate event was handled  
 	 }
 	 
-	 private void dibujarMarca(int x, int y, View v)
-	 {
-	 }
+	private void dibujarMarca(float x, float y, View v)
+	{
+		CircleView cv = new CircleView(this);
+	}
 	 
-	 private static class CircleView extends View {
-		 private int anchoPantalla;
-		 private int altoPantalla;
-	        private Paint mPaint = new Paint();
-
-	        public CircleView(Context context) {
-	            super(context);
-	        }
-	        
-	        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-	            super.onSizeChanged(w, h, oldw, oldh);
-	            anchoPantalla = w;
-	            altoPantalla = h;
-	        }
-	        
-	        @Override protected void onDraw(Canvas canvas) {
-	            Paint paint = mPaint;
-	             
-	            paint.setColor(Color.GREEN);
-	            paint.setStrokeWidth(3);
-	            
-	            canvas.drawCircle(anchoPantalla/2, altoPantalla/2, 10, paint);
-	        }
-	    }
-	  
-	 public void onClickZoomIn(View v)
-		{
-		 	if (ZOOM_ACTUAL < ZOOM_MAX)
-		 	{
-		 		ZOOM_ACTUAL++;
-				savedMatrix.set(matrix);
-				matrix.postScale(scaleIn, scaleIn);
-				ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
-				iv.setImageMatrix(matrix);
-				
-				actualizarSeekBar();
-		 	}
-		}
-		
-		public void onClickZoomOut(View v)
-		{
-			if(ZOOM_ACTUAL > ZOOM_MIN)
-			{
-				ZOOM_ACTUAL--;
-				savedMatrix.set(matrix);
-				matrix.postScale(scaleOut, scaleOut);
-				ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
-				iv.setImageMatrix(matrix);
-				
-				actualizarSeekBar();
-			}
-		}
-		
-		private void actualizarSeekBar()
-		{
-			SeekBar s = (SeekBar) findViewById(R.id.seekBarZoom);
-			s.setProgress(ZOOM_ACTUAL*10);
-		}
-		
-		public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch)
+	private static class CircleView extends View
+	{
+		 private Paint mPaint = new Paint();
+		 
+		 public CircleView(Context context)
 		 {
-			 if (progress%5 == 0)
-			 {
-				 if (ZOOM_ACTUAL < progress/5)
-				 {
-					 if (ZOOM_ACTUAL < ZOOM_MAX)
-					 	{
-					 		ZOOM_ACTUAL = progress/5;
-							savedMatrix.set(matrix);
-							matrix.postScale(scaleIn, scaleIn);
-							matrix.postTranslate(desplazZoomIn, desplazZoomIn);
-							ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
-							iv.setImageMatrix(matrix);
-							Log.i("zoomActual", Integer.toString(ZOOM_ACTUAL)+","+Integer.toString(progress));
-					 	}
-				 }
-				 else if (ZOOM_ACTUAL > progress/5)
-				 {
-					 if(ZOOM_ACTUAL > ZOOM_MIN)
-						{
-							ZOOM_ACTUAL = progress/5;
-							savedMatrix.set(matrix);
-							matrix.postScale(scaleOut, scaleOut);
-							matrix.postTranslate(desplazZoomOut, desplazZoomOut);
-							ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
-							iv.setImageMatrix(matrix);
-							Log.i("zoomActual", Integer.toString(ZOOM_ACTUAL)+","+Integer.toString(progress));
-						}
-				 }
-			 }
+			 super(context);
+	     }
+
+		 protected void onSizeChanged(int w, int h, int oldw, int oldh)
+		 {
+			 super.onSizeChanged(w, h, oldw, oldh);
+			 anchoPantalla = w;
+			 altoPantalla = h;
 		 }
 
-		public void onStartTrackingTouch(SeekBar seekBar) {
-			
-		}
+		 @Override
+		 protected void onDraw(Canvas canvas)
+		 {
+			 Paint paint = mPaint;
+			 paint.setColor(Color.GREEN);
+			 paint.setStrokeWidth(3);
+			 canvas.drawCircle(XX, YY, 100, paint);
+		 }
 
-		public void onStopTrackingTouch(SeekBar arg0) {
-			
+	}
+	  
+	public void onClickZoomIn(View v)
+	{
+		if (ZOOM_ACTUAL < ZOOM_MAX)
+		{
+			ZOOM_ACTUAL++;
+			savedMatrix.set(matrix);
+			matrix.postScale(scaleIn, scaleIn);
+			ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
+			iv.setImageMatrix(matrix);
+				
+			actualizarSeekBar();
 		}
-		/*
-		  @Override
-		    protected void onSaveInstanceState(Bundle outState) {
-		    	super.onSaveInstanceState(outState);
-		        outState.putAll(outState);
-		    }
-		 
-		    private void restoreMe(Bundle state){
-		    	if (state!=null) {
-		    		super.onRestoreInstanceState(state);
-		    	}
-		     }*/
+	}
+		
+	public void onClickZoomOut(View v)
+	{
+		if(ZOOM_ACTUAL > ZOOM_MIN)
+		{
+			ZOOM_ACTUAL--;
+			savedMatrix.set(matrix);
+			matrix.postScale(scaleOut, scaleOut);
+			ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
+			iv.setImageMatrix(matrix);
+				
+			actualizarSeekBar();
+		}
+	}
+		
+	private void actualizarSeekBar()
+	{
+		SeekBar s = (SeekBar) findViewById(R.id.seekBarZoom);
+		s.setProgress(ZOOM_ACTUAL*10);
+	}
+		
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch)
+	{
+		if (progress%5 == 0)
+		{
+			if (ZOOM_ACTUAL < progress/5)
+			{
+				if (ZOOM_ACTUAL < ZOOM_MAX)
+					 	{
+					ZOOM_ACTUAL = progress/5;
+					savedMatrix.set(matrix);
+					matrix.postScale(scaleIn, scaleIn);
+					matrix.postTranslate(desplazZoomIn, desplazZoomIn);
+					ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
+					iv.setImageMatrix(matrix);
+					Log.i("zoomActual", Integer.toString(ZOOM_ACTUAL)+","+Integer.toString(progress));
+				}
+			}
+			else if (ZOOM_ACTUAL > progress/5)
+			{
+				if(ZOOM_ACTUAL > ZOOM_MIN)
+				{
+					ZOOM_ACTUAL = progress/5;
+					savedMatrix.set(matrix);
+					matrix.postScale(scaleOut, scaleOut);
+					matrix.postTranslate(desplazZoomOut, desplazZoomOut);
+					ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
+					iv.setImageMatrix(matrix);
+					Log.i("zoomActual", Integer.toString(ZOOM_ACTUAL)+","+Integer.toString(progress));
+				}
+			}
+		}
+	}
+
+	public void onStartTrackingTouch(SeekBar seekBar)
+	{
+			
+	}
+
+	public void onStopTrackingTouch(SeekBar arg0)
+	{
+		
+	}
 }

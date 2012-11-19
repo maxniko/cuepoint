@@ -77,6 +77,7 @@ public final class R {
         public static final int enviar=0x7f090000;
     }
     public static final class string {
+        public static final int abrir=0x7f07001c;
         public static final int actualizar_boletin=0x7f07000f;
         public static final int app_name=0x7f070000;
         public static final int ayuda=0x7f070010;
