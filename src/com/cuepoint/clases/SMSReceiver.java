@@ -47,15 +47,6 @@ public class SMSReceiver extends BroadcastReceiver {
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				i.setClass(context, com.cuepoint.controladores.SMSRecibido.class);
 				context.startActivity(i);
-				/*
-				Bundle b = new Bundle();
-		        b.putString("numero", nroOrigen);
-				
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.putExtras(bundle);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				i.setClass(context, com.cuepoint.controladores.SMSRecibido.class);
-		    	context.startActivity(i);*/
 			}
 		}
 	}

@@ -30,6 +30,7 @@ public class SMSRecibido extends Activity {
         Intent i = getIntent();
         try
         {
+        	//Obtengo el numero de quien mando el sms
         	numero = i.getStringExtra("NumeroOrigen");
         }
         catch(Exception e)
@@ -62,7 +63,6 @@ public class SMSRecibido extends Activity {
             
             if (mCursor.moveToFirst()) {
                 do {
-                	Log.d("nombre", mCursor.getString(nameIndex));
                     nombre = mCursor.getString(nameIndex);
                     numero = mCursor.getString(numberIndex);
                 } while (mCursor.moveToNext());
