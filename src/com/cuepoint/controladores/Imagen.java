@@ -8,15 +8,18 @@ import java.io.File;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -79,6 +82,9 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	 
 	 //id del plano
 	 int idPlano = 0;
+	 
+	 float altoOriginal;
+	 float anchoOriginal;
     
     
 	@Override
@@ -159,6 +165,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			Intent in = new Intent();
 			in.setComponent(new ComponentName(this, Preferencias.class));
 			startActivity(in);
+			dibujarMarca();
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -222,6 +229,8 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			    
 			    if(imgFile.exists()){
 			    	imagen = (BitmapDrawable) BitmapDrawable.createFromPath(imgFile.getAbsolutePath());
+			    	altoOriginal = imagen.getBitmap().getHeight();
+			    	anchoOriginal = imagen.getBitmap().getWidth();
 	            }
 			}
 		}
@@ -252,7 +261,8 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 		//if (mode != NONE && (touchFinalTime - touchInitialTime > 1000))
 		 		if (mode != NONE)
 		 		{
-		 			dibujarMarca(event.getX(), event.getY(), v);
+		 			calcularCoordenadasImagen(event.getX(), event.getY());
+		 			dibujarMarca();
 		 		}
 		 		break;
 		 		
@@ -301,20 +311,14 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 view.setImageMatrix(matrix);
 		 return true; // indicate event was handled  
 	 }
-	 
-	private void dibujarMarca(float x, float y, View v)
+	
+	private void calcularCoordenadasImagen(float x, float y)
 	{
-		BitmapDrawable bm = leerImagenesSD();
-		
 		float[] values = new float[9];
 		savedMatrix.set(matrix);
 		matrix.getValues(values);
 		float desplazamientoX = values[Matrix.MTRANS_X];
 		float desplazamientoY = values[Matrix.MTRANS_Y];
-
-		//original height and width of the bitmap
-		float altoOriginal = bm.getBitmap().getHeight();
-		float anchoOriginal = bm.getBitmap().getWidth();
 		
 		//height and width of the visible (scaled) image
 		float altoEscalado = (plano.getDrawable().getIntrinsicHeight()) * values[Matrix.MSCALE_X];
@@ -330,20 +334,24 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		//For example, if the original image is 1.5x the size of the scaled
 		//image, and your offset is (10, 20), your original image offset
 		//values should be (15, 30). 
-		float originalImageOffsetX = (-desplazamientoX + x) / anchoRatio;
-		float originalImageOffsetY = (-desplazamientoY + y) / altoRatio;
-		
+		cx = (-desplazamientoX + x) / anchoRatio;
+		cy = (-desplazamientoY + y) / altoRatio;
+	}
+	
+	private void dibujarMarca()
+	{
+		BitmapDrawable bm = leerImagenesSD();
+				
 		// As described by Steve Pomeroy in a previous comment, 
 		// use the canvas to combine them.
 		// Start with the first in the constructor..
 		Bitmap bmOverlay = Bitmap.createBitmap(bm.getBitmap().getWidth(), bm.getBitmap().getHeight(), bm.getBitmap().getConfig());
 		Canvas comboImage = new Canvas(bmOverlay);
-		Bitmap marca = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.circulo), bm.getIntrinsicWidth()/escalaMarcador, bm.getIntrinsicWidth()/escalaMarcador, true);
-		cx = originalImageOffsetX - (marca.getWidth()/2);
-		cy = originalImageOffsetY - (marca.getHeight()/2);
+		Bitmap marca = getMarcador(bm.getIntrinsicWidth());
+		
 		// Then draw the second on top of that
 		comboImage.drawBitmap(bm.getBitmap(), new Matrix(), null);
-		comboImage.drawBitmap(marca, cx, cy, null);
+		comboImage.drawBitmap(marca, cx - (marca.getWidth()/2), cy - (marca.getHeight()/2), null);
 		
 		plano.setImageBitmap(bmOverlay);
 		//plano.invalidate();
@@ -351,6 +359,52 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		marca = null;
 		bm = null;
 		System.gc();
+	}
+
+	private Bitmap getMarcador(int anchoPlano)
+	{
+		Bitmap m = null;
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		int tipo = Integer.parseInt(pref. getString("marcador", "1"));
+		int color = Integer.parseInt(pref.getString("color", "1"));
+		int recurso = 0;
+		switch(tipo)
+		{
+		case 1:
+			switch (color)
+			{
+			case 1:
+				recurso = R.drawable.circulo_azul;
+				break;
+				
+			case 2:
+				recurso = R.drawable.circulo_rojo;
+				break;
+				
+			case 3:
+				recurso = R.drawable.circulo_verde;
+				break;
+			}
+			break;
+			
+		case 2:
+			switch (color)
+			{
+			case 1:
+				recurso = R.drawable.cruz_azul;
+				break;
+				
+			case 2:
+				recurso = R.drawable.cruz_roja;
+				break;
+				
+			case 3:
+				recurso = R.drawable.cruz_verde;
+				break;
+			}
+		}
+		m = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), recurso), anchoPlano/escalaMarcador, anchoPlano/escalaMarcador, true);
+		return m;
 	}
 	
 	private void limitDrag(Matrix m)
