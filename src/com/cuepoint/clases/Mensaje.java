@@ -1,12 +1,5 @@
 package com.cuepoint.clases;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-
-import android.text.format.DateFormat;
-import android.util.Log;
-
 /*
  * Clase que guarda un mensaje de texto recibido/enviado
  */
@@ -16,6 +9,9 @@ public class Mensaje {
 	private String texto;
 	private int numeroOrigenDestino;
 	private String fecha;
+	private float x;
+	private float y;
+	private int idPlano = 0;
 	
 	public Mensaje(int id, int tipo, String texto, int nroOrigen, String fecha) 
 	{
@@ -97,6 +93,38 @@ public class Mensaje {
 	 */
 	public void setFecha(String f) {
 		this.fecha = f;
+	}
+
+	public int getNumeroOrigenDestino() {
+		return numeroOrigenDestino;
+	}
+
+	public void setNumeroOrigenDestino(int numeroOrigenDestino) {
+		this.numeroOrigenDestino = numeroOrigenDestino;
+	}
+
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	public int getIdPlano() {
+		return idPlano;
+	}
+
+	public void setIdPlano(int idPlano) {
+		this.idPlano = idPlano;
 	}
 	
 	/**

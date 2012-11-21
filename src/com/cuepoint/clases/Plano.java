@@ -7,14 +7,25 @@ package com.cuepoint.clases;
  *
  */
 public class Plano{
+	protected int idPlano = 0;
 	protected String nombre = "";
 	protected String descripcion = "";
 	protected String rutaImagen = "";
 	
-	public Plano(String nombre, String rutaImagen)
+	public Plano(int id, String nombre, String rutaImagen, String descripc)
 	{
+		this.idPlano = id;
 		this.nombre = nombre;
 		this.rutaImagen = rutaImagen;
+		this.descripcion = descripc;
+	}
+
+	public int getIdPlano() {
+		return idPlano;
+	}
+
+	public void setIdPlano(int idPlano) {
+		this.idPlano = idPlano;
 	}
 
 	/**

@@ -32,6 +32,7 @@ public class MenuPrincipal extends Activity {
 				Bundle bundle = new Bundle();
 		        bundle.putString("nombre", data.getStringExtra("nombre"));
 		        bundle.putString("numero", data.getStringExtra("numero"));
+		        bundle.putInt("idPlano", 0);
 		        i.putExtras(bundle);
 				i.setComponent(new ComponentName(this, EnviarSMS.class));
 				startActivity(i);

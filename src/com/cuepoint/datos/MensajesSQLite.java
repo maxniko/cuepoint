@@ -85,15 +85,29 @@ public class MensajesSQLite {
          
         // Insertar datos en la base de datos
         SQLiteDatabase db = pdb.getWritableDatabase();
-        
         StringBuilder sb = new StringBuilder();
-        sb.append("INSERT INTO Mensajes (tipo, nroOrigen, texto, fecha) values (");
-        sb.append(mensaje.getTipo() + ",");
-        sb.append(mensaje.getNroOrigenDestino() + ",");
-        sb.append("'" + mensaje.getTexto() + "','");
-        sb.append(mensaje.getFecha());
-        sb.append("');");
         
+        if(mensaje.getIdPlano() == 0)
+        {
+	        sb.append("INSERT INTO Mensajes (tipo, nroOrigen, texto, fecha) values (");
+	        sb.append(mensaje.getTipo() + ",");
+	        sb.append(mensaje.getNroOrigenDestino() + ",");
+	        sb.append("'" + mensaje.getTexto() + "','");
+	        sb.append(mensaje.getFecha());
+	        sb.append("');");
+        }
+        else
+        {
+        	sb.append("INSERT INTO Mensajes (tipo, nroOrigen, texto, fecha, coordenadaX, coordenadaY, idPlano) values (");
+	        sb.append(mensaje.getTipo() + ",");
+	        sb.append(mensaje.getNroOrigenDestino() + ",");
+	        sb.append("'" + mensaje.getTexto() + "','");
+	        sb.append(mensaje.getFecha() + "','");
+	        sb.append(mensaje.getX() + "','");
+	        sb.append(mensaje.getY() + "','");
+	        sb.append(mensaje.getIdPlano());
+	        sb.append("');");
+        }
         //Si hemos abierto correctamente la base de datos
         if(db != null)
         {

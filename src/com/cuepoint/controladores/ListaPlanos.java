@@ -36,7 +36,9 @@ public class ListaPlanos extends Activity {
         	  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         	    Intent intent = new Intent(view.getContext(), Imagen.class);
         	    String dir = lista.get(position).getRutaImagen();
+        	    int idPlano = lista.get(position).getIdPlano();
         	    intent.putExtra("path", dir );
+        	    intent.putExtra("idPlano", idPlano);
         	    startActivity(intent);
         	  }
         	});
@@ -50,31 +52,19 @@ public class ListaPlanos extends Activity {
     	//Abrimos la base de datos 'Planos'
         PlanosSQLite pdb = new PlanosSQLite(this, "Planos", null, 1);
         SQLiteDatabase db = pdb.getReadableDatabase();
- 
-        /* Insertar datos en la base de datos
-        SQLiteDatabase db = pdb.getWritableDatabase();
- 
-        //Si hemos abierto correctamente la base de datos
-        if(db != null)
-        {
-            db.execSQL("");
-            //Cerramos la base de datos
-            db.close();
-        }
-    	*/
         
         //Leer datos de la base de datos
-        Cursor c = db.rawQuery("SELECT nombre,descripcion,path FROM Planos", null);
+        Cursor c = db.rawQuery("SELECT idPlano,nombre,descripcion,path FROM Planos", null);
         
         //Nos aseguramos de que existe al menos un registro
         if (c.moveToFirst()) {
             //Recorremos el cursor hasta que no haya más registros
             do {
-                 String nombre = c.getString(0);
-                 String desc = c.getString(1);
-                 String path = c.getString(2);
-                 Plano p = new Plano(nombre, path);
-                 p.setDescripcion(desc);
+            	int id = c.getInt(0);
+                 String nombre = c.getString(1);
+                 String desc = c.getString(2);
+                 String path = c.getString(3);
+                 Plano p = new Plano(id,nombre, path, desc);
                  items.add(p);
             } while(c.moveToNext());
        }

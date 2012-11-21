@@ -21,7 +21,7 @@ public class SMSReceiver extends BroadcastReceiver {
 		String nroOrigen = "";
 		long tiempo = 0;
 		// codigo que deberia tener el mensaje para que se active la aplicacion
-		String codigo = "<cuepoint/>";
+		String codigo = "<cuepoint";
 		
 		// obtenemos el array de estructuras pdus
 		Object[] pdus = (Object[]) bundle.get("pdus");
@@ -38,11 +38,11 @@ public class SMSReceiver extends BroadcastReceiver {
 			// guardamos la fecha y hora
 			tiempo = msgs[n].getTimestampMillis();
 		}
-		if (msj.length() >= 11)
+		if (msj.length() >= 9)
 		{
 			// comparamos si el mensaje tiene el codigo de nuestro programa
 			// si es asi se llama a la clase SMSRecibido
-			if (msj.substring(0, 11).equalsIgnoreCase(codigo)) 
+			if (msj.substring(0, 9).equalsIgnoreCase(codigo)) 
 			{
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.putExtra("NumeroOrigen", nroOrigen);

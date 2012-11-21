@@ -76,6 +76,9 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	 //coordenadas del marcador
 	 float cx;
 	 float cy;
+	 
+	 //id del plano
+	 int idPlano = 0;
     
     
 	@Override
@@ -169,6 +172,9 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 				Bundle bundle = new Bundle();
 		        bundle.putString("nombre", data.getStringExtra("nombre"));
 		        bundle.putString("numero", data.getStringExtra("numero"));
+		        bundle.putFloat("x", cx);
+		        bundle.putFloat("y", cy);
+		        bundle.putInt("idPlano", idPlano);
 		        i.putExtras(bundle);
 				i.setComponent(new ComponentName(this, EnviarSMS.class));
 				startActivity(i);
@@ -210,6 +216,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 				//Obtenemos la ruta a la tarjeta SD
 			    File ruta_sd = Environment.getExternalStorageDirectory();
 			    Bundle b = getIntent().getExtras();
+			    idPlano = b.getInt("idPlano");
 			    //Obtenemos la ruta al archivo del plano
 			    File imgFile = new File(ruta_sd.getAbsolutePath(), b.getString("path"));
 			    
