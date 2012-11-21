@@ -1,6 +1,11 @@
 package com.cuepoint.clases;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
+
+import android.text.format.DateFormat;
+import android.util.Log;
 
 /*
  * Clase que guarda un mensaje de texto recibido/enviado
@@ -10,9 +15,9 @@ public class Mensaje {
 	private int tipo;
 	private String texto;
 	private int numeroOrigenDestino;
-	private Date fecha;
+	private String fecha;
 	
-	public Mensaje(int id, int tipo, String texto, int nroOrigen, Date fecha) 
+	public Mensaje(int id, int tipo, String texto, int nroOrigen, String fecha) 
 	{
 		this.idMensaje = id;
 		this.tipo = tipo;
@@ -83,29 +88,33 @@ public class Mensaje {
 	/**
 	 * @return Objeto Date con la fecha y hora del mensaje
 	 */
-	public Date getFecha() {
+	public String getFecha() {
 		return fecha;
 	}
 
 	/**
 	 * @param Objeto Date con la fecha y hora del mensaje
 	 */
-	public void setFecha(Date f) {
+	public void setFecha(String f) {
 		this.fecha = f;
 	}
 	
 	/**
 	 * @return Fecha con formato: dd/mm/aa hh:mm:ss
-	 */
+	 *//*
 	public String getFechaFormateada()
 	{
+		Calendar c = Calendar.getInstance();
+        c.setTime(fecha);
+        c.setTimeZone(TimeZone.getTimeZone("America/Argentina/Buenos_Aires"));
 		StringBuilder f = new StringBuilder();
-		f.append(fecha.getDate() + "/");
-		f.append(fecha.getMonth() + "/");
-		f.append(fecha.getYear() + ", ");
-		f.append(fecha.getHours() + ":");
-		f.append(fecha.getMinutes() + ":");
-		f.append(fecha.getSeconds());
+		f.append(c.get(Calendar.DAY_OF_MONTH) + "/");
+		f.append(c.get(Calendar.MONTH) + "/");
+		f.append(c.get(Calendar.YEAR) + ", ");
+		f.append(c.get(Calendar.HOUR_OF_DAY) + ":");
+		f.append(c.get(Calendar.MINUTE) + ":");
+		f.append(c.get(Calendar.SECOND));
+		Log.i("Fecha", Long.toString(fecha.getTime()));
 		return f.toString();
-	}
+	}*/
 }

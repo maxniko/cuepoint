@@ -1,21 +1,28 @@
 package com.cuepoint.controladores;
 
 import java.util.ArrayList;
-import java.util.Date;
 import android.app.Activity;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ListView;
 import com.cuepoint.actividades.R;
 import com.cuepoint.clases.Mensaje;
 import com.cuepoint.datos.ItemMensajeAdapter;
-import com.cuepoint.datos.PlanosSQLite;
+import com.cuepoint.datos.MensajesSQLite;
 
 public class Mensajes extends Activity{
 	ArrayList<Mensaje> itemsE;
 	ArrayList<Mensaje> itemsR;
-	
+	boolean acepto = false;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,43 +53,84 @@ public class Mensajes extends Activity{
         }
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater mi = getMenuInflater();
+		mi.inflate(R.menu.mensajes, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		MensajesSQLite msql = new MensajesSQLite();
+		switch (item.getItemId()) {
+		case R.id.eliminarEnviados:
+			showDialog(1);
+			if (acepto) {
+				msql.borrarEnviados(this);
+			}
+			acepto = false;
+			return true;
+		case R.id.eliminarRecibidos:
+			showDialog(2);
+			if (acepto) {
+				msql.borrarRecibidos(this);
+			}
+			acepto = false;
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	@Override
+    protected Dialog onCreateDialog(int id) 
+	{
+    	Dialog dialogo = null;
+
+    	switch(id)
+    	{
+    		case 1:
+    			dialogo = crearDialogoConfirmacion("enviados");
+    			break;
+    		case 2:
+    			dialogo = crearDialogoConfirmacion("recibidos");
+    			break;
+    		default:
+    			dialogo = null;
+    			break;
+    	}
+    
+    	return dialogo;
+    }
+	
+	private Dialog crearDialogoConfirmacion(String mensaje)
+	{
+    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	
+    	builder.setTitle("Mensajes");
+    	builder.setMessage("¿Desea eliminar todos los mensajes " + mensaje + "?");
+    	builder.setPositiveButton("Aceptar", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				acepto = true;
+		    	finish();
+			}
+		});
+    	builder.setNegativeButton("Cancelar", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+				finish();
+			}
+		});
+    	
+    	return builder.create();
+    }
+	
 	private void cargarListas()
 	{
-		itemsE = new ArrayList<Mensaje>();
-		itemsR = new ArrayList<Mensaje>();
-    	
-    	//Abrimos la base de datos 'Planos'
-        PlanosSQLite pdb = new PlanosSQLite(this, "Planos", null, 1);
-        SQLiteDatabase db = pdb.getReadableDatabase();
-        
-        //Leer datos de la base de datos
-        Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto," +
-        		"(strftime('%s',fecha)*1000) FROM Mensajes ORDER BY fecha", null);
-        
-        //Nos aseguramos de que existe al menos un registro
-        if (c.moveToFirst()) {
-            //Recorremos el cursor hasta que no haya más registros
-            do {
-            	Mensaje m = new Mensaje();
-            	m.setIdMensaje(c.getInt(0));
-            	m.setTipo(c.getInt(1));
-            	m.setNroOrigen(c.getInt(2));
-            	m.setTexto(c.getString(3));
-            	long milisegundos = c.getLong(4);
-            	Date f = new Date(milisegundos);
-            	m.setFecha(f);
-            	//Mensaje enviado
-            	if(m.getTipo() == 0)
-            	{
-            		itemsE.add(m);
-            	}
-            	//Mensaje recibido
-            	else if(m.getTipo() == 1)
-            	{
-            		itemsR.add(m);
-            	}
-            } while(c.moveToNext());
-       }
-       db.close();
+		MensajesSQLite m = new MensajesSQLite();
+		itemsE = m.getMensajesEnviados(this);
+		itemsR = m.getMensajesRecibidos(this);
+		m = null;
 	}
 }

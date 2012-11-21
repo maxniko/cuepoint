@@ -1,5 +1,6 @@
 package com.cuepoint.controladores;
 
+import java.util.Date;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -11,6 +12,9 @@ import android.widget.Toast;
 
 import com.cuepoint.actividades.R;
 import com.cuepoint.clases.EditText_SMS;
+import com.cuepoint.clases.Mensaje;
+import com.cuepoint.clases.Util;
+import com.cuepoint.datos.MensajesSQLite;
 
 public class EnviarSMS extends Activity {
 	
@@ -61,6 +65,21 @@ public class EnviarSMS extends Activity {
     	SmsManager sms = SmsManager.getDefault();
     	sms.sendTextMessage(numero, null, text, null, null);
     	
+    	//Guardar mensaje en SQLite
+    	MensajesSQLite msql = new MensajesSQLite();
+		Mensaje m = new Mensaje();
+		m.setTipo(0);
+		m.setTexto(text);
+		m.setNroOrigen(Integer.parseInt(numero));
+		Date d = new Date();
+		Util u = new Util();
+		m.setFecha(u.getFechaFormateada(d));
+		msql.nuevoMensaje(this, m);
+		d = null;
+		u = null;
+		m = null;
+		msql = null;
+    	
     	finish();
     	
     	Toast toast = Toast.makeText(this, "SMS Enviado", Toast.LENGTH_LONG);
@@ -71,6 +90,4 @@ public class EnviarSMS extends Activity {
 	{
 		finish();
 	}
-	
-	
 }

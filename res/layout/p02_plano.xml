@@ -12,10 +12,10 @@
         android:text="@string/marcar_ubicacion"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="20sp" />
-
+
     <ImageView
         android:id="@+id/imageViewPlano"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_gravity="center|center_horizontal"
         android:layout_weight="0.16"
@@ -37,13 +37,13 @@
 	        android:layout_weight="1"
 	        android:contentDescription="@string/zoom"
 	        android:src="@drawable/zoom_out" />
-	
+	
 		<SeekBar
 		    android:id="@+id/seekBarZoom"
 		    android:layout_width="242dp"
 		    android:layout_height="wrap_content"
 		    android:max="100"
-		    android:progress="10" />
+		    android:progress="0" />
 
 		<ImageView
 		    android:id="@+id/zoomin"

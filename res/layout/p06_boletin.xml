@@ -10,10 +10,10 @@
         android:layout_height="wrap_content"
         android:text="@string/boletin"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <WebView
+
+    <TextView
         android:id="@+id/boletin"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

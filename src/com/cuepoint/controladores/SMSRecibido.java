@@ -1,5 +1,11 @@
 package com.cuepoint.controladores;
 
+import java.util.Date;
+
+import com.cuepoint.clases.Mensaje;
+import com.cuepoint.clases.Util;
+import com.cuepoint.datos.MensajesSQLite;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -22,6 +28,8 @@ public class SMSRecibido extends Activity {
 	private static final int DIALOGO_SELECCION = 3;
 	String nombre = "";
 	String numero = "";
+	String texto = "";
+	long tiempo = 0;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,10 +40,14 @@ public class SMSRecibido extends Activity {
         {
         	//Obtengo el numero de quien mando el sms
         	numero = i.getStringExtra("NumeroOrigen");
+        	//Obtengo el texto del mensaje
+        	texto = i.getStringExtra("Texto");
+        	//Obtengo la fecha en milisegundos
+        	tiempo = i.getLongExtra("Fecha", 0);
         }
         catch(Exception e)
         {
-        	Log.e("Numero SMSRecibido", "No se pudo leer el numero");
+        	Log.e("SMSRecibido", "No se pudo leer el numero, texto o fecha");
         }
         
         
@@ -67,11 +79,27 @@ public class SMSRecibido extends Activity {
                     numero = mCursor.getString(numberIndex);
                 } while (mCursor.moveToNext());
             }
+            guardarMensajeEnSQLite();
           //El vibrador del dispositivo
             Vibrator vibrator =(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             vibrator.vibrate(2000);
         showDialog(DIALOGO_CONFIRMACION);
     }
+	
+	protected void guardarMensajeEnSQLite()
+	{
+		MensajesSQLite msql = new MensajesSQLite();
+		Mensaje m = new Mensaje();
+		m.setTipo(1);
+		m.setTexto(texto);
+		m.setNroOrigen(Integer.parseInt(numero));
+		Date d = new Date(tiempo);
+		Util u = new Util();
+		m.setFecha(u.getFechaFormateada(d));
+		msql.nuevoMensaje(this, m);
+		m = null;
+		msql = null;
+	}
 	
 	@Override
     protected Dialog onCreateDialog(int id) 

@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class PlanosSQLite extends SQLiteOpenHelper{
 
 	String sqlCreate = "CREATE TABLE Planos (idPlano INTEGER, nombre TEXT, path TEXT, rank INTEGER); +" +
-			"INSERT INTO Planos (idPlano, nombre, path, rank) values (1,'Templo UAP', 'iglesia.jpg', 0);";
+			"INSERT INTO Planos (idPlano, nombre, path, rank) values (1,'Templo UAP', 'templo.png', 0);";
 	
 	 
     public PlanosSQLite(Context contexto, String nombre,

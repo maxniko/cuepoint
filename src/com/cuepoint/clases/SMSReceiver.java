@@ -3,7 +3,6 @@ package com.cuepoint.clases;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 
@@ -20,6 +19,7 @@ public class SMSReceiver extends BroadcastReceiver {
 		SmsMessage [] msgs = null;
 		String msj = "";
 		String nroOrigen = "";
+		long tiempo = 0;
 		// codigo que deberia tener el mensaje para que se active la aplicacion
 		String codigo = "<cuepoint/>";
 		
@@ -35,6 +35,8 @@ public class SMSReceiver extends BroadcastReceiver {
 			nroOrigen = msgs[n].getOriginatingAddress();
 			// guardamos el mensaje
 			msj = msgs[n].getMessageBody().toString();
+			// guardamos la fecha y hora
+			tiempo = msgs[n].getTimestampMillis();
 		}
 		if (msj.length() >= 11)
 		{
@@ -44,6 +46,8 @@ public class SMSReceiver extends BroadcastReceiver {
 			{
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.putExtra("NumeroOrigen", nroOrigen);
+				i.putExtra("Texto", msj);
+				i.putExtra("Fecha", tiempo);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				i.setClass(context, com.cuepoint.controladores.SMSRecibido.class);
 				context.startActivity(i);

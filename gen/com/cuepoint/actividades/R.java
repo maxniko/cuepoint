@@ -23,13 +23,14 @@ public final class R {
     public static final class drawable {
         public static final int cancelar=0x7f020000;
         public static final int circulo=0x7f020001;
-        public static final int enviar=0x7f020002;
-        public static final int flecha_verde=0x7f020003;
-        public static final int ic_action_search=0x7f020004;
-        public static final int ic_launcher=0x7f020005;
-        public static final int opciones=0x7f020006;
-        public static final int zoom_in=0x7f020007;
-        public static final int zoom_out=0x7f020008;
+        public static final int delete=0x7f020002;
+        public static final int enviar=0x7f020003;
+        public static final int flecha_verde=0x7f020004;
+        public static final int ic_action_search=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int opciones=0x7f020007;
+        public static final int zoom_in=0x7f020008;
+        public static final int zoom_out=0x7f020009;
     }
     public static final class id {
         public static final int Button01=0x7f0a0008;
@@ -42,6 +43,8 @@ public final class R {
         public static final int button6=0x7f0a000a;
         public static final int cancelar=0x7f0a0019;
         public static final int descripcion=0x7f0a0016;
+        public static final int eliminarEnviados=0x7f0a001b;
+        public static final int eliminarRecibidos=0x7f0a001c;
         public static final int enviar=0x7f0a0018;
         public static final int imageView1=0x7f0a0017;
         public static final int imageViewPlano=0x7f0a000c;
@@ -75,6 +78,7 @@ public final class R {
     }
     public static final class menu {
         public static final int enviar=0x7f090000;
+        public static final int mensajes=0x7f090001;
     }
     public static final class string {
         public static final int abrir=0x7f07001c;
