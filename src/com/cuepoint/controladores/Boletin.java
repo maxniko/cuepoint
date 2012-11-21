@@ -1,17 +1,17 @@
 package com.cuepoint.controladores;
 
-import com.cuepoint.actividades.R;
-import com.cuepoint.datos.CargaDatosWS;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.webkit.WebView;
+
+import com.cuepoint.actividades.R;
+import com.cuepoint.datos.CargaDatosWS;
 
 public class Boletin extends Activity{
-	//WebView boletin;
-	TextView boletin;
+	WebView boletin;
+	//TextView boletin;
 	String res = "";
 	private ProgressDialog pd;
 
@@ -21,15 +21,15 @@ public class Boletin extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p06_boletin);
         
-        //boletin = (WebView) findViewById(R.id.boletin);
-        //boletin.loadUrl("http://www.uap.edu.ar/es/boletiniglesia");
-        boletin = (TextView) findViewById(R.id.boletin);
+        boletin = (WebView) findViewById(R.id.boletin);
+        boletin.loadUrl("http://www.uap.edu.ar/es/boletiniglesia");
+        //boletin = (TextView) findViewById(R.id.boletin);
         // Usamos un AsyncTask, para poder mostrar una ventana de por favor espere, mientras se consulta el servicio web
-		 new DownloadTask2().execute("");
-		 pd = ProgressDialog.show(this, "Por favor espere","Consultando Boletín", true, false);
+		 //new DownloadTask2().execute("");
+		 //pd = ProgressDialog.show(this, "Por favor espere","Consultando Boletín", true, false);
 
     }
-	
+	/*
 	//Tarea en Background
 		private class DownloadTask2 extends AsyncTask<String, Void, Object> {
 			protected Integer doInBackground(String... args) {
@@ -46,7 +46,7 @@ public class Boletin extends Activity{
 				boletin.setText(res);
 				super.onPostExecute(result);
 			}
-		}
+		}*/
 
 
 }

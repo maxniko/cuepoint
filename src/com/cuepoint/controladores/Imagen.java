@@ -16,6 +16,7 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,6 +35,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.cuepoint.actividades.R;
+import com.cuepoint.datos.CargaDatosWS;
 
 /**
  * @author Silvio
@@ -77,8 +79,8 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	 private int escalaMarcador = 20;
 	 
 	 //coordenadas del marcador
-	 float cx;
-	 float cy;
+	 float cx = 0;
+	 float cy = 0;
 	 
 	 //id del plano
 	 int idPlano = 0;
@@ -91,6 +93,8 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p02_plano);
+        
+        
         
         mSeekBar = (SeekBar)findViewById(R.id.seekBarZoom);
         mSeekBar.setOnSeekBarChangeListener(this);
@@ -115,6 +119,11 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
         {
         	Toast toast = Toast.makeText(this, "No se encontró la imagen", Toast.LENGTH_LONG);
     		toast.show();
+        }
+        
+        if(cx != 0)
+        {
+        	dibujarMarca();
         }
     }
 	
@@ -165,7 +174,6 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			Intent in = new Intent();
 			in.setComponent(new ComponentName(this, Preferencias.class));
 			startActivity(in);
-			dibujarMarca();
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -252,59 +260,64 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 	case MotionEvent.ACTION_DOWN:
 		 		savedMatrix.set(matrix);
 		 		start.set(event.getX(), event.getY());
-		 		mode = DRAG;
-		 		touchInitialTime = (int) event.getEventTime();
+		 		mode = NONE;
 		 		break;
 		 		
 		 	case MotionEvent.ACTION_UP:
 		 		//int touchFinalTime = (int) event.getEventTime();
 		 		//if (mode != NONE && (touchFinalTime - touchInitialTime > 1000))
-		 		if (mode != NONE)
+		 		if (mode == NONE)
 		 		{
 		 			calcularCoordenadasImagen(event.getX(), event.getY());
 		 			dibujarMarca();
 		 		}
+		 		else if (mode == DRAG)
+		 		{/*
+		 			matrix.set(savedMatrix);
+			 		
+			 		float[] matrixValues = new float[9];
+			 		matrix.set(savedMatrix);
+			 		matrix.getValues(matrixValues);
+			 		
+			 		float imagenX = matrixValues[2]; // coordenada X de matrix (la imagen) relativo a ImageView
+			 		float imagenY = matrixValues[5]; // coordenada Y de matrix (la imagen) relativo a ImageView
+			 		// Ancho actual de la imagen
+			 		float anchoImagen = matrixValues[0] * (((ImageView) view).getDrawable().getIntrinsicWidth());
+			 		// Alto actual de la imagen
+			 		float altoImagen = matrixValues[4] * (((ImageView) view).getDrawable().getIntrinsicHeight());
+			 		
+			 		// Ancho ImageView que contiene la imagen
+			 		float anchoIV = view.getDrawable().getBounds().width();
+			 		// Alto ImageView que contiene la imagen
+			 		float altoIV = view.getDrawable().getBounds().height();
+			 		
+			        //if image will go outside left bound
+			        if (imagenX < 0 && (imagenX + anchoImagen) < anchoIV){
+			        	if(anchoImagen >= anchoIV){
+			        		
+			        	}
+			            
+			        }
+			        //if image will go outside right bound
+			        if(matrixX + dx + width > view.getWidth()){
+			            dx = view.getWidth() - matrixX - width;
+			        }
+			        //if image will go oustside top bound
+			        if (matrixY + dy < 0){
+			            dy = -matrixY;
+			        }
+			        //if image will go outside bottom bound
+			        if(matrixY + dy + height > view.getHeight()){
+			            dy = view.getHeight() - matrixY - height;
+			        }
+			        matrix.postTranslate(dx, dy);*/ 
+		 		}
 		 		break;
 		 		
 		 	case MotionEvent.ACTION_MOVE:
-		 		mode = NONE;
+		 		mode = DRAG;
 		 		matrix.set(savedMatrix);
-		 		
-		 		float dx; // postTranslate X distance
-		 		float dy; // postTranslate Y distance
-		 		float[] matrixValues = new float[9];
-		 		float matrixX = 0; // X coordinate of matrix inside the ImageView
-		 		float matrixY = 0; // Y coordinate of matrix inside the ImageView
-		 		float width = 0; // width of drawable
-		 		float height = 0; // height of drawable
-		 		
-		 		matrix.set(savedMatrix);
-		 		matrix.getValues(matrixValues);
-		 		matrixX = matrixValues[2];
-		        matrixY = matrixValues[5];
-		        width = matrixValues[0] * (((ImageView) view).getDrawable().getIntrinsicWidth());
-		        height = matrixValues[4] * (((ImageView) view).getDrawable().getIntrinsicHeight());
-
-		        dx = event.getX() - start.x;
-		        dy = event.getY() - start.y;
-
-		        //if image will go outside left bound
-		        if (matrixX + dx < 0){
-		            dx = -matrixX;
-		        }
-		        //if image will go outside right bound
-		        if(matrixX + dx + width > view.getWidth()){
-		            dx = view.getWidth() - matrixX - width;
-		        }
-		        //if image will go oustside top bound
-		        if (matrixY + dy < 0){
-		            dy = -matrixY;
-		        }
-		        //if image will go outside bottom bound
-		        if(matrixY + dy + height > view.getHeight()){
-		            dy = view.getHeight() - matrixY - height;
-		        }
-		        matrix.postTranslate(dx, dy); 
+		 		matrix.postTranslate(event.getX() - start.x, event.getY() - start.y);
 		 		break;
 		 }
 		 
