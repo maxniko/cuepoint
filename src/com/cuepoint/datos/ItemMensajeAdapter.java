@@ -43,7 +43,7 @@ public class ItemMensajeAdapter extends BaseAdapter{
 	    Mensaje item = items.get(position);
 	         
 	    TextView nombre = (TextView) vi.findViewById(R.id.nombre);
-	    nombre.setText(Integer.toString(item.getNroOrigenDestino()));
+	    nombre.setText(Integer.toString(item.getNumeroOrigenDestino()));
 	    
 	    TextView descr = (TextView) vi.findViewById(R.id.descripcion);
 	    descr.setText(item.getFecha());

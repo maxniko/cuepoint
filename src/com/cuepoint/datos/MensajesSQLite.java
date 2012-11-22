@@ -19,7 +19,7 @@ public class MensajesSQLite {
 		itemsE = new ArrayList<Mensaje>();
     	
     	//Abrimos la base de datos 'Planos'
-        PlanosSQLite pdb = new PlanosSQLite(contexto, "Planos", null, 1);
+		ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
         SQLiteDatabase db = pdb.getReadableDatabase();
         
         //Leer datos de la base de datos
@@ -33,7 +33,7 @@ public class MensajesSQLite {
             do {
             	Mensaje m = new Mensaje();
             	m.setIdMensaje(c.getInt(0));
-            	m.setNroOrigen(c.getInt(1));
+            	m.setNumeroOrigenDestino(c.getInt(1));
             	m.setTexto(c.getString(2));
             	//long milisegundos = c.getLong(3);
             	//Date f = new Date(milisegundos);
@@ -51,7 +51,7 @@ public class MensajesSQLite {
 		itemsR = new ArrayList<Mensaje>();
     	
     	//Abrimos la base de datos 'Planos'
-        PlanosSQLite pdb = new PlanosSQLite(contexto, "Planos", null, 1);
+		ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
         SQLiteDatabase db = pdb.getReadableDatabase();
         
         //Leer datos de la base de datos
@@ -65,7 +65,7 @@ public class MensajesSQLite {
             do {
             	Mensaje m = new Mensaje();
             	m.setIdMensaje(c.getInt(0));
-            	m.setNroOrigen(c.getInt(1));
+            	m.setNumeroOrigenDestino(c.getInt(1));
             	m.setTexto(c.getString(2));
             	//long milisegundos = c.getLong(3);
             	//Date f = new Date(milisegundos);
@@ -81,7 +81,7 @@ public class MensajesSQLite {
 	public void nuevoMensaje(Context contexto, Mensaje mensaje)
 	{
     	//Abrimos la base de datos 'Planos'
-        PlanosSQLite pdb = new PlanosSQLite(contexto, "Planos", null, 1);
+		ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
          
         // Insertar datos en la base de datos
         SQLiteDatabase db = pdb.getWritableDatabase();
@@ -91,7 +91,7 @@ public class MensajesSQLite {
         {
 	        sb.append("INSERT INTO Mensajes (tipo, nroOrigen, texto, fecha) values (");
 	        sb.append(mensaje.getTipo() + ",");
-	        sb.append(mensaje.getNroOrigenDestino() + ",");
+	        sb.append(mensaje.getNumeroOrigenDestino() + ",");
 	        sb.append("'" + mensaje.getTexto() + "','");
 	        sb.append(mensaje.getFecha());
 	        sb.append("');");
@@ -100,7 +100,7 @@ public class MensajesSQLite {
         {
         	sb.append("INSERT INTO Mensajes (tipo, nroOrigen, texto, fecha, coordenadaX, coordenadaY, idPlano) values (");
 	        sb.append(mensaje.getTipo() + ",");
-	        sb.append(mensaje.getNroOrigenDestino() + ",");
+	        sb.append(mensaje.getNumeroOrigenDestino() + ",");
 	        sb.append("'" + mensaje.getTexto() + "','");
 	        sb.append(mensaje.getFecha() + "','");
 	        sb.append(mensaje.getX() + "','");
@@ -121,7 +121,7 @@ public class MensajesSQLite {
 	public void borrarEnviados(Context contexto)
 	{
 		//Abrimos la base de datos 'Planos'
-        PlanosSQLite pdb = new PlanosSQLite(contexto, "Planos", null, 1);
+		ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
          
         // Insertar datos en la base de datos
         SQLiteDatabase db = pdb.getWritableDatabase();
@@ -139,7 +139,7 @@ public class MensajesSQLite {
 	public void borrarRecibidos(Context contexto)
 	{
 		//Abrimos la base de datos 'Planos'
-        PlanosSQLite pdb = new PlanosSQLite(contexto, "Planos", null, 1);
+		ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
          
         // Insertar datos en la base de datos
         SQLiteDatabase db = pdb.getWritableDatabase();

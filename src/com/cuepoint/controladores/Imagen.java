@@ -35,6 +35,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.cuepoint.actividades.R;
+import com.cuepoint.clases.Plano;
 import com.cuepoint.datos.CargaDatosWS;
 
 /**
@@ -93,8 +94,6 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p02_plano);
-        
-        
         
         mSeekBar = (SeekBar)findViewById(R.id.seekBarZoom);
         mSeekBar.setOnSeekBarChangeListener(this);
@@ -199,6 +198,16 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		}
 	}
 	
+	private Plano getPlano()
+	{
+		Plano p = new Plano();
+		Bundle b = getIntent().getExtras();
+		
+		p = b.getParcelable("Plano");
+		
+	    return p;
+	}
+	
 	public BitmapDrawable leerImagenesSD()
 	{
 		BitmapDrawable imagen = null;
@@ -230,10 +239,9 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			{
 				//Obtenemos la ruta a la tarjeta SD
 			    File ruta_sd = Environment.getExternalStorageDirectory();
-			    Bundle b = getIntent().getExtras();
-			    idPlano = b.getInt("idPlano");
+			    
 			    //Obtenemos la ruta al archivo del plano
-			    File imgFile = new File(ruta_sd.getAbsolutePath(), b.getString("path"));
+			    File imgFile = new File(ruta_sd.getAbsolutePath(), getPlano().getRutaImagen());
 			    
 			    if(imgFile.exists()){
 			    	imagen = (BitmapDrawable) BitmapDrawable.createFromPath(imgFile.getAbsolutePath());
@@ -245,6 +253,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		catch (Exception ex)
 		{
 		    Log.e("Ficheros", "Error al abrir el fichero de la tarjeta SD");
+		    Log.e("Ficheros", ex.getMessage());
 		}
 		System.gc();
 		return imagen;
@@ -272,7 +281,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 			dibujarMarca();
 		 		}
 		 		else if (mode == DRAG)
-		 		{/*
+		 		{
 		 			matrix.set(savedMatrix);
 			 		
 			 		float[] matrixValues = new float[9];
@@ -297,7 +306,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			        		
 			        	}
 			            
-			        }
+			        }/*
 			        //if image will go outside right bound
 			        if(matrixX + dx + width > view.getWidth()){
 			            dx = view.getWidth() - matrixX - width;
@@ -310,7 +319,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			        if(matrixY + dy + height > view.getHeight()){
 			            dy = view.getHeight() - matrixY - height;
 			        }
-			        matrix.postTranslate(dx, dy);*/ 
+			        matrix.postTranslate(dx, dy);*/
 		 		}
 		 		break;
 		 		

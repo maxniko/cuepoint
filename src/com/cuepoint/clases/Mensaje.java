@@ -6,7 +6,7 @@ package com.cuepoint.clases;
 public class Mensaje {
 	private int idMensaje;
 	private int tipo;
-	private String texto;
+	private String textoOpcional;
 	private int numeroOrigenDestino;
 	private String fecha;
 	private float x;
@@ -17,7 +17,7 @@ public class Mensaje {
 	{
 		this.idMensaje = id;
 		this.tipo = tipo;
-		this.texto = texto;
+		this.textoOpcional = texto;
 		this.numeroOrigenDestino = nroOrigen;
 		this.fecha = fecha;
 	}
@@ -40,14 +40,14 @@ public class Mensaje {
 	}
 
 	/**
-	 * @return Tipo de mensaje (0: enviado, 1:recibido)
+	 * @return Tipo de mensaje (0: enviado solicitud, 1:enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
 	 */
 	public int getTipo() {
 		return tipo;
 	}
 
 	/**
-	 * @param Tipo de mensaje (0: enviado, 1:recibido)
+	 * @param Tipo de mensaje (0: enviado solicitud, 1:enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
 	 */
 	public void setTipo(int tipo) {
 		this.tipo = tipo;
@@ -57,28 +57,14 @@ public class Mensaje {
 	 * @return Cuerpo del mensaje
 	 */
 	public String getTexto() {
-		return texto;
+		return textoOpcional;
 	}
 
 	/**
 	 * @param Cuerpo del mensaje
 	 */
 	public void setTexto(String texto) {
-		this.texto = texto;
-	}
-
-	/**
-	 * @return Integer con el numero enviado/recibido
-	 */
-	public int getNroOrigenDestino() {
-		return numeroOrigenDestino;
-	}
-
-	/**
-	 * @param Integer con el numero enviado/recibido
-	 */
-	public void setNroOrigen(int nroOrigenDestino) {
-		this.numeroOrigenDestino = nroOrigenDestino;
+		this.textoOpcional = texto;
 	}
 
 	/**

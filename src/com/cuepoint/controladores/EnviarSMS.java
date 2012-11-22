@@ -73,9 +73,9 @@ public class EnviarSMS extends Activity {
 		sb.append("<cuepoint");
 		if(idPlano > 0)
 		{
-			sb.append(cx + ",");
+			sb.append("," + cx + ",");
 			sb.append(cy + ",");
-			sb.append(idPlano);
+			sb.append(idPlano + ",");
 		}
 		sb.append("/>" + msj);
     	
@@ -88,7 +88,7 @@ public class EnviarSMS extends Activity {
 		Mensaje m = new Mensaje();
 		m.setTipo(0);
 		m.setTexto(sb.toString());
-		m.setNroOrigen(Integer.parseInt(numero));
+		m.setNumeroOrigenDestino((Integer.parseInt(numero)));
 		Date d = new Date();
 		Util u = new Util();
 		m.setFecha(u.getFechaFormateada(d));

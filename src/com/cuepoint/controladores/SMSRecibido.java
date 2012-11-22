@@ -1,10 +1,14 @@
 package com.cuepoint.controladores;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.cuepoint.clases.Mensaje;
+import com.cuepoint.clases.Plano;
 import com.cuepoint.clases.Util;
+import com.cuepoint.datos.ItemPlanoAdapter;
 import com.cuepoint.datos.MensajesSQLite;
+import com.cuepoint.datos.PlanosSQLite;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,84 +24,131 @@ import android.os.Vibrator;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Data;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 
 public class SMSRecibido extends Activity {
 	
-	private static final int DIALOGO_ALERTA = 1;
-	private static final int DIALOGO_CONFIRMACION = 2;
-	private static final int DIALOGO_SELECCION = 3;
+	private static final int SOLICITUD = 1;
+	private static final int RESPUESTA = 2;
+	
+	Mensaje mensaje = null;
 	String nombre = "";
-	String numero = "";
-	String texto = "";
+	String textoSMS = "";
+	
 	long tiempo = 0;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        mensaje = new Mensaje();
         Intent i = getIntent();
         try
         {
         	//Obtengo el numero de quien mando el sms
-        	numero = i.getStringExtra("NumeroOrigen");
+        	mensaje.setNumeroOrigenDestino(Integer.parseInt(i.getStringExtra("NumeroOrigen")));
         	//Obtengo el texto del mensaje
-        	texto = i.getStringExtra("Texto");
+        	textoSMS = i.getStringExtra("Texto");
         	//Obtengo la fecha en milisegundos
-        	tiempo = i.getLongExtra("Fecha", 0);
+        	Date d = new Date(i.getLongExtra("Fecha", 0));
+    		Util u = new Util();
+    		mensaje.setFecha(u.getFechaFormateada(d));
         }
         catch(Exception e)
         {
         	Log.e("SMSRecibido", "No se pudo leer el numero, texto o fecha");
         }
         
-        
-        // Query: contacto con el numero de telefono ingresado
+        verTipoMensaje();
+        buscarNombreContacto();
+        extraerTextoDeMensaje();
+        guardarMensajeEnSQLite();
+        vibrar(2000);
+        if (mensaje.getTipo() == 2) {
+        	showDialog(SOLICITUD);
+        } else {
+        	showDialog(RESPUESTA);
+        }
+    }
+	
+	protected void verTipoMensaje()
+	{
+		//Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
+		if(textoSMS.substring(9, 10).equals("/"))
+		{
+			mensaje.setTipo(2);
+		}
+		else
+		{
+			mensaje.setTipo(3);
+			String [] t = textoSMS.split(",");
+			try
+			{
+				mensaje.setX(Float.parseFloat(t[1]));
+				mensaje.setY(Float.parseFloat(t[2]));
+				mensaje.setIdPlano(Integer.parseInt(t[3]));
+			}
+			catch (Exception e)
+			{
+				Log.e("Mensaje recibido", "ERROR AL CONVERTIR COORDENADAS");
+			}
+		}
+	}
+	
+	protected void extraerTextoDeMensaje()
+	{
+		String [ ] palabra = textoSMS.split(">");
+		if(palabra.length > 1)
+		{
+			mensaje.setTexto(palabra[1]);
+		}
+	}
+	
+	protected void vibrar(long milisegundos)
+	{
+		//El vibrador del dispositivo
+        Vibrator vibrator =(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(milisegundos);
+	}
+	
+	protected void buscarNombreContacto()
+	{
+		// Query: contacto con el numero de telefono ingresado
         //lanzamos una query al Content provider por medio del "contentresolver"
         //y guardamos la tabla de los resultados que nos devuelve con un Cursor
         //para iterar despues en las filas con el objeto de clase Cursor. 
         //(Es como una tabla de filas y columnas)
-     		Cursor mCursor = getContentResolver().query(
-     		Data.CONTENT_URI,
-     		new String[] { Data.DISPLAY_NAME, Phone.NUMBER, },
-     			Phone.NUMBER + " LIKE ? ",
-     			new String[] { "%"+ numero +"%" },
-     			Data.DISPLAY_NAME + " ASC");
-     		//estructura query= (tabla objetivo, campos a consultar, where, parametros, ordered by)
-            //ordenamos por orden alfabetico con campo Display_name.
+ 		Cursor mCursor = getContentResolver().query(
+ 		Data.CONTENT_URI,
+ 		new String[] { Data.DISPLAY_NAME, Phone.NUMBER, },
+ 			Phone.NUMBER + " LIKE ? ",
+ 			new String[] { "%"+ mensaje.getNumeroOrigenDestino() +"%" },
+ 			Data.DISPLAY_NAME + " ASC");
+ 		//estructura query= (tabla objetivo, campos a consultar, where, parametros, ordered by)
+        //ordenamos por orden alfabetico con campo Display_name.
 
-     		// Esto asocia el ciclo de vida del cursor al ciclo de vida de la Activity. Si
-            // la Activity para, el sistema libera el Cursor. No quedan recursos bloqueados.
-     		startManagingCursor(mCursor);
+ 		// Esto asocia el ciclo de vida del cursor al ciclo de vida de la Activity. Si
+        // la Activity para, el sistema libera el Cursor. No quedan recursos bloqueados.
+ 		startManagingCursor(mCursor);
 
-     		int nameIndex = mCursor.getColumnIndexOrThrow(Data.DISPLAY_NAME);
-            int numberIndex = mCursor.getColumnIndexOrThrow(Phone.NUMBER);
-            
-            
-            if (mCursor.moveToFirst()) {
-                do {
-                    nombre = mCursor.getString(nameIndex);
-                    numero = mCursor.getString(numberIndex);
-                } while (mCursor.moveToNext());
-            }
-            guardarMensajeEnSQLite();
-          //El vibrador del dispositivo
-            Vibrator vibrator =(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            vibrator.vibrate(2000);
-        showDialog(DIALOGO_CONFIRMACION);
-    }
+ 		int nameIndex = mCursor.getColumnIndexOrThrow(Data.DISPLAY_NAME);
+        int numberIndex = mCursor.getColumnIndexOrThrow(Phone.NUMBER);
+        
+        
+        if (mCursor.moveToFirst()) {
+            do {
+                nombre = mCursor.getString(nameIndex);
+                mensaje.setNumeroOrigenDestino(Integer.parseInt(mCursor.getString(numberIndex)));
+            } while (mCursor.moveToNext());
+        }
+
+	}
 	
 	protected void guardarMensajeEnSQLite()
 	{
 		MensajesSQLite msql = new MensajesSQLite();
-		Mensaje m = new Mensaje();
-		m.setTipo(1);
-		m.setTexto(texto);
-		m.setNroOrigen(Integer.parseInt(numero));
-		Date d = new Date(tiempo);
-		Util u = new Util();
-		m.setFecha(u.getFechaFormateada(d));
-		msql.nuevoMensaje(this, m);
-		m = null;
+		msql.nuevoMensaje(this, mensaje);
 		msql = null;
 	}
 	
@@ -108,14 +159,11 @@ public class SMSRecibido extends Activity {
 
     	switch(id)
     	{
-    		case DIALOGO_ALERTA:
-    			dialogo = crearDialogoAlerta();
+    		case SOLICITUD:
+    			dialogo = crearDialogoSolicitud();
     			break;
-    		case DIALOGO_CONFIRMACION:
-    			dialogo = crearDialogoConfirmacion();
-    			break;
-    		case DIALOGO_SELECCION:
-    			dialogo = crearDialogoSeleccion();
+    		case RESPUESTA:
+    			dialogo = crearDialogoRespuesta();
     			break;
     		default:
     			dialogo = null;
@@ -125,29 +173,14 @@ public class SMSRecibido extends Activity {
     	return dialogo;
     }
     
-    private Dialog crearDialogoAlerta()
-    {
-    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    	
-    	builder.setTitle("Informacion");
-    	builder.setMessage("Esto es un mensaje de alerta.");
-    	builder.setPositiveButton("OK", new OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		});
-    	
-    	return builder.create();
-    }
-    
-    private Dialog crearDialogoConfirmacion()
+    private Dialog crearDialogoSolicitud()
     {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	
     	builder.setTitle("CuePoint");
     	if (nombre.equals(""))
     	{
-    		builder.setMessage("El numero " + numero + " solicita su ubicacion a traves de CuePoint, ¿Desea responder ahora?");
+    		builder.setMessage("El numero " + mensaje.getNumeroOrigenDestino() + " solicita su ubicacion a traves de CuePoint, ¿Desea responder ahora?");
     	}
     	else
     	{
@@ -163,41 +196,45 @@ public class SMSRecibido extends Activity {
 		});
     	builder.setNegativeButton("Cancelar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Log.i("Dialogos", "Confirmacion Cancelada.");
 				dialog.cancel();
 				finish();
 			}
 		});
-    	
     	return builder.create();
     }
     
-    private Dialog crearDialogoSeleccion()
+    private Dialog crearDialogoRespuesta()
     {
-    	final String[] items = {"Español", "Inglés", "Francés"};
-    	
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	
-    	builder.setTitle("Selección");
-    	builder.setItems(items, new DialogInterface.OnClickListener() {
-    	    public void onClick(DialogInterface dialog, int item) {
-    	        Log.i("Dialogos", "Opción elegida: " + items[item]);
-    	    }
-    	});
-    	
-    	//Dialogo de selección simple
-//    	builder.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
-//			public void onClick(DialogInterface dialog, int item, boolean isChecked) {
-//				Log.i("Dialogos", "Opción elegida: " + items[item]);
-//			}
-//		});
-    	
-    	//Diálogo de selección múltiple
-//    	builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
-//    	    public void onClick(DialogInterface dialog, int item) {
-//    	        Log.i("Dialogos", "Opción elegida: " + items[item]);
-//    	    }
-//    	});
+    	builder.setTitle("CuePoint");
+    	if (nombre.equals(""))
+    	{
+    		builder.setMessage("El numero " + mensaje.getNumeroOrigenDestino() + " le envía su ubicacion a traves de CuePoint, ¿Desea ver ahora?");
+    	}
+    	else
+    	{
+    		builder.setMessage(nombre + " envía su ubicacion a traves de CuePoint, ¿Desea ver ahora?");
+    	}
+    	builder.setPositiveButton("Aceptar", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				PlanosSQLite psql = new PlanosSQLite();
+		        Plano p = psql.getPlanoPorId(SMSRecibido.this, mensaje.getIdPlano());
+		        
+		        Intent intent = new Intent(SMSRecibido.this, Imagen.class);
+		        Bundle b = new Bundle();
+		        b.putParcelable("Plano", p);
+		        intent.putExtras(b);
+		        startActivity(intent);
+		    	finish();
+			}
+		});
+    	builder.setNegativeButton("Cancelar", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+				finish();
+			}
+		});
     	
     	return builder.create();
     }

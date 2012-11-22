@@ -1,12 +1,15 @@
 package com.cuepoint.clases;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * 
  * @author Silvio
  * Clase que aloja la definicion de un plano
  *
  */
-public class Plano{
+public class Plano implements Parcelable{
 	protected int idPlano = 0;
 	protected String nombre = "";
 	protected String descripcion = "";
@@ -18,6 +21,37 @@ public class Plano{
 		this.nombre = nombre;
 		this.rutaImagen = rutaImagen;
 		this.descripcion = descripc;
+	}
+	
+	public Plano() {
+	}
+	
+	public Plano(Parcel parcel) {
+		readToParcel(parcel);
+	}
+
+	public static final Parcelable.Creator<Plano> CREATOR = new Parcelable.Creator<Plano>() {
+		public Plano createFromParcel(Parcel parcel) {
+			return new Plano(parcel);
+		}
+
+		public Plano[] newArray(int size) {
+			return new Plano[size];
+		}
+	};
+	
+	public void writeToParcel(Parcel parcel, int flags) {
+		parcel.writeInt(idPlano);
+		parcel.writeString(nombre);
+		parcel.writeString(descripcion);
+		parcel.writeString(rutaImagen);
+	}
+	
+	public void readToParcel(Parcel parcel){
+		idPlano = parcel.readInt();
+		nombre = parcel.readString();
+		descripcion = parcel.readString();
+		rutaImagen = parcel.readString();
 	}
 
 	public int getIdPlano() {
@@ -70,5 +104,8 @@ public class Plano{
 		this.rutaImagen = rutaImagen;
 	}
 	
-	
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

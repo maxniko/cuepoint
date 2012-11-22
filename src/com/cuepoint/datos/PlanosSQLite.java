@@ -1,39 +1,67 @@
 package com.cuepoint.datos;
 
+import java.util.ArrayList;
+
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.database.sqlite.SQLiteOpenHelper;
 
-public class PlanosSQLite extends SQLiteOpenHelper{
+import com.cuepoint.clases.Plano;
 
-	String sqlCreate = "CREATE TABLE Planos (idPlano INTEGER, nombre TEXT, path TEXT, rank INTEGER); +" +
-			"INSERT INTO Planos (idPlano, nombre, path, rank) values (1,'Templo UAP', 'templo.png', 0);";
-	
-	 
-    public PlanosSQLite(Context contexto, String nombre,
-                               CursorFactory factory, int version) {
-        super(contexto, nombre, factory, version);
+public class PlanosSQLite {
+    
+    public ArrayList<Plano> getPlanos(Context contexto)
+    {
+    	ArrayList<Plano> items = new ArrayList<Plano>();
+    	
+    	//Abrimos la base de datos 'Planos'
+        ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
+        SQLiteDatabase db = pdb.getReadableDatabase();
+        
+        //Leer datos de la base de datos
+        Cursor c = db.rawQuery("SELECT idPlano,nombre,descripcion,path FROM Planos", null);
+        
+        //Nos aseguramos de que existe al menos un registro
+        if (c.moveToFirst()) {
+            //Recorremos el cursor hasta que no haya más registros
+            do {
+            	int id = c.getInt(0);
+                 String nombre = c.getString(1);
+                 String desc = c.getString(2);
+                 String path = c.getString(3);
+                 Plano p = new Plano(id,nombre, path, desc);
+                 items.add(p);
+            } while(c.moveToNext());
+       }
+       db.close();
+       return items;
     }
- 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        //Se ejecuta la sentencia SQL de creación de la tabla
-        db.execSQL(sqlCreate);
-    }
- 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int versionAnterior, int versionNueva) {
-        //NOTA: Por simplicidad del ejemplo aquí utilizamos directamente la opción de
-        //      eliminar la tabla anterior y crearla de nuevo vacía con el nuevo formato.
-        //      Sin embargo lo normal será que haya que migrar datos de la tabla antigua
-        //      a la nueva, por lo que este método debería ser más elaborado.
- 
-        //Se elimina la versión anterior de la tabla
-        db.execSQL("DROP TABLE IF EXISTS Planos");
- 
-        //Se crea la nueva versión de la tabla
-        db.execSQL(sqlCreate);
+    
+    public Plano getPlanoPorId(Context contexto, int id)
+    {
+    	Plano p = null;
+    	//Abrimos la base de datos 'Planos'
+        ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
+        SQLiteDatabase db = pdb.getReadableDatabase();
+        
+        //String de consulta
+        String consulta = "SELECT idPlano,nombre,descripcion,path FROM Planos " +
+        		"WHERE idPlano = " + id + ";";
+        
+        //Leer datos de la base de datos
+        Cursor c = db.rawQuery(consulta, null);
+        
+        //Nos aseguramos de que existe al menos un registro
+        if (c.moveToFirst()) {
+	        int idP = c.getInt(0);
+            String nombre = c.getString(1);
+            String desc = c.getString(2);
+            String path = c.getString(3);
+            p = new Plano(idP,nombre, path, desc);
+        }
+        db.close();
+        
+    	return p;
     }
 
 }
