@@ -37,6 +37,7 @@ public class ListaPlanos extends Activity {
         		Plano plano = lista.get(position);
         	    Intent intent = new Intent(view.getContext(), Imagen.class);
         	    intent.putExtra("Plano", plano);
+        	    intent.putExtra("InsertarMarca", false);
         	    startActivity(intent);
         	  }
         	});

@@ -37,11 +37,12 @@
 	        android:layout_weight="1"
 	        android:contentDescription="@string/zoom"
 	        android:src="@drawable/zoom_out" />
-	
+	
 		<SeekBar
 		    android:id="@+id/seekBarZoom"
 		    android:layout_width="242dp"
 		    android:layout_height="wrap_content"
+		    android:layout_gravity="center_vertical"
 		    android:max="100"
 		    android:progress="0" />
 

@@ -13,10 +13,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,7 +34,7 @@ import android.widget.Toast;
 
 import com.cuepoint.actividades.R;
 import com.cuepoint.clases.Plano;
-import com.cuepoint.datos.CargaDatosWS;
+import com.cuepoint.clases.Punto;
 
 /**
  * @author Silvio
@@ -44,7 +42,7 @@ import com.cuepoint.datos.CargaDatosWS;
  */
 public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekBarChangeListener{
 	//variables para la escala
-    static final int ZOOM_MAX = 20;
+    static final int ZOOM_MAX = 10;
     static final int ZOOM_MIN = 0;
     private int ZOOM_ACTUAL = 0;
     private float scaleIn = 1.169f;
@@ -88,6 +86,11 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	 
 	 float altoOriginal;
 	 float anchoOriginal;
+	 
+	 //Si el mensaje ya trae las coordenadas como respuesta a una solicitud
+	 //no se puede insertar marcadores nuevos en esta imagen. Es sólo para mostrar
+	 //la posición de otra persona.
+	 boolean imagenAccesoEscritura = true;
     
     
 	@Override
@@ -103,6 +106,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
         BitmapDrawable d = leerImagenesSD();
         if(d != null)
         {
+        	savedMatrix.set(matrix);
         	DisplayMetrics dm = new DisplayMetrics();
         	getWindowManager().getDefaultDisplay().getMetrics(dm);
         	float pantalla = dm.widthPixels;
@@ -110,8 +114,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
         	float escala = pantalla / imagen;
 	        plano.setOnTouchListener(this);
 	        plano.setImageDrawable(d);
-	        savedMatrix.set(matrix);
-	        matrix.setScale(escala, escala);
+	        matrix.postScale(escala, escala);
 	        plano.setImageMatrix(matrix);
         }
         else
@@ -119,10 +122,13 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
         	Toast toast = Toast.makeText(this, "No se encontró la imagen", Toast.LENGTH_LONG);
     		toast.show();
         }
-        
-        if(cx != 0)
+        Bundle b = getIntent().getExtras();
+        if(b.getBoolean("InsertarMarca"))
         {
+        	cx = ((Punto) b.getParcelable("Punto")).getX();
+        	cy = ((Punto) b.getParcelable("Punto")).getY();
         	dibujarMarca();
+        	imagenAccesoEscritura = false;
         }
     }
 	
@@ -200,12 +206,8 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	
 	private Plano getPlano()
 	{
-		Plano p = new Plano();
 		Bundle b = getIntent().getExtras();
-		
-		p = b.getParcelable("Plano");
-		
-	    return p;
+		return b.getParcelable("Plano");
 	}
 	
 	public BitmapDrawable leerImagenesSD()
@@ -282,8 +284,6 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 		}
 		 		else if (mode == DRAG)
 		 		{
-		 			matrix.set(savedMatrix);
-			 		
 			 		float[] matrixValues = new float[9];
 			 		matrix.set(savedMatrix);
 			 		matrix.getValues(matrixValues);
@@ -337,7 +337,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	private void calcularCoordenadasImagen(float x, float y)
 	{
 		float[] values = new float[9];
-		savedMatrix.set(matrix);
+		matrix.set(savedMatrix);
 		matrix.getValues(values);
 		float desplazamientoX = values[Matrix.MTRANS_X];
 		float desplazamientoY = values[Matrix.MTRANS_Y];
@@ -363,7 +363,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	private void dibujarMarca()
 	{
 		BitmapDrawable bm = leerImagenesSD();
-				
+		matrix.set(savedMatrix);
 		// As described by Steve Pomeroy in a previous comment, 
 		// use the canvas to combine them.
 		// Start with the first in the constructor..
@@ -475,7 +475,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			matrix.postScale(scaleIn, scaleIn);
 			ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
 			iv.setImageMatrix(matrix);
-				
+			
 			actualizarSeekBar();
 		}
 	}
@@ -489,7 +489,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			matrix.postScale(scaleOut, scaleOut);
 			ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
 			iv.setImageMatrix(matrix);
-				
+			
 			actualizarSeekBar();
 		}
 	}
@@ -502,13 +502,13 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch)
 	{
-		if (progress%5 == 0)
+		if (progress%10 == 0)
 		{
-			if (ZOOM_ACTUAL < progress/5)
+			if (ZOOM_ACTUAL < progress/10)
 			{
 				if (ZOOM_ACTUAL < ZOOM_MAX)
 					 	{
-					ZOOM_ACTUAL = progress/5;
+					ZOOM_ACTUAL = progress/10;
 					savedMatrix.set(matrix);
 					matrix.postScale(scaleIn, scaleIn);
 					matrix.postTranslate(desplazZoomIn, desplazZoomIn);
@@ -516,11 +516,11 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 					iv.setImageMatrix(matrix);
 				}
 			}
-			else if (ZOOM_ACTUAL > progress/5)
+			else if (ZOOM_ACTUAL > progress/10)
 			{
 				if(ZOOM_ACTUAL > ZOOM_MIN)
 				{
-					ZOOM_ACTUAL = progress/5;
+					ZOOM_ACTUAL = progress/10;
 					savedMatrix.set(matrix);
 					matrix.postScale(scaleOut, scaleOut);
 					matrix.postTranslate(desplazZoomOut, desplazZoomOut);

@@ -1,12 +1,11 @@
 package com.cuepoint.controladores;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import com.cuepoint.clases.Mensaje;
 import com.cuepoint.clases.Plano;
+import com.cuepoint.clases.Punto;
 import com.cuepoint.clases.Util;
-import com.cuepoint.datos.ItemPlanoAdapter;
 import com.cuepoint.datos.MensajesSQLite;
 import com.cuepoint.datos.PlanosSQLite;
 
@@ -24,8 +23,6 @@ import android.os.Vibrator;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Data;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 
 public class SMSRecibido extends Activity {
 	
@@ -218,13 +215,17 @@ public class SMSRecibido extends Activity {
     	}
     	builder.setPositiveButton("Aceptar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
+				//Obtengo los datos del plano desde la base de datos
 				PlanosSQLite psql = new PlanosSQLite();
 		        Plano p = psql.getPlanoPorId(SMSRecibido.this, mensaje.getIdPlano());
 		        
+		        //Guardo las coordenadas en un objeto Point para pasar a la otra activity
+		        Punto xy = new Punto(mensaje.getX(), mensaje.getY());
+		        
 		        Intent intent = new Intent(SMSRecibido.this, Imagen.class);
-		        Bundle b = new Bundle();
-		        b.putParcelable("Plano", p);
-		        intent.putExtras(b);
+		        intent.putExtra("Plano", p);
+		        intent.putExtra("Punto", xy);
+		        intent.putExtra("InsertarMarca", true);
 		        startActivity(intent);
 		    	finish();
 			}
