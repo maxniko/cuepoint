@@ -60,6 +60,7 @@ public final class R {
         public static final int msjsRecibidos=0x7f0a0014;
         public static final int nombre=0x7f0a0010;
         public static final int opciones=0x7f0a001a;
+        public static final int responder=0x7f0a001d;
         public static final int seekBarZoom=0x7f0a000e;
         public static final int textView1=0x7f0a0000;
         public static final int textView2=0x7f0a0001;
@@ -84,6 +85,7 @@ public final class R {
     public static final class menu {
         public static final int enviar=0x7f090000;
         public static final int mensajes=0x7f090001;
+        public static final int responder=0x7f090002;
     }
     public static final class string {
         public static final int abrir=0x7f07001c;

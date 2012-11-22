@@ -50,9 +50,6 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
     private float desplazZoomIn = -50f;
     private float desplazZoomOut = 50f;
     
-    //variable que tendrá el tiempo de una pulsación en la pantalla
-    int touchInitialTime = 0;
-    
     //barra que actua de zoom
     SeekBar mSeekBar;
     
@@ -81,9 +78,6 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	 float cx = 0;
 	 float cy = 0;
 	 
-	 //id del plano
-	 int idPlano = 0;
-	 
 	 float altoOriginal;
 	 float anchoOriginal;
 	 
@@ -91,6 +85,8 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	 //no se puede insertar marcadores nuevos en esta imagen. Es sólo para mostrar
 	 //la posición de otra persona.
 	 boolean imagenAccesoEscritura = true;
+	 
+	 Plano imagenPlano;
     
     
 	@Override
@@ -103,7 +99,22 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
         
         plano = (ImageView) findViewById(R.id.imageViewPlano);
         
-        BitmapDrawable d = leerImagenesSD();
+        getPlano();
+        
+        cargarImagen();
+        
+        Bundle b = getIntent().getExtras();
+        if(b.getBoolean("InsertarMarca"))
+        {
+        	cx = ((Punto) b.getParcelable("Punto")).getX();
+        	cy = ((Punto) b.getParcelable("Punto")).getY();
+        	dibujarMarca();
+        	imagenAccesoEscritura = false;
+        }
+    }
+	protected void cargarImagen()
+	{
+		BitmapDrawable d = leerImagenesSD();
         if(d != null)
         {
         	savedMatrix.set(matrix);
@@ -122,15 +133,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
         	Toast toast = Toast.makeText(this, "No se encontró la imagen", Toast.LENGTH_LONG);
     		toast.show();
         }
-        Bundle b = getIntent().getExtras();
-        if(b.getBoolean("InsertarMarca"))
-        {
-        	cx = ((Punto) b.getParcelable("Punto")).getX();
-        	cy = ((Punto) b.getParcelable("Punto")).getY();
-        	dibujarMarca();
-        	imagenAccesoEscritura = false;
-        }
-    }
+	}
 	
 	 @Override
 	protected void onDestroy()
@@ -158,14 +161,28 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater mi = getMenuInflater();
-		mi.inflate(R.menu.enviar, menu);
+		if(imagenAccesoEscritura)
+		{
+			MenuInflater mi = getMenuInflater();
+			mi.inflate(R.menu.enviar, menu);
+		}
+		else
+		{
+			MenuInflater mi = getMenuInflater();
+			mi.inflate(R.menu.responder, menu);
+		}
 		return true;
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case R.id.responder:
+			cx = 0;
+			cy = 0;
+			imagenAccesoEscritura = true;
+			cargarImagen();
+			return true;
 		case R.id.enviar:
 			Intent i = new Intent();
 			i.setComponent(new ComponentName(this, ListaContactos.class));
@@ -194,7 +211,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		        bundle.putString("numero", data.getStringExtra("numero"));
 		        bundle.putFloat("x", cx);
 		        bundle.putFloat("y", cy);
-		        bundle.putInt("idPlano", idPlano);
+		        bundle.putInt("idPlano", imagenPlano.getIdPlano());
 		        i.putExtras(bundle);
 				i.setComponent(new ComponentName(this, EnviarSMS.class));
 				startActivity(i);
@@ -204,10 +221,10 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		}
 	}
 	
-	private Plano getPlano()
+	private void getPlano()
 	{
 		Bundle b = getIntent().getExtras();
-		return b.getParcelable("Plano");
+		imagenPlano = b.getParcelable("Plano");
 	}
 	
 	public BitmapDrawable leerImagenesSD()
@@ -243,7 +260,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			    File ruta_sd = Environment.getExternalStorageDirectory();
 			    
 			    //Obtenemos la ruta al archivo del plano
-			    File imgFile = new File(ruta_sd.getAbsolutePath(), getPlano().getRutaImagen());
+			    File imgFile = new File(ruta_sd.getAbsolutePath(), imagenPlano.getRutaImagen());
 			    
 			    if(imgFile.exists()){
 			    	imagen = (BitmapDrawable) BitmapDrawable.createFromPath(imgFile.getAbsolutePath());
@@ -263,8 +280,6 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	   
 	public boolean onTouch(View v, MotionEvent event)
 	 {
-		 ImageView view = (ImageView) v;
-		 
 		 // Handle touch events here...
 		 switch (event.getAction() & MotionEvent.ACTION_MASK)
 		 {
@@ -277,7 +292,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 	case MotionEvent.ACTION_UP:
 		 		//int touchFinalTime = (int) event.getEventTime();
 		 		//if (mode != NONE && (touchFinalTime - touchInitialTime > 1000))
-		 		if (mode == NONE)
+		 		if (mode == NONE && imagenAccesoEscritura)
 		 		{
 		 			calcularCoordenadasImagen(event.getX(), event.getY());
 		 			dibujarMarca();
@@ -291,14 +306,14 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			 		float imagenX = matrixValues[2]; // coordenada X de matrix (la imagen) relativo a ImageView
 			 		float imagenY = matrixValues[5]; // coordenada Y de matrix (la imagen) relativo a ImageView
 			 		// Ancho actual de la imagen
-			 		float anchoImagen = matrixValues[0] * (((ImageView) view).getDrawable().getIntrinsicWidth());
+			 		float anchoImagen = matrixValues[0] * (((ImageView) plano).getDrawable().getIntrinsicWidth());
 			 		// Alto actual de la imagen
-			 		float altoImagen = matrixValues[4] * (((ImageView) view).getDrawable().getIntrinsicHeight());
+			 		float altoImagen = matrixValues[4] * (((ImageView) plano).getDrawable().getIntrinsicHeight());
 			 		
 			 		// Ancho ImageView que contiene la imagen
-			 		float anchoIV = view.getDrawable().getBounds().width();
+			 		float anchoIV = plano.getDrawable().getBounds().width();
 			 		// Alto ImageView que contiene la imagen
-			 		float altoIV = view.getDrawable().getBounds().height();
+			 		float altoIV = plano.getDrawable().getBounds().height();
 			 		
 			        //if image will go outside left bound
 			        if (imagenX < 0 && (imagenX + anchoImagen) < anchoIV){
@@ -321,6 +336,11 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			        }
 			        matrix.postTranslate(dx, dy);*/
 		 		}
+		 		else if (!imagenAccesoEscritura)
+		 		{
+		 			Toast toast = Toast.makeText(this, "No se puede modificar la imagen", Toast.LENGTH_SHORT);
+		    		toast.show();
+		 		}
 		 		break;
 		 		
 		 	case MotionEvent.ACTION_MOVE:
@@ -330,7 +350,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 		break;
 		 }
 		 
-		 view.setImageMatrix(matrix);
+		 plano.setImageMatrix(matrix);
 		 return true; // indicate event was handled  
 	 }
 	
@@ -371,12 +391,13 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		Canvas comboImage = new Canvas(bmOverlay);
 		Bitmap marca = getMarcador(bm.getIntrinsicWidth());
 		
-		// Then draw the second on top of that
-		comboImage.drawBitmap(bm.getBitmap(), new Matrix(), null);
+		// Dibujar el plano sobre la imagen
+		comboImage.drawBitmap(bm.getBitmap(), matrix, null);
+		// Dibujar la marca sobre el plano
 		comboImage.drawBitmap(marca, cx - (marca.getWidth()/2), cy - (marca.getHeight()/2), null);
 		
 		plano.setImageBitmap(bmOverlay);
-		//plano.invalidate();
+		comboImage = null;
 		bmOverlay = null;
 		marca = null;
 		bm = null;
