@@ -159,40 +159,53 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		}
 	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	private void construirMenu(Menu menu)
+	{
 		if(imagenAccesoEscritura)
 		{
-			MenuInflater mi = getMenuInflater();
-			mi.inflate(R.menu.enviar, menu);
+			menu.add(Menu.NONE, 1, Menu.NONE, "Enviar").setIcon(R.drawable.enviar);
 		}
 		else
 		{
-			MenuInflater mi = getMenuInflater();
-			mi.inflate(R.menu.responder, menu);
+			menu.add(Menu.NONE, 4, Menu.NONE, "Responder").setIcon(R.drawable.enviar);
 		}
+		menu.add(Menu.NONE, 2, Menu.NONE, "Cancelar").setIcon(R.drawable.cancelar);
+		menu.add(Menu.NONE, 3, Menu.NONE, "Opciones").setIcon(R.drawable.opciones);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		construirMenu(menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
+		construirMenu(menu);
+		return super.onPrepareOptionsMenu(menu);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.responder:
+		case 4:
 			cx = 0;
 			cy = 0;
 			imagenAccesoEscritura = true;
 			cargarImagen();
+			
 			return true;
-		case R.id.enviar:
+		case 1:
 			Intent i = new Intent();
 			i.setComponent(new ComponentName(this, ListaContactos.class));
 			startActivityForResult(i, REQUEST_CHOOSE_PHONE);
 			return true;
-		case R.id.cancelar:
+		case 2:
 			System.gc();
 			finish();
 			return true;
-		case R.id.opciones:
+		case 3:
 			Intent in = new Intent();
 			in.setComponent(new ComponentName(this, Preferencias.class));
 			startActivity(in);
