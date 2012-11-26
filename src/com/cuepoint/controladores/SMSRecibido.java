@@ -95,7 +95,7 @@ public class SMSRecibido extends Activity {
 	
 	protected void extraerTextoDeMensaje()
 	{
-		String [ ] palabra = textoSMS.split(">");
+		String [] palabra = textoSMS.split(">");
 		if(palabra.length > 1)
 		{
 			mensaje.setTexto(palabra[1]);

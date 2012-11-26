@@ -3,7 +3,9 @@ package com.cuepoint.controladores;
 import java.util.Date;
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -15,6 +17,7 @@ import com.cuepoint.actividades.R;
 import com.cuepoint.clases.EditText_SMS;
 import com.cuepoint.clases.Mensaje;
 import com.cuepoint.clases.Util;
+import com.cuepoint.datos.ConexionSQLite;
 import com.cuepoint.datos.MensajesSQLite;
 
 public class EnviarSMS extends Activity {
@@ -99,6 +102,10 @@ public class EnviarSMS extends Activity {
 			m.setIdPlano(idPlano);
 		}
 		msql.nuevoMensaje(this, m);
+		
+		//Guardar el SMS en la base de datos de Android para que sea accesible desde el SO
+		//nuevoMensajeDBAndroid(this, m);
+		
 		d = null;
 		u = null;
 		m = null;
@@ -108,6 +115,44 @@ public class EnviarSMS extends Activity {
     	
     	Toast toast = Toast.makeText(this, "SMS Enviado", Toast.LENGTH_LONG);
 		toast.show();
+	}
+	
+	public void nuevoMensajeDBAndroid(Context contexto, Mensaje mensaje)
+	{
+    	//Abrimos la base de datos 'Planos'
+		ConexionSQLite pdb = new ConexionSQLite(contexto, "mmssms", null, 1);
+         
+        // Insertar datos en la base de datos
+        SQLiteDatabase db = pdb.getWritableDatabase();
+        StringBuilder sb = new StringBuilder();
+        Date date = new Date();
+        
+        sb.append("INSERT INTO sms (_id, thread_id, address, person, date, protocol, read, status, type, reply_path_present, subject, body, service_center, locked, error_code, seen) values (");
+        sb.append("NULL" + ",");
+        sb.append("555" + ",");
+        sb.append("'" + mensaje.getNumeroOrigenDestino() + "'" + ",");
+        sb.append("NULL" + ",");
+        sb.append(date.getTime() + ",");
+        sb.append("0" + ",");
+        sb.append("0" + ",");
+        sb.append("-1" + ",");
+        sb.append("1" + ",");
+        sb.append("0" + ",");
+        sb.append("NULL" + ",");
+        sb.append("'" + mensaje.getTexto() + "'" + ",");
+        sb.append("NULL" + ",");
+        sb.append("0" + ",");
+        sb.append("0" + ",");
+        sb.append("0");
+        sb.append(");");
+        //Si hemos abierto correctamente la base de datos
+        if(db != null)
+        {
+        	Log.d("Insert", sb.toString());
+            db.execSQL(sb.toString());
+            //Cerramos la base de datos
+            db.close();
+        }
 	}
 	
 	public void cancelarClick(View v)
