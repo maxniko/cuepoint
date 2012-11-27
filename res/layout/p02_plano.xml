@@ -29,13 +29,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
+
 	    <ImageView
 	        android:id="@+id/zoomout"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
 	        android:contentDescription="@string/zoom"
+	        android:onClick="onClickZoomOut"
 	        android:src="@drawable/zoom_out" />
 	
 		<SeekBar
@@ -45,13 +46,14 @@
 		    android:layout_gravity="center_vertical"
 		    android:max="100"
 		    android:progress="0" />
-
+
 		<ImageView
 		    android:id="@+id/zoomin"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_weight="1"
 		    android:contentDescription="@string/zoom"
+		    android:onClick="onClickZoomIn"
 		    android:src="@drawable/zoom_in" />
 
     </LinearLayout>

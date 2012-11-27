@@ -14,7 +14,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,7 +21,6 @@ import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -69,9 +67,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	 PointF start = new PointF();  
 	 PointF mid = new PointF();  
 	 float oldDist = 1f;
-	 
-	 private ImageView plano;
-	 
+	 	 
 	 private int escalaMarcador = 20;
 	 
 	 //coordenadas del marcador
@@ -96,10 +92,8 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
         
         mSeekBar = (SeekBar)findViewById(R.id.seekBarZoom);
         mSeekBar.setOnSeekBarChangeListener(this);
-        
-        plano = (ImageView) findViewById(R.id.imageViewPlano);
-        
-        getPlano();
+                
+        getPlanoEnIntent();
         
         cargarImagen();
         
@@ -114,6 +108,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
     }
 	protected void cargarImagen()
 	{
+		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
 		BitmapDrawable d = leerImagenesSD();
         if(d != null)
         {
@@ -234,7 +229,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		}
 	}
 	
-	private void getPlano()
+	private void getPlanoEnIntent()
 	{
 		Bundle b = getIntent().getExtras();
 		imagenPlano = b.getParcelable("Plano");
@@ -293,6 +288,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	   
 	public boolean onTouch(View v, MotionEvent event)
 	 {
+		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
 		 // Handle touch events here...
 		 switch (event.getAction() & MotionEvent.ACTION_MASK)
 		 {
@@ -303,15 +299,14 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 		break;
 		 		
 		 	case MotionEvent.ACTION_UP:
-		 		//int touchFinalTime = (int) event.getEventTime();
-		 		//if (mode != NONE && (touchFinalTime - touchInitialTime > 1000))
 		 		if (mode == NONE && imagenAccesoEscritura)
 		 		{
 		 			calcularCoordenadasImagen(event.getX(), event.getY());
 		 			dibujarMarca();
 		 		}
 		 		else if (mode == DRAG)
-		 		{
+		 		{/*
+		 			
 			 		float[] matrixValues = new float[9];
 			 		matrix.set(savedMatrix);
 			 		matrix.getValues(matrixValues);
@@ -369,6 +364,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	
 	private void calcularCoordenadasImagen(float x, float y)
 	{
+		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
 		float[] values = new float[9];
 		matrix.set(savedMatrix);
 		matrix.getValues(values);
@@ -395,6 +391,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	
 	private void dibujarMarca()
 	{
+		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
 		BitmapDrawable bm = leerImagenesSD();
 		matrix.set(savedMatrix);
 		// As described by Steve Pomeroy in a previous comment, 
@@ -405,7 +402,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		Bitmap marca = getMarcador(bm.getIntrinsicWidth());
 		
 		// Dibujar el plano sobre la imagen
-		comboImage.drawBitmap(bm.getBitmap(), matrix, null);
+		comboImage.drawBitmap(bm.getBitmap(), new Matrix(), null);
 		// Dibujar la marca sobre el plano
 		comboImage.drawBitmap(marca, cx - (marca.getWidth()/2), cy - (marca.getHeight()/2), null);
 		
@@ -462,7 +459,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		m = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), recurso), anchoPlano/escalaMarcador, anchoPlano/escalaMarcador, true);
 		return m;
 	}
-	
+	/*
 	private void limitDrag(Matrix m)
 	{
 	    float[] values = new float[9];
@@ -498,8 +495,8 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	    values[Matrix.MTRANS_X] = transX;
 	    values[Matrix.MTRANS_Y] = transY; 
 	    m.setValues(values);
-	}
-	  
+	}*/
+	
 	public void onClickZoomIn(View v)
 	{
 		if (ZOOM_ACTUAL < ZOOM_MAX)
@@ -507,6 +504,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			ZOOM_ACTUAL++;
 			savedMatrix.set(matrix);
 			matrix.postScale(scaleIn, scaleIn);
+			matrix.postTranslate(desplazZoomIn, desplazZoomIn);
 			ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
 			iv.setImageMatrix(matrix);
 			
@@ -521,6 +519,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			ZOOM_ACTUAL--;
 			savedMatrix.set(matrix);
 			matrix.postScale(scaleOut, scaleOut);
+			matrix.postTranslate(desplazZoomOut, desplazZoomOut);
 			ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
 			iv.setImageMatrix(matrix);
 			
@@ -535,13 +534,13 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	}
 		
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch)
-	{
+	{/*
 		if (progress%10 == 0)
 		{
 			if (ZOOM_ACTUAL < progress/10)
 			{
 				if (ZOOM_ACTUAL < ZOOM_MAX)
-					 	{
+				{
 					ZOOM_ACTUAL = progress/10;
 					savedMatrix.set(matrix);
 					matrix.postScale(scaleIn, scaleIn);
@@ -562,7 +561,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 					iv.setImageMatrix(matrix);
 				}
 			}
-		}
+		}*/
 	}
 
 	public void onStartTrackingTouch(SeekBar seekBar)
