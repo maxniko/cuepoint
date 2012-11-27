@@ -1,19 +1,16 @@
 package com.cuepoint.controladores;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.webkit.WebView;
 
 import com.cuepoint.actividades.R;
-import com.cuepoint.datos.CargaDatosWS;
 
 public class Boletin extends Activity{
 	WebView boletin;
 	//TextView boletin;
 	String res = "";
-	private ProgressDialog pd;
+	//private ProgressDialog pd;
 
 	
 	@Override

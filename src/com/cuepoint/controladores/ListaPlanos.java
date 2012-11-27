@@ -27,31 +27,20 @@ public class ListaPlanos extends Activity {
         
         final ArrayList<Plano> lista = p.getPlanos(this);
         
-        if(lista.size() == 1)
-        {
-        	Plano plano = lista.get(0);
-    	    Intent intent = new Intent(this, Imagen.class);
-    	    intent.putExtra("Plano", plano);
-    	    intent.putExtra("InsertarMarca", false);
-    	    startActivity(intent);
-        }
-        else
-        {
-	        ItemPlanoAdapter adapter = new ItemPlanoAdapter(this, lista);
-	        
-	        lv.setAdapter(adapter);
-	        
-	        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-	        	
-	        	  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	        		Plano plano = lista.get(position);
-	        	    Intent intent = new Intent(view.getContext(), Imagen.class);
-	        	    intent.putExtra("Plano", plano);
-	        	    intent.putExtra("InsertarMarca", false);
-	        	    startActivity(intent);
-	        	  }
-	        	});
-	        p = null;
-	    }
+        ItemPlanoAdapter adapter = new ItemPlanoAdapter(this, lista);
+        
+        lv.setAdapter(adapter);
+        
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        	
+        	  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        		Plano plano = lista.get(position);
+        	    Intent intent = new Intent(view.getContext(), Imagen.class);
+        	    intent.putExtra("Plano", plano);
+        	    intent.putExtra("InsertarMarca", false);
+        	    startActivity(intent);
+        	  }
+        	});
+        p = null;
     }
 }

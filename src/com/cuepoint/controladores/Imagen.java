@@ -71,8 +71,8 @@ public class Imagen extends Activity implements OnTouchListener{
 	 private int escalaMarcador = 20;
 	 
 	 //coordenadas del marcador
-	 float cx = 0;
-	 float cy = 0;
+	 float cx = -1;
+	 float cy = -1;
 	 
 	 float altoOriginal;
 	 float anchoOriginal;
@@ -105,6 +105,14 @@ public class Imagen extends Activity implements OnTouchListener{
         	imagenAccesoEscritura = false;
         }
     }
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		dibujarMarca();
+	}
+	
 	protected void cargarImagen()
 	{
 		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
@@ -155,11 +163,11 @@ public class Imagen extends Activity implements OnTouchListener{
 	
 	private void construirMenu(Menu menu)
 	{
-		if(imagenAccesoEscritura)
+		if(imagenAccesoEscritura && cx != -1 && cx != -1)
 		{
 			menu.add(Menu.NONE, 1, Menu.NONE, "Enviar").setIcon(R.drawable.enviar);
 		}
-		else
+		else if(!imagenAccesoEscritura)
 		{
 			menu.add(Menu.NONE, 4, Menu.NONE, "Responder").setIcon(R.drawable.enviar);
 		}
@@ -187,8 +195,6 @@ public class Imagen extends Activity implements OnTouchListener{
 			cx = 0;
 			cy = 0;
 			imagenAccesoEscritura = true;
-			cargarImagen();
-			
 			return true;
 		case 1:
 			Intent i = new Intent();
@@ -234,7 +240,7 @@ public class Imagen extends Activity implements OnTouchListener{
 		imagenPlano = b.getParcelable("Plano");
 	}
 	
-	public BitmapDrawable leerImagenesSD()
+	private BitmapDrawable leerImagenesSD()
 	{
 		BitmapDrawable imagen = null;
 		boolean sdDisponible = false;
@@ -285,7 +291,7 @@ public class Imagen extends Activity implements OnTouchListener{
 		return imagen;
 	}
 	
-	public void centrarImagenEnPantalla(ImageView plano)
+	private void centrarImagenEnPantalla(ImageView plano)
 	{
 		//Extraer los parámetros de la matriz referentes a la imagen.
  		float[] matrixValues = new float[9];
@@ -430,27 +436,30 @@ public class Imagen extends Activity implements OnTouchListener{
 	
 	private void dibujarMarca()
 	{
-		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
-		BitmapDrawable bm = leerImagenesSD();
-		matrix.set(savedMatrix);
-		// As described by Steve Pomeroy in a previous comment, 
-		// use the canvas to combine them.
-		// Start with the first in the constructor..
-		Bitmap bmOverlay = Bitmap.createBitmap(bm.getBitmap().getWidth(), bm.getBitmap().getHeight(), bm.getBitmap().getConfig());
-		Canvas comboImage = new Canvas(bmOverlay);
-		Bitmap marca = getMarcador(bm.getIntrinsicWidth());
-		
-		// Dibujar el plano sobre la imagen
-		comboImage.drawBitmap(bm.getBitmap(), new Matrix(), null);
-		// Dibujar la marca sobre el plano
-		comboImage.drawBitmap(marca, cx - (marca.getWidth()/2), cy - (marca.getHeight()/2), null);
-		
-		plano.setImageBitmap(bmOverlay);
-		comboImage = null;
-		bmOverlay = null;
-		marca = null;
-		bm = null;
-		System.gc();
+		if(cx > -1 && cy > -1)
+		{
+			ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
+			BitmapDrawable bm = leerImagenesSD();
+			matrix.set(savedMatrix);
+			// As described by Steve Pomeroy in a previous comment, 
+			// use the canvas to combine them.
+			// Start with the first in the constructor..
+			Bitmap bmOverlay = Bitmap.createBitmap(bm.getBitmap().getWidth(), bm.getBitmap().getHeight(), bm.getBitmap().getConfig());
+			Canvas comboImage = new Canvas(bmOverlay);
+			Bitmap marca = getMarcador(bm.getIntrinsicWidth());
+			
+			// Dibujar el plano sobre la imagen
+			comboImage.drawBitmap(bm.getBitmap(), new Matrix(), null);
+			// Dibujar la marca sobre el plano
+			comboImage.drawBitmap(marca, cx - (marca.getWidth()/2), cy - (marca.getHeight()/2), null);
+			
+			plano.setImageBitmap(bmOverlay);
+			comboImage = null;
+			bmOverlay = null;
+			marca = null;
+			bm = null;
+			System.gc();
+		}
 	}
 
 	private Bitmap getMarcador(int anchoPlano)

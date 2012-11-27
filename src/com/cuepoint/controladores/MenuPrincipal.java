@@ -1,11 +1,15 @@
 package com.cuepoint.controladores;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import com.cuepoint.actividades.R;
+import com.cuepoint.clases.Plano;
+import com.cuepoint.datos.PlanosSQLite;
 
 public class MenuPrincipal extends Activity {
 	
@@ -44,9 +48,24 @@ public class MenuPrincipal extends Activity {
 	
 	public void enviarPosicionClick(View v)
 	{
-		Intent intent = new Intent();
-    	intent.setComponent(new ComponentName(this, ListaPlanos.class));
-    	startActivity(intent);
+		PlanosSQLite p = new PlanosSQLite();
+        
+        final ArrayList<Plano> lista = p.getPlanos(this);
+        
+        if(lista.size() == 1)
+        {
+        	Plano plano = lista.get(0);
+    	    Intent intent = new Intent(this, Imagen.class);
+    	    intent.putExtra("Plano", plano);
+    	    intent.putExtra("InsertarMarca", false);
+    	    startActivity(intent);
+        }
+        else
+        {
+        	Intent intent = new Intent();
+        	intent.setComponent(new ComponentName(this, ListaPlanos.class));
+        	startActivity(intent);
+        }
 	}
 	
 	public void opcionesClick(View v)
