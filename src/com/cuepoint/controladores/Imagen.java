@@ -38,7 +38,7 @@ import com.cuepoint.clases.Punto;
  * @author Silvio
  *
  */
-public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekBarChangeListener{
+public class Imagen extends Activity implements OnTouchListener{
 	//variables para la escala
     static final int ZOOM_MAX = 10;
     static final int ZOOM_MIN = 0;
@@ -91,7 +91,6 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
         setContentView(R.layout.p02_plano);
         
         mSeekBar = (SeekBar)findViewById(R.id.seekBarZoom);
-        mSeekBar.setOnSeekBarChangeListener(this);
                 
         getPlanoEnIntent();
         
@@ -290,25 +289,21 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	{
 		//Extraer los parámetros de la matriz referentes a la imagen.
  		float[] matrixValues = new float[9];
- 		//matrix.set(savedMatrix);
  		matrix.getValues(matrixValues);
  		
  		// coordenada X de matrix (la imagen) relativo a ImageView
  		float imagenX = matrixValues[2];
-			// coordenada Y de matrix (la imagen) relativo a ImageView
+ 		// coordenada Y de matrix (la imagen) relativo a ImageView
  		float imagenY = matrixValues[5];
  		// Ancho actual de la imagen
  		float anchoImagen = matrixValues[0] * plano.getDrawable().getBounds().width();
  		// Alto actual de la imagen
  		float altoImagen = matrixValues[4] * plano.getDrawable().getBounds().height();
- 		//float altoImagen = matrixValues[4] * (((ImageView) plano).getDrawable().getIntrinsicHeight());
  		
  		// Ancho ImageView que contiene la imagen
  		float anchoIV = plano.getWidth();
- 		//float anchoIV = plano.getDrawable().getBounds().width();
  		// Alto ImageView que contiene la imagen
  		float altoIV = plano.getHeight();
- 		//float altoIV = plano.getDrawable().getBounds().height();
  		
  		float desplazarX = 0;
  		float desplazarY = 0;
@@ -503,43 +498,6 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		m = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), recurso), anchoPlano/escalaMarcador, anchoPlano/escalaMarcador, true);
 		return m;
 	}
-	/*
-	private void limitDrag(Matrix m)
-	{
-	    float[] values = new float[9];
-	    m.getValues(values);
-	    float transX = values[Matrix.MTRANS_X];
-	    float transY = values[Matrix.MTRANS_Y];
-	    float scaleX = values[Matrix.MSCALE_X];
-	    float scaleY = values[Matrix.MSCALE_Y];
-
-	    ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
-	    Rect bounds = iv.getDrawable().getBounds();
-	    int anchoPantalla = getResources().getDisplayMetrics().widthPixels;
-	    int altoPantalla = getResources().getDisplayMetrics().heightPixels;
-
-	    int ancho = bounds.right - bounds.left;
-	    int alto = bounds.bottom - bounds.top;
-
-	    float minX = (-ancho + 20) * scaleX; 
-	    float minY = (-alto + 20) * scaleY;
-
-	    if(transX > (anchoPantalla - 20)) {
-	        transX = anchoPantalla - 20;
-	    } else if(transX < minX) {
-	        transX = minX;
-	    }
-
-	    if(transY > (altoPantalla - 80)) {
-	        transY = altoPantalla - 80;
-	    } else if(transY < minY) {
-	        transY = minY;
-	    }
-
-	    values[Matrix.MTRANS_X] = transX;
-	    values[Matrix.MTRANS_Y] = transY; 
-	    m.setValues(values);
-	}*/
 	
 	public void onClickZoomIn(View v)
 	{
@@ -553,6 +511,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			iv.setImageMatrix(matrix);
 			
 			actualizarSeekBar();
+			centrarImagenEnPantalla(iv);
 		}
 	}
 		
@@ -568,6 +527,7 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 			iv.setImageMatrix(matrix);
 			
 			actualizarSeekBar();
+			centrarImagenEnPantalla(iv);
 		}
 	}
 		
@@ -575,46 +535,5 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 	{
 		SeekBar s = (SeekBar) findViewById(R.id.seekBarZoom);
 		s.setProgress(ZOOM_ACTUAL*10);
-	}
-		
-	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch)
-	{/*
-		if (progress%10 == 0)
-		{
-			if (ZOOM_ACTUAL < progress/10)
-			{
-				if (ZOOM_ACTUAL < ZOOM_MAX)
-				{
-					ZOOM_ACTUAL = progress/10;
-					savedMatrix.set(matrix);
-					matrix.postScale(scaleIn, scaleIn);
-					matrix.postTranslate(desplazZoomIn, desplazZoomIn);
-					ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
-					iv.setImageMatrix(matrix);
-				}
-			}
-			else if (ZOOM_ACTUAL > progress/10)
-			{
-				if(ZOOM_ACTUAL > ZOOM_MIN)
-				{
-					ZOOM_ACTUAL = progress/10;
-					savedMatrix.set(matrix);
-					matrix.postScale(scaleOut, scaleOut);
-					matrix.postTranslate(desplazZoomOut, desplazZoomOut);
-					ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
-					iv.setImageMatrix(matrix);
-				}
-			}
-		}*/
-	}
-
-	public void onStartTrackingTouch(SeekBar seekBar)
-	{
-			
-	}
-
-	public void onStopTrackingTouch(SeekBar arg0)
-	{
-		
 	}
 }

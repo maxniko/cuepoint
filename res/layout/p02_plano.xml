@@ -9,10 +9,11 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:text="@string/marcar_ubicacion"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="20sp" />
-
+    
     <ImageView
         android:id="@+id/imageViewPlano"
         android:layout_width="match_parent"
@@ -29,7 +30,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
+
 	    <ImageView
 	        android:id="@+id/zoomout"
 	        android:layout_width="wrap_content"
@@ -38,15 +39,18 @@
 	        android:contentDescription="@string/zoom"
 	        android:onClick="onClickZoomOut"
 	        android:src="@drawable/zoom_out" />
-	
+	    
 		<SeekBar
 		    android:id="@+id/seekBarZoom"
 		    android:layout_width="242dp"
 		    android:layout_height="wrap_content"
 		    android:layout_gravity="center_vertical"
+		    android:clickable="false"
+		    android:focusableInTouchMode="false"
+		    android:longClickable="false"
 		    android:max="100"
 		    android:progress="0" />
-
+
 		<ImageView
 		    android:id="@+id/zoomin"
 		    android:layout_width="wrap_content"
