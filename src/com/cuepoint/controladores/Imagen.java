@@ -305,44 +305,83 @@ public class Imagen extends Activity implements OnTouchListener, SeekBar.OnSeekB
 		 			dibujarMarca();
 		 		}
 		 		else if (mode == DRAG)
-		 		{/*
-		 			
+		 		{
+		 			//Extraer los parámetros de la matriz referentes a la imagen.
 			 		float[] matrixValues = new float[9];
-			 		matrix.set(savedMatrix);
+			 		//matrix.set(savedMatrix);
 			 		matrix.getValues(matrixValues);
 			 		
-			 		float imagenX = matrixValues[2]; // coordenada X de matrix (la imagen) relativo a ImageView
-			 		float imagenY = matrixValues[5]; // coordenada Y de matrix (la imagen) relativo a ImageView
+			 		// coordenada X de matrix (la imagen) relativo a ImageView
+			 		float imagenX = matrixValues[2];
+		 			// coordenada Y de matrix (la imagen) relativo a ImageView
+			 		float imagenY = matrixValues[5];
 			 		// Ancho actual de la imagen
-			 		float anchoImagen = matrixValues[0] * (((ImageView) plano).getDrawable().getIntrinsicWidth());
+			 		float anchoImagen = matrixValues[0] * plano.getDrawable().getBounds().width();
 			 		// Alto actual de la imagen
-			 		float altoImagen = matrixValues[4] * (((ImageView) plano).getDrawable().getIntrinsicHeight());
+			 		float altoImagen = matrixValues[4] * plano.getDrawable().getBounds().height();
+			 		//float altoImagen = matrixValues[4] * (((ImageView) plano).getDrawable().getIntrinsicHeight());
 			 		
 			 		// Ancho ImageView que contiene la imagen
-			 		float anchoIV = plano.getDrawable().getBounds().width();
+			 		float anchoIV = plano.getWidth();
+			 		//float anchoIV = plano.getDrawable().getBounds().width();
 			 		// Alto ImageView que contiene la imagen
-			 		float altoIV = plano.getDrawable().getBounds().height();
+			 		float altoIV = plano.getHeight();
+			 		//float altoIV = plano.getDrawable().getBounds().height();
 			 		
-			        //if image will go outside left bound
+			 		float desplazarX = 0;
+			 		float desplazarY = 0;
+			 		
+			        //Si la imagen se sale por el borde izquierdo pero no por el derecho
 			        if (imagenX < 0 && (imagenX + anchoImagen) < anchoIV){
+			        	//La imagen es más grande que la pantalla
 			        	if(anchoImagen >= anchoIV){
-			        		
+			        		//Distancia del borde derecho de la imagen con el borde derecho del ImageView
+			        		desplazarX = anchoIV - (imagenX + anchoImagen);
 			        	}
-			            
-			        }/*
-			        //if image will go outside right bound
-			        if(matrixX + dx + width > view.getWidth()){
-			            dx = view.getWidth() - matrixX - width;
+			        	else{
+			        		//Distancia del borde izquierdo de la imagen con el borde izquierdo del ImageView
+			        		desplazarX = (-1) * imagenX;
+			        	}
 			        }
-			        //if image will go oustside top bound
-			        if (matrixY + dy < 0){
-			            dy = -matrixY;
+			        
+			        //Si la imagen se sale por el borde derecho pero no por el izquierdo
+			        if((imagenX + anchoImagen) > anchoIV && imagenX > 0){
+			        	//La imagen es más grande que la pantalla
+			        	if(anchoImagen >= anchoIV){
+			        		//Distancia del borde derecho de la imagen con el borde derecho del ImageView
+			        		desplazarX = (-1) * imagenX;
+			        	}
+			        	else{
+			        		//Distancia del borde izquierdo de la imagen con el borde izquierdo del ImageView
+			        		desplazarX = anchoIV - (imagenX + anchoImagen);
+			        	}
 			        }
-			        //if image will go outside bottom bound
-			        if(matrixY + dy + height > view.getHeight()){
-			            dy = view.getHeight() - matrixY - height;
+			        
+			        //Si la imagen se sale por el borde superior
+			        if (imagenY < 0 && (imagenY + altoImagen) < altoIV){
+			        	if(altoImagen >= altoIV){
+			        		//Distancia del borde inferior de la imagen con el borde inferior del ImageView
+			        		desplazarY = altoIV - (imagenY + altoImagen);
+			        	}
+			        	else{
+			        		//Distancia del borde superior de la imagen con el borde superior del ImageView
+			        		desplazarY = (-1) * imagenY;
+			        	}
 			        }
-			        matrix.postTranslate(dx, dy);*/
+			        
+			        //Si la imagen se sale por el borde inferior
+			        if((imagenY + altoImagen) > altoIV && imagenY > 0){
+			        	if(altoImagen >= altoIV){
+			        		//Distancia del borde inferior de la imagen con el borde inferior del ImageView
+			        		desplazarY = (-1) * imagenY;
+			        	}
+			        	else{
+			        		//Distancia del borde superior de la imagen con el borde superior del ImageView
+			        		desplazarY = altoIV - (imagenY + altoImagen);
+			        	}
+			        }
+			        
+			        matrix.postTranslate(desplazarX, desplazarY);
 		 		}
 		 		else if (!imagenAccesoEscritura)
 		 		{
