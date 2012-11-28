@@ -28,7 +28,6 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.cuepoint.actividades.R;
@@ -46,8 +45,6 @@ public class Imagen extends Activity implements OnTouchListener{
     private int ZOOM_ACTUAL = 0;
     private float scaleIn = 1.169f;
     private float scaleOut = 0.85f;
-    private float desplazZoomIn = -50f;
-    private float desplazZoomOut = 50f;
         
     private static final int REQUEST_CHOOSE_PHONE = 1;
     
@@ -287,7 +284,7 @@ public class Imagen extends Activity implements OnTouchListener{
 		return imagen;
 	}
 	
-	private void centrarImagenEnPantalla(ImageView plano)
+	private void limitarDesplazamientoFueraPantalla(ImageView plano)
 	{
 		//Extraer los parámetros de la matriz referentes a la imagen.
  		float[] matrixValues = new float[9];
@@ -359,10 +356,10 @@ public class Imagen extends Activity implements OnTouchListener{
         		desplazarY = altoIV - (imagenY + altoImagen);
         	}
         }
-        
         matrix.postTranslate(desplazarX, desplazarY);
+        plano.setImageMatrix(matrix);
 	}
-	   
+	
 	public boolean onTouch(View v, MotionEvent event)
 	 {
 		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
@@ -383,7 +380,7 @@ public class Imagen extends Activity implements OnTouchListener{
 		 		}
 		 		else if (mode == DRAG)
 		 		{
-		 			centrarImagenEnPantalla(plano);
+		 			limitarDesplazamientoFueraPantalla(plano);
 		 		}
 		 		else if (!imagenAccesoEscritura)
 		 		{
@@ -504,19 +501,46 @@ public class Imagen extends Activity implements OnTouchListener{
 		return m;
 	}
 	
+	private Punto desplazarCentroPantalla(int tipoZoom)
+	{
+		Punto p = new Punto();
+		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
+		//Extraer los parámetros de la matriz referentes a la imagen.
+ 		float[] matrixValues = new float[9];
+ 		matrix.getValues(matrixValues);
+ 		// Ancho actual de la imagen
+ 		float anchoImagen = matrixValues[0] * plano.getDrawable().getBounds().width();
+ 		// Alto actual de la imagen
+ 		float altoImagen = matrixValues[4] * plano.getDrawable().getBounds().height();
+ 		
+ 		//Zoom in
+ 		if(tipoZoom == 0)
+ 		{
+ 			p.setX(-((anchoImagen * scaleIn) - anchoImagen) / 2);
+ 			p.setY(-((altoImagen * scaleIn) - altoImagen) / 2);
+ 		}
+ 		else if(tipoZoom == 1)
+ 		{
+ 			p.setX(((anchoImagen * scaleOut) - anchoImagen) / 2);
+ 			p.setY(((altoImagen * scaleOut) - altoImagen) / 2);
+ 		}
+ 		return p;
+	}
+	
 	public void onClickZoomIn(View v)
 	{
 		if (ZOOM_ACTUAL < ZOOM_MAX)
 		{
 			ZOOM_ACTUAL++;
 			savedMatrix.set(matrix);
+			Punto p = desplazarCentroPantalla(0);
 			matrix.postScale(scaleIn, scaleIn);
-			matrix.postTranslate(desplazZoomIn, desplazZoomIn);
+			matrix.postTranslate(p.getX(), p.getY());
 			ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
 			iv.setImageMatrix(matrix);
 			
 			actualizarBarraZoom();
-			centrarImagenEnPantalla(iv);
+			limitarDesplazamientoFueraPantalla(iv);
 		}
 	}
 		
@@ -526,13 +550,14 @@ public class Imagen extends Activity implements OnTouchListener{
 		{
 			ZOOM_ACTUAL--;
 			savedMatrix.set(matrix);
+			Punto p = desplazarCentroPantalla(1);
 			matrix.postScale(scaleOut, scaleOut);
-			matrix.postTranslate(desplazZoomOut, desplazZoomOut);
+			matrix.postTranslate(p.getX(), p.getY());
 			ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
 			iv.setImageMatrix(matrix);
 			
 			actualizarBarraZoom();
-			centrarImagenEnPantalla(iv);
+			limitarDesplazamientoFueraPantalla(iv);
 		}
 	}
 		

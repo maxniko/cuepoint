@@ -13,6 +13,11 @@ public class Punto implements Parcelable {
 		this.y = y;
 	}
 	
+	public Punto()
+	{
+		
+	}
+	
 	public Punto(Parcel parcel) {
 		readToParcel(parcel);
 	}
