@@ -1,16 +1,22 @@
 package com.cuepoint.datos;
 
 import java.util.ArrayList;
+
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract.Data;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.util.Log;
 
 import com.cuepoint.clases.Mensaje;
 
-public class MensajesSQLite {
+public class MensajesSQLite extends Activity{
 	ArrayList<Mensaje> itemsE;
 	ArrayList<Mensaje> itemsR;
+	ContentResolver cr = null;
 	
 	//0: Enviados, 1: Recibidos
 	
@@ -39,6 +45,8 @@ public class MensajesSQLite {
             	//Date f = new Date(milisegundos);
             	m.setFecha(c.getString(3));
             	m.setTipo(0);
+            	cr = contexto.getContentResolver();
+            	m.setNombre(buscarNombreContacto(m.getNumeroOrigenDestino()));
             	itemsE.add(m);
             } while(c.moveToNext());
        }
@@ -71,6 +79,7 @@ public class MensajesSQLite {
             	//Date f = new Date(milisegundos);
             	m.setFecha(c.getString(3));
             	m.setTipo(1);
+            	m.setNombre(buscarNombreContacto(m.getNumeroOrigenDestino()));
             	itemsR.add(m);
             } while(c.moveToNext());
        }
@@ -153,4 +162,36 @@ public class MensajesSQLite {
             db.close();
         }
 	}
+	
+	protected String buscarNombreContacto(int numero)
+	{
+		String nombre = "";
+		// Query: contacto con el numero de telefono ingresado
+        //lanzamos una query al Content provider por medio del "contentresolver"
+        //y guardamos la tabla de los resultados que nos devuelve con un Cursor
+        //para iterar despues en las filas con el objeto de clase Cursor. 
+        //(Es como una tabla de filas y columnas)
+ 		Cursor mCursor = cr.query(
+ 		Data.CONTENT_URI,
+ 		new String[] { Data.DISPLAY_NAME, Phone.NUMBER, },
+ 			Phone.NUMBER + " LIKE ? ",
+ 			new String[] { "%"+ numero +"%" },
+ 			Data.DISPLAY_NAME + " ASC");
+ 		//estructura query= (tabla objetivo, campos a consultar, where, parametros, ordered by)
+        //ordenamos por orden alfabetico con campo Display_name.
+
+ 		// Esto asocia el ciclo de vida del cursor al ciclo de vida de la Activity. Si
+        // la Activity para, el sistema libera el Cursor. No quedan recursos bloqueados.
+ 		startManagingCursor(mCursor);
+
+ 		int nameIndex = mCursor.getColumnIndexOrThrow(Data.DISPLAY_NAME);
+        
+        if (mCursor.moveToFirst()) {
+            do {
+                nombre = mCursor.getString(nameIndex);
+            } while (mCursor.moveToNext());
+        }
+        return nombre;
+	}
+
 }

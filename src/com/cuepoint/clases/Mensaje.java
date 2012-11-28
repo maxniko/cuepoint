@@ -6,6 +6,7 @@ package com.cuepoint.clases;
 public class Mensaje {
 	private int idMensaje;
 	private int tipo;
+	private String nombre;
 	private String textoOpcional;
 	private int numeroOrigenDestino;
 	private String fecha;
@@ -51,6 +52,20 @@ public class Mensaje {
 	 */
 	public void setTipo(int tipo) {
 		this.tipo = tipo;
+	}
+
+	/**
+	 * @return Nombre de la persona
+	 */
+	public String getNombre() {
+		return nombre;
+	}
+
+	/**
+	 * @param Nombre de la persona
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	/**

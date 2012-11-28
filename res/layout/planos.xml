@@ -2,8 +2,7 @@
   android:layout_width="fill_parent"
   android:layout_height="wrap_content"
   android:background="@color/background" >
-     
-
+     
   <TextView
       android:id="@+id/nombre"
       android:layout_width="wrap_content"
@@ -11,16 +10,15 @@
       android:layout_alignParentTop="true"
       android:text="@string/nombre_lugar"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      android:textColor="@color/blanco"/>
- 
-
+      android:textColor="@color/blanco" />
+
   <TextView
       android:id="@+id/descripcion"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_below="@+id/nombre"
       android:text="@string/descripcion"
-      android:textColor="@color/blanco"/>
+      android:textColor="@color/blanco" />
  
   <ImageView
       android:id="@+id/imageView1"

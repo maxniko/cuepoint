@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -47,10 +48,7 @@ public class Imagen extends Activity implements OnTouchListener{
     private float scaleOut = 0.85f;
     private float desplazZoomIn = -50f;
     private float desplazZoomOut = 50f;
-    
-    //barra que actua de zoom
-    SeekBar mSeekBar;
-    
+        
     private static final int REQUEST_CHOOSE_PHONE = 1;
     
 	 // Estas matrices serán usadas para el zoom y mover la imagen
@@ -90,8 +88,6 @@ public class Imagen extends Activity implements OnTouchListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p02_plano);
         
-        mSeekBar = (SeekBar)findViewById(R.id.seekBarZoom);
-                
         getPlanoEnIntent();
         
         cargarImagen();
@@ -519,7 +515,7 @@ public class Imagen extends Activity implements OnTouchListener{
 			ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
 			iv.setImageMatrix(matrix);
 			
-			actualizarSeekBar();
+			actualizarBarraZoom();
 			centrarImagenEnPantalla(iv);
 		}
 	}
@@ -535,14 +531,14 @@ public class Imagen extends Activity implements OnTouchListener{
 			ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
 			iv.setImageMatrix(matrix);
 			
-			actualizarSeekBar();
+			actualizarBarraZoom();
 			centrarImagenEnPantalla(iv);
 		}
 	}
 		
-	private void actualizarSeekBar()
+	private void actualizarBarraZoom()
 	{
-		SeekBar s = (SeekBar) findViewById(R.id.seekBarZoom);
+		ProgressBar s = (ProgressBar) findViewById(R.id.barraProgresoZoom);
 		s.setProgress(ZOOM_ACTUAL*10);
 	}
 }

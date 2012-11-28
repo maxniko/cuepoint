@@ -19,32 +19,43 @@ public class ItemMensajeAdapter extends BaseAdapter{
 	/**
 	 * 
 	 */
-	public ItemMensajeAdapter(Activity activity, ArrayList<Mensaje> items) {
-	    this.activity = activity;
-	    this.items = items;
+	public ItemMensajeAdapter(Activity activity, ArrayList<Mensaje> items)
+	{
+		this.activity = activity;
+		this.items = items;
 	}
 	
-	public int getCount() {
-	    return items.size();
-	  }
+	public int getCount()
+	{
+		return items.size();
+	}
 	 
-	  public Object getItem(int position) {
-	    return items.get(position);
-	  }
+	public Object getItem(int position)
+	{
+		return items.get(position);
+	}
 	 
-	  public View getView(int position, View convertView, ViewGroup parent) {
-	    View vi=convertView;
+	public View getView(int position, View convertView, ViewGroup parent)
+	{
+		View vi=convertView;
 	         
-	    if(convertView == null) {
-	      LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	      vi = inflater.inflate(R.layout.planos, null);
+	    if(convertView == null)
+	    {
+	    	LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	    	vi = inflater.inflate(R.layout.planos, null);
 	    }
 	             
 	    Mensaje item = items.get(position);
 	         
 	    TextView nombre = (TextView) vi.findViewById(R.id.nombre);
-	    nombre.setText(Integer.toString(item.getNumeroOrigenDestino()));
-	    
+	    if(!item.getNombre().equals(""))
+	    {
+	    	nombre.setText(item.getNombre());
+	    }
+	    else
+	    {
+	    	nombre.setText(Integer.toString(item.getNumeroOrigenDestino()));
+	    }
 	    TextView descr = (TextView) vi.findViewById(R.id.descripcion);
 	    descr.setText(item.getFecha());
 	 
