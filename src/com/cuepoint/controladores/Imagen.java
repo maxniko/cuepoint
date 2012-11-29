@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -43,8 +44,8 @@ public class Imagen extends Activity implements OnTouchListener{
     static final int ZOOM_MAX = 10;
     static final int ZOOM_MIN = 0;
     private int ZOOM_ACTUAL = 0;
-    private float scaleIn = 1.169f;
-    private float scaleOut = 0.85f;
+    private float scaleIn = 1.17f;
+    private float scaleOut = 0.8547f;
         
     private static final int REQUEST_CHOOSE_PHONE = 1;
     
@@ -508,21 +509,39 @@ public class Imagen extends Activity implements OnTouchListener{
 		//Extraer los parámetros de la matriz referentes a la imagen.
  		float[] matrixValues = new float[9];
  		matrix.getValues(matrixValues);
+ 		// coordenada X de matrix (la imagen) relativo a ImageView
+ 		float imagenX = matrixValues[2];
+ 		// coordenada Y de matrix (la imagen) relativo a ImageView
+ 		float imagenY = matrixValues[5];
+ 		// Ancho ImageView que contiene la imagen
+ 		float anchoIV = plano.getWidth();
+ 		// Alto ImageView que contiene la imagen
+ 		float altoIV = plano.getHeight();
+ 		
  		// Ancho actual de la imagen
  		float anchoImagen = matrixValues[0] * plano.getDrawable().getBounds().width();
  		// Alto actual de la imagen
  		float altoImagen = matrixValues[4] * plano.getDrawable().getBounds().height();
  		
+ 		
  		//Zoom in
  		if(tipoZoom == 0)
  		{
- 			p.setX(-((anchoImagen * scaleIn) - anchoImagen) / 2);
- 			p.setY(-((altoImagen * scaleIn) - altoImagen) / 2);
+ 			float anchoEscalado = (-imagenX + (anchoIV / 2)) * scaleIn;
+ 			float anchoActual = (-imagenX + (anchoIV / 2));
+ 			p.setX(-(anchoEscalado - anchoActual));
+ 			float altoEscalado = (-imagenY + (altoIV / 2)) * scaleIn;
+ 			float altoActual = (-imagenY + (altoIV / 2));
+ 			p.setY(-(altoEscalado - altoActual));
  		}
  		else if(tipoZoom == 1)
  		{
- 			p.setX(((anchoImagen * scaleOut) - anchoImagen) / 2);
- 			p.setY(((altoImagen * scaleOut) - altoImagen) / 2);
+ 			float anchoEscalado = (-imagenX + (anchoIV / 2)) * scaleOut;
+ 			float anchoActual = (-imagenX + (anchoIV / 2));
+ 			p.setX(-(anchoEscalado - anchoActual));
+ 			float altoEscalado = (-imagenY + (altoIV / 2)) * scaleOut;
+ 			float altoActual = (-imagenY + (altoIV / 2));
+ 			p.setY(-(altoEscalado - altoActual));
  		}
  		return p;
 	}
@@ -534,7 +553,7 @@ public class Imagen extends Activity implements OnTouchListener{
 			ZOOM_ACTUAL++;
 			savedMatrix.set(matrix);
 			Punto p = desplazarCentroPantalla(0);
-			matrix.postScale(scaleIn, scaleIn);
+			matrix.preScale(scaleIn, scaleIn);
 			matrix.postTranslate(p.getX(), p.getY());
 			ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
 			iv.setImageMatrix(matrix);
@@ -551,7 +570,7 @@ public class Imagen extends Activity implements OnTouchListener{
 			ZOOM_ACTUAL--;
 			savedMatrix.set(matrix);
 			Punto p = desplazarCentroPantalla(1);
-			matrix.postScale(scaleOut, scaleOut);
+			matrix.preScale(scaleOut, scaleOut);
 			matrix.postTranslate(p.getX(), p.getY());
 			ImageView iv = (ImageView)findViewById(R.id.imageViewPlano);
 			iv.setImageMatrix(matrix);
