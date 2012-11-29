@@ -30,7 +30,7 @@ public class MensajesSQLite extends Activity{
         
         //Leer datos de la base de datos
       //Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
-        Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha " +
+        Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha,coordenadaX,coordenadaY,idPlano " +
         		"FROM Mensajes " +
         		"WHERE tipo<2 ORDER BY fecha", null);
         
@@ -46,6 +46,9 @@ public class MensajesSQLite extends Activity{
             	//long milisegundos = c.getLong(3);
             	//Date f = new Date(milisegundos);
             	m.setFecha(c.getString(4));
+            	m.setX(c.getFloat(5));
+            	m.setY(c.getFloat(6));
+            	m.setIdPlano(c.getInt(7));
             	cr = contexto.getContentResolver();
             	m.setNombre(buscarNombreContacto(m.getNumeroOrigenDestino()));
             	itemsE.add(m);
@@ -65,7 +68,7 @@ public class MensajesSQLite extends Activity{
         
         //Leer datos de la base de datos
         //Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
-        Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha " +
+        Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha,coordenadaX,coordenadaY,idPlano " +
         		"FROM Mensajes " +
         		"WHERE tipo>1 ORDER BY fecha", null);
         
@@ -81,6 +84,9 @@ public class MensajesSQLite extends Activity{
             	//long milisegundos = c.getLong(3);
             	//Date f = new Date(milisegundos);
             	m.setFecha(c.getString(4));
+            	m.setX(c.getFloat(5));
+            	m.setY(c.getFloat(6));
+            	m.setIdPlano(c.getInt(7));
             	cr = contexto.getContentResolver();
             	m.setNombre(buscarNombreContacto(m.getNumeroOrigenDestino()));
             	itemsR.add(m);

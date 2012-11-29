@@ -110,6 +110,7 @@ public class Imagen extends Activity implements OnTouchListener{
 		BitmapDrawable d = leerImagenesSD();
         if(d != null)
         {
+        	matrix.reset();
         	savedMatrix.set(matrix);
         	DisplayMetrics dm = new DisplayMetrics();
         	getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -182,20 +183,28 @@ public class Imagen extends Activity implements OnTouchListener{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		//Responder
 		case 4:
 			cx = 0;
 			cy = 0;
 			imagenAccesoEscritura = true;
+			ZOOM_ACTUAL = 0;
+			ProgressBar pb = (ProgressBar) findViewById(R.id.barraProgresoZoom);
+			pb.setProgress(0);
+			cargarImagen();
 			return true;
+		//Enviar
 		case 1:
 			Intent i = new Intent();
 			i.setComponent(new ComponentName(this, ListaContactos.class));
 			startActivityForResult(i, REQUEST_CHOOSE_PHONE);
 			return true;
+		//Cancelar
 		case 2:
 			System.gc();
 			finish();
 			return true;
+		//Opciones
 		case 3:
 			Intent in = new Intent();
 			in.setComponent(new ComponentName(this, Preferencias.class));
@@ -361,6 +370,7 @@ public class Imagen extends Activity implements OnTouchListener{
 	public boolean onTouch(View v, MotionEvent event)
 	 {
 		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
+		matrix.set(plano.getImageMatrix());
 		 // Handle touch events here...
 		 switch (event.getAction() & MotionEvent.ACTION_MASK)
 		 {
@@ -503,6 +513,7 @@ public class Imagen extends Activity implements OnTouchListener{
 	{
 		Punto p = new Punto();
 		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
+		matrix.set(plano.getImageMatrix());
 		//Extraer los parámetros de la matriz referentes a la imagen.
  		float[] matrixValues = new float[9];
  		matrix.getValues(matrixValues);
@@ -543,6 +554,7 @@ public class Imagen extends Activity implements OnTouchListener{
 		if (ZOOM_ACTUAL < ZOOM_MAX)
 		{
 			ZOOM_ACTUAL++;
+			matrix.set(((ImageView)v).getImageMatrix());
 			savedMatrix.set(matrix);
 			Punto p = desplazarCentroPantalla(0);
 			matrix.preScale(scaleIn, scaleIn);
@@ -560,6 +572,7 @@ public class Imagen extends Activity implements OnTouchListener{
 		if(ZOOM_ACTUAL > ZOOM_MIN)
 		{
 			ZOOM_ACTUAL--;
+			matrix.set(((ImageView)v).getImageMatrix());
 			savedMatrix.set(matrix);
 			Punto p = desplazarCentroPantalla(1);
 			matrix.preScale(scaleOut, scaleOut);
