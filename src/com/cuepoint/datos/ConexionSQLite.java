@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class ConexionSQLite extends SQLiteOpenHelper{
 	
-	String sqlCreate = "CREATE TABLE Planos (idPlano INTEGER, nombre TEXT, path TEXT, rank INTEGER); +" +
-			"INSERT INTO Planos (idPlano, nombre, path, rank) values (1,'Templo UAP', 'templo.png', 0);";
+	String sqlCreate = "CREATE TABLE Planos (idPlano INTEGER, nombre TEXT, descripcion TEXT, path TEXT, rank INTEGER); +" +
+			"INSERT INTO Planos (idPlano, nombre, descripcion, path, rank) values (1,'Templo UAP', 'Templo de la Universidad Adventista del Plata', 'Planos_Cue_Point/templo.jpg', 0);";
 	
 	public ConexionSQLite(Context context, String name, CursorFactory factory,
 			int version) {

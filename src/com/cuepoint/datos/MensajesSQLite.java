@@ -25,13 +25,14 @@ public class MensajesSQLite extends Activity{
 		itemsE = new ArrayList<Mensaje>();
     	
     	//Abrimos la base de datos 'Planos'
-		ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
+		ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
         SQLiteDatabase db = pdb.getReadableDatabase();
         
         //Leer datos de la base de datos
-        Cursor c = db.rawQuery("SELECT idMensaje,nroOrigen,texto,fecha " +
+      //Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
+        Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha " +
         		"FROM Mensajes " +
-        		"WHERE tipo=0 ORDER BY fecha", null);
+        		"WHERE tipo<2 ORDER BY fecha", null);
         
         //Nos aseguramos de que existe al menos un registro
         if (c.moveToFirst()) {
@@ -39,12 +40,12 @@ public class MensajesSQLite extends Activity{
             do {
             	Mensaje m = new Mensaje();
             	m.setIdMensaje(c.getInt(0));
-            	m.setNumeroOrigenDestino(c.getInt(1));
-            	m.setTexto(c.getString(2));
+            	m.setTipo(c.getInt(1));
+            	m.setNumeroOrigenDestino(c.getInt(2));
+            	m.setTexto(c.getString(3));
             	//long milisegundos = c.getLong(3);
             	//Date f = new Date(milisegundos);
-            	m.setFecha(c.getString(3));
-            	m.setTipo(0);
+            	m.setFecha(c.getString(4));
             	cr = contexto.getContentResolver();
             	m.setNombre(buscarNombreContacto(m.getNumeroOrigenDestino()));
             	itemsE.add(m);
@@ -59,13 +60,14 @@ public class MensajesSQLite extends Activity{
 		itemsR = new ArrayList<Mensaje>();
     	
     	//Abrimos la base de datos 'Planos'
-		ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
+		ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
         SQLiteDatabase db = pdb.getReadableDatabase();
         
         //Leer datos de la base de datos
-        Cursor c = db.rawQuery("SELECT idMensaje,nroOrigen,texto,fecha " +
+        //Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
+        Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha " +
         		"FROM Mensajes " +
-        		"WHERE tipo=1 ORDER BY fecha", null);
+        		"WHERE tipo>1 ORDER BY fecha", null);
         
         //Nos aseguramos de que existe al menos un registro
         if (c.moveToFirst()) {
@@ -73,12 +75,13 @@ public class MensajesSQLite extends Activity{
             do {
             	Mensaje m = new Mensaje();
             	m.setIdMensaje(c.getInt(0));
-            	m.setNumeroOrigenDestino(c.getInt(1));
-            	m.setTexto(c.getString(2));
+            	m.setTipo(c.getInt(1));
+            	m.setNumeroOrigenDestino(c.getInt(2));
+            	m.setTexto(c.getString(3));
             	//long milisegundos = c.getLong(3);
             	//Date f = new Date(milisegundos);
-            	m.setFecha(c.getString(3));
-            	m.setTipo(1);
+            	m.setFecha(c.getString(4));
+            	cr = contexto.getContentResolver();
             	m.setNombre(buscarNombreContacto(m.getNumeroOrigenDestino()));
             	itemsR.add(m);
             } while(c.moveToNext());
@@ -90,7 +93,7 @@ public class MensajesSQLite extends Activity{
 	public void nuevoMensaje(Context contexto, Mensaje mensaje)
 	{
     	//Abrimos la base de datos 'Planos'
-		ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
+		ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
          
         // Insertar datos en la base de datos
         SQLiteDatabase db = pdb.getWritableDatabase();
@@ -130,7 +133,7 @@ public class MensajesSQLite extends Activity{
 	public void borrarEnviados(Context contexto)
 	{
 		//Abrimos la base de datos 'Planos'
-		ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
+		ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
          
         // Insertar datos en la base de datos
         SQLiteDatabase db = pdb.getWritableDatabase();
@@ -148,7 +151,7 @@ public class MensajesSQLite extends Activity{
 	public void borrarRecibidos(Context contexto)
 	{
 		//Abrimos la base de datos 'Planos'
-		ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
+		ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
          
         // Insertar datos en la base de datos
         SQLiteDatabase db = pdb.getWritableDatabase();

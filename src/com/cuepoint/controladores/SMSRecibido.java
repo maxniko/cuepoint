@@ -1,5 +1,6 @@
 package com.cuepoint.controladores;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.cuepoint.clases.Mensaje;
@@ -185,9 +186,23 @@ public class SMSRecibido extends Activity {
     	}
     	builder.setPositiveButton("Aceptar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Intent intent = new Intent();
-		    	intent.setComponent(new ComponentName(SMSRecibido.this, ListaPlanos.class));
-		    	startActivity(intent);
+				PlanosSQLite p = new PlanosSQLite();
+		        final ArrayList<Plano> lista = p.getPlanos(SMSRecibido.this);
+		        
+				if(lista.size() == 1)
+		        {
+		        	Plano plano = lista.get(0);
+		    	    Intent intent = new Intent(SMSRecibido.this, Imagen.class);
+		    	    intent.putExtra("Plano", plano);
+		    	    intent.putExtra("InsertarMarca", false);
+		    	    startActivity(intent);
+		        }
+		        else
+		        {
+		        	Intent intent = new Intent();
+		        	intent.setComponent(new ComponentName(SMSRecibido.this, ListaPlanos.class));
+		        	startActivity(intent);
+		        }
 		    	finish();
 			}
 		});

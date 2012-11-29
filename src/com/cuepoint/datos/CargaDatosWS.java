@@ -9,15 +9,16 @@ public class CargaDatosWS {
 	public String getBoletin()
 	{
 		String texto = null;
-		SoapObject rpc = new SoapObject("http://localhost:8080/WebServiceBoletin","Boletin");
+		SoapObject rpc = new SoapObject("http://silviokucharski.com.ar/service","Boletin");
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.bodyOut = rpc;
+		envelope.encodingStyle = SoapSerializationEnvelope.XSD;
 		HttpTransportSE ht = null;
 		try {
-			String conexion = "http://localhost:8080/WebServiceBoletin/services/WebServiceBoletin";
+			String conexion = "http://silviokucharski.com.ar/service/servicio.php";
 			ht = new HttpTransportSE(conexion);
 			ht.debug = true;
-			ht.call("http://localhost:8080/WebServiceBoletin", envelope);
+			ht.call("http://silviokucharski.com.ar/service/servicio.php", envelope);
 			texto = envelope.getResponse().toString();
 		}
 		catch(Exception e)

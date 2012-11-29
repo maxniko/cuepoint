@@ -70,6 +70,7 @@ public class EnviarSMS extends Activity {
 	
 	public void enviarClick(View button)
 	{
+		boolean coordenadas = false;
 		EditText_SMS et = (EditText_SMS) findViewById(R.id.mensaje);
 		String msj = et.getText().toString();
 		StringBuilder sb = new StringBuilder();
@@ -79,6 +80,7 @@ public class EnviarSMS extends Activity {
 			sb.append("," + cx + ",");
 			sb.append(cy + ",");
 			sb.append(idPlano + ",");
+			coordenadas = true;
 		}
 		sb.append("/>" + msj);
     	
@@ -89,7 +91,14 @@ public class EnviarSMS extends Activity {
     	//Guardar mensaje en SQLite
     	MensajesSQLite msql = new MensajesSQLite();
 		Mensaje m = new Mensaje();
-		m.setTipo(0);
+		if(coordenadas)
+		{
+			m.setTipo(1);
+		}
+		else
+		{
+			m.setTipo(0);
+		}
 		m.setTexto(sb.toString());
 		m.setNumeroOrigenDestino((Integer.parseInt(numero)));
 		Date d = new Date();

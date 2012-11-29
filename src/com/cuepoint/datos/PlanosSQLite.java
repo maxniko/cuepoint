@@ -15,7 +15,7 @@ public class PlanosSQLite {
     	ArrayList<Plano> items = new ArrayList<Plano>();
     	
     	//Abrimos la base de datos 'Planos'
-        ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
+        ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
         SQLiteDatabase db = pdb.getReadableDatabase();
         
         //Leer datos de la base de datos
@@ -41,7 +41,7 @@ public class PlanosSQLite {
     {
     	Plano p = null;
     	//Abrimos la base de datos 'Planos'
-        ConexionSQLite pdb = new ConexionSQLite(contexto, "Planos", null, 1);
+        ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
         SQLiteDatabase db = pdb.getReadableDatabase();
         
         //String de consulta

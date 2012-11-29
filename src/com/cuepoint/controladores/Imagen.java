@@ -14,7 +14,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
-import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -60,9 +59,7 @@ public class Imagen extends Activity implements OnTouchListener{
 	 int mode = NONE;  
 	  
 	 // Remember some things for zooming  
-	 PointF start = new PointF();  
-	 PointF mid = new PointF();  
-	 float oldDist = 1f;
+	 PointF start = new PointF();
 	 	 
 	 private int escalaMarcador = 20;
 	 
@@ -518,12 +515,6 @@ public class Imagen extends Activity implements OnTouchListener{
  		// Alto ImageView que contiene la imagen
  		float altoIV = plano.getHeight();
  		
- 		// Ancho actual de la imagen
- 		float anchoImagen = matrixValues[0] * plano.getDrawable().getBounds().width();
- 		// Alto actual de la imagen
- 		float altoImagen = matrixValues[4] * plano.getDrawable().getBounds().height();
- 		
- 		
  		//Zoom in
  		if(tipoZoom == 0)
  		{
@@ -534,6 +525,7 @@ public class Imagen extends Activity implements OnTouchListener{
  			float altoActual = (-imagenY + (altoIV / 2));
  			p.setY(-(altoEscalado - altoActual));
  		}
+ 		//Zoom out
  		else if(tipoZoom == 1)
  		{
  			float anchoEscalado = (-imagenX + (anchoIV / 2)) * scaleOut;
