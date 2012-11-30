@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.cuepoint.actividades.R;
 import com.cuepoint.clases.Mensaje;
 
@@ -58,7 +60,17 @@ public class ItemMensajeAdapter extends BaseAdapter{
 	    }
 	    TextView descr = (TextView) vi.findViewById(R.id.descripcion);
 	    descr.setText(item.getFecha());
-	 
+	    
+	  //Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
+	    ImageView img = (ImageView) vi.findViewById(R.id.imagenListView);
+	    if(item.getTipo() == 1 || item.getTipo() == 3)
+	    {
+	    	img.setImageResource(R.drawable.coordenadas);
+	    }
+	    else
+	    {
+	    	img.setImageBitmap(null);
+	    }
 	    return vi;
 	  }
 

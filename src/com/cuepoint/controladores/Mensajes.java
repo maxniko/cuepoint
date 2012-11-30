@@ -60,7 +60,10 @@ public class Mensajes extends Activity{
 	    		        intent.putExtra("Mensaje", m);
 	    		        intent.putExtra("Respuesta", true);
 	    		        startActivity(intent);
-	    		    	finish();
+	        	    }
+	        	    else
+	        	    {
+	        	    	
 	        	    }
 	        	  }
 	        	});
