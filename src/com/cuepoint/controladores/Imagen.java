@@ -31,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cuepoint.actividades.R;
+import com.cuepoint.clases.Mensaje;
 import com.cuepoint.clases.Plano;
 import com.cuepoint.clases.Punto;
 
@@ -76,6 +77,10 @@ public class Imagen extends Activity implements OnTouchListener{
 	 boolean imagenAccesoEscritura = true;
 	 
 	 Plano imagenPlano;
+	 
+	 //Indica si es una respuesta a un mensaje
+	 boolean respuesta = false;
+	 Mensaje mensaje;
     
     
 	@Override
@@ -88,6 +93,11 @@ public class Imagen extends Activity implements OnTouchListener{
         cargarImagen();
         
         Bundle b = getIntent().getExtras();
+        if(b.getBoolean("Respuesta"))
+        {
+        	mensaje = (Mensaje) b.getParcelable("Mensaje");
+        	respuesta = true;
+        }
         if(b.getBoolean("InsertarMarca"))
         {
         	cx = ((Punto) b.getParcelable("Punto")).getX();
@@ -196,8 +206,30 @@ public class Imagen extends Activity implements OnTouchListener{
 		//Enviar
 		case 1:
 			Intent i = new Intent();
-			i.setComponent(new ComponentName(this, ListaContactos.class));
-			startActivityForResult(i, REQUEST_CHOOSE_PHONE);
+			if(respuesta)
+			{
+				Bundle bundle = new Bundle();
+				if(mensaje.getNombre().equals(""))
+				{
+					bundle.putString("nombre", Integer.toString(mensaje.getNumeroOrigenDestino()));
+				}
+				else
+				{
+					bundle.putString("nombre", mensaje.getNombre());
+				}
+				bundle.putString("numero", Integer.toString(mensaje.getNumeroOrigenDestino()));
+		        bundle.putFloat("x", cx);
+		        bundle.putFloat("y", cy);
+		        bundle.putInt("idPlano", imagenPlano.getIdPlano());
+		        i.putExtras(bundle);
+				i.setComponent(new ComponentName(this, EnviarSMS.class));
+				startActivity(i);
+			}
+			else
+			{
+				i.setComponent(new ComponentName(this, ListaContactos.class));
+				startActivityForResult(i, REQUEST_CHOOSE_PHONE);
+			}
 			return true;
 		//Cancelar
 		case 2:
@@ -392,7 +424,7 @@ public class Imagen extends Activity implements OnTouchListener{
 		 		}
 		 		else if (!imagenAccesoEscritura)
 		 		{
-		 			Toast toast = Toast.makeText(this, "No se puede modificar la imagen", Toast.LENGTH_SHORT);
+		 			Toast toast = Toast.makeText(this, "Para responder ir a Menú - Responder", Toast.LENGTH_SHORT);
 		    		toast.show();
 		 		}
 		 		break;

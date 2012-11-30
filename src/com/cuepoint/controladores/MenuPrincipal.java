@@ -58,6 +58,7 @@ public class MenuPrincipal extends Activity {
     	    Intent intent = new Intent(this, Imagen.class);
     	    intent.putExtra("Plano", plano);
     	    intent.putExtra("InsertarMarca", false);
+    	    intent.putExtra("Respuesta", false);
     	    startActivity(intent);
         }
         else

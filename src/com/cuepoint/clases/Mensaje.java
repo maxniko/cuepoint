@@ -1,9 +1,12 @@
 package com.cuepoint.clases;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /*
  * Clase que guarda un mensaje de texto recibido/enviado
  */
-public class Mensaje {
+public class Mensaje implements Parcelable {
 	private int idMensaje;
 	private int tipo;
 	private String nombre;
@@ -24,6 +27,48 @@ public class Mensaje {
 	}
 
 	public Mensaje() {
+	}
+	
+	public Mensaje(Parcel parcel) {
+		readToParcel(parcel);
+	}
+
+	public static final Parcelable.Creator<Mensaje> CREATOR = new Parcelable.Creator<Mensaje>() {
+		public Mensaje createFromParcel(Parcel parcel) {
+			return new Mensaje(parcel);
+		}
+
+		public Mensaje[] newArray(int size) {
+			return new Mensaje[size];
+		}
+	};
+	
+	public void writeToParcel(Parcel parcel, int flags) {
+		parcel.writeInt(idMensaje);
+		parcel.writeInt(tipo);
+		parcel.writeString(nombre);
+		parcel.writeString(textoOpcional);
+		parcel.writeInt(numeroOrigenDestino);
+		parcel.writeString(fecha);
+		parcel.writeFloat(x);
+		parcel.writeFloat(y);
+		parcel.writeInt(idPlano);
+	}
+	
+	public void readToParcel(Parcel parcel){
+		idMensaje = parcel.readInt();
+		tipo = parcel.readInt();
+		nombre = parcel.readString();
+		textoOpcional = parcel.readString();
+		numeroOrigenDestino = parcel.readInt();
+		fecha = parcel.readString();
+		x = parcel.readFloat();
+		y = parcel.readFloat();
+		idPlano = parcel.readInt();
+	}
+	
+	public int describeContents() {
+		return 0;
 	}
 
 	/**
@@ -127,7 +172,7 @@ public class Mensaje {
 	public void setIdPlano(int idPlano) {
 		this.idPlano = idPlano;
 	}
-	
+
 	/**
 	 * @return Fecha con formato: dd/mm/aa hh:mm:ss
 	 *//*

@@ -57,6 +57,8 @@ public class Mensajes extends Activity{
 	    		        intent.putExtra("Plano", p);
 	    		        intent.putExtra("Punto", xy);
 	    		        intent.putExtra("InsertarMarca", true);
+	    		        intent.putExtra("Mensaje", m);
+	    		        intent.putExtra("Respuesta", true);
 	    		        startActivity(intent);
 	    		    	finish();
 	        	    }

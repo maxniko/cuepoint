@@ -195,6 +195,8 @@ public class SMSRecibido extends Activity {
 		    	    Intent intent = new Intent(SMSRecibido.this, Imagen.class);
 		    	    intent.putExtra("Plano", plano);
 		    	    intent.putExtra("InsertarMarca", false);
+		    	    intent.putExtra("Respuesta", true);
+			        intent.putExtra("Mensaje", mensaje);
 		    	    startActivity(intent);
 		        }
 		        else
@@ -241,6 +243,8 @@ public class SMSRecibido extends Activity {
 		        intent.putExtra("Plano", p);
 		        intent.putExtra("Punto", xy);
 		        intent.putExtra("InsertarMarca", true);
+	    	    intent.putExtra("Respuesta", true);
+		        intent.putExtra("Mensaje", mensaje);
 		        startActivity(intent);
 		    	finish();
 			}
