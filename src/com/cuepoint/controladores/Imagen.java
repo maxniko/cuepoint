@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
@@ -46,22 +47,21 @@ public class Imagen extends Activity implements OnTouchListener{
     private int ZOOM_ACTUAL = 0;
     private float scaleIn = 1.17f;
     private float scaleOut = 0.8547f;
-        
+    
     private static final int REQUEST_CHOOSE_PHONE = 1;
     
 	 // Estas matrices serán usadas para el zoom y mover la imagen
-	 Matrix matrix = new Matrix();  
-	 Matrix savedMatrix = new Matrix();  
-	  
+	 Matrix matrix = new Matrix();
+	 Matrix savedMatrix = new Matrix();
+	 
 	 // We can be in one of these 3 states  
-	 static final int NONE = 0;  
-	 static final int DRAG = 1;  
-	 static final int ZOOM = 2;  
-	 int mode = NONE;  
+	 static final int NONE = 0;
+	 static final int DRAG = 1;
+	 int mode = NONE;
 	  
 	 // Remember some things for zooming  
 	 PointF start = new PointF();
-	 	 
+	 
 	 private int escalaMarcador = 20;
 	 
 	 //coordenadas del marcador
@@ -174,6 +174,9 @@ public class Imagen extends Activity implements OnTouchListener{
 			menu.add(Menu.NONE, 4, Menu.NONE, "Responder").setIcon(R.drawable.enviar);
 		}
 		menu.add(Menu.NONE, 2, Menu.NONE, "Cancelar").setIcon(R.drawable.cancelar);
+		SubMenu submenu1 = menu.addSubMenu(Menu.NONE, 5, Menu.NONE, "Marcadores Favoritos").setIcon(R.drawable.marcador);
+			submenu1.add(Menu.NONE, 6, Menu.NONE, "Insertar marcador");
+			submenu1.add(Menu.NONE, 7, Menu.NONE, "Guardar marcador");
 		menu.add(Menu.NONE, 3, Menu.NONE, "Opciones").setIcon(R.drawable.opciones);
 	}
 	
@@ -241,6 +244,12 @@ public class Imagen extends Activity implements OnTouchListener{
 			Intent in = new Intent();
 			in.setComponent(new ComponentName(this, Preferencias.class));
 			startActivity(in);
+		//Insertar marcador favorito
+		case 6:
+			return true;
+		//Guardar marcador favorito
+		case 7:
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

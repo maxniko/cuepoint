@@ -71,6 +71,33 @@ public class Mensajes extends Activity{
         if(!itemsR.isEmpty()) {
 	        ItemMensajeAdapter adapterR = new ItemMensajeAdapter(this, itemsR);
 	        recibidos.setAdapter(adapterR);
+	        recibidos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+	        	
+	        	  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	        	    Intent intent = new Intent(view.getContext(), Imagen.class);
+	        	    Mensaje m = itemsR.get(position);
+	        	    if (m.getTipo() == 3)
+	        	    {
+	        	    	//Obtengo los datos del plano desde la base de datos
+	    				PlanosSQLite psql = new PlanosSQLite();
+	    		        Plano p = psql.getPlanoPorId(Mensajes.this, m.getIdPlano());
+	    		        
+	    		        //Guardo las coordenadas en un objeto Point para pasar a la otra activity
+	    		        Punto xy = new Punto(m.getX(), m.getY());
+	    		        
+	    		        intent.putExtra("Plano", p);
+	    		        intent.putExtra("Punto", xy);
+	    		        intent.putExtra("InsertarMarca", true);
+	    		        intent.putExtra("Mensaje", m);
+	    		        intent.putExtra("Respuesta", true);
+	    		        startActivity(intent);
+	        	    }
+	        	    else
+	        	    {
+	        	    	
+	        	    }
+	        	  }
+	        	});
         }
 	}
 	
