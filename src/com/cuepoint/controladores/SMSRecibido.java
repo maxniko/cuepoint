@@ -60,7 +60,6 @@ public class SMSRecibido extends Activity {
         verTipoMensaje();
         buscarNombreContacto();
         extraerTextoDeMensaje();
-        guardarMensajeEnSQLite();
         vibrar(2000);
         if (mensaje.getTipo() == 2) {
         	showDialog(SOLICITUD);
@@ -187,7 +186,8 @@ public class SMSRecibido extends Activity {
 			public void onClick(DialogInterface dialog, int which) {
 				PlanosSQLite p = new PlanosSQLite();
 		        final ArrayList<Plano> lista = p.getPlanos(SMSRecibido.this);
-		        
+		        mensaje.setEstado(1); //Mensaje leido
+		        guardarMensajeEnSQLite();
 				if(lista.size() == 1)
 		        {
 		        	Plano plano = lista.get(0);
@@ -209,6 +209,8 @@ public class SMSRecibido extends Activity {
 		});
     	builder.setNegativeButton("Cancelar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
+				mensaje.setEstado(0); //Mensaje no leido
+		        guardarMensajeEnSQLite();
 				dialog.cancel();
 				finish();
 			}

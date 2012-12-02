@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background" >
+
+    <ImageView
+        android:id="@+id/estadoSMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/abrir"
+        android:maxHeight="50dp"
+        android:maxWidth="50dp"
+        android:padding="5dp"
+        android:src="@drawable/flecha_verde" />
+
+    <ImageView
+        android:id="@+id/imagenListView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/abrir"
+        android:src="@drawable/flecha_verde" />
+
+    <TextView
+        android:id="@+id/nombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="40dp"
+        android:text="@string/nombre_lugar"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/blanco" />
+
+    <TextView
+        android:id="@+id/descripcion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/nombre"
+        android:layout_below="@+id/nombre"
+        android:text="@string/descripcion"
+        android:textColor="@color/blanco" />
+
+</RelativeLayout>

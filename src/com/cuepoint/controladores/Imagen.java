@@ -19,6 +19,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -347,6 +348,7 @@ public class Imagen extends Activity implements OnTouchListener{
 		}
 	}
 	
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if ((requestCode == REQUEST_CHOOSE_PHONE) && (resultCode == Activity.RESULT_OK)) {
 			try {
@@ -409,7 +411,7 @@ public class Imagen extends Activity implements OnTouchListener{
 			    File imgFile = new File(ruta_sd.getAbsolutePath(), imagenPlano.getRutaImagen());
 			    
 			    if(imgFile.exists()){
-			    	imagen = (BitmapDrawable) BitmapDrawable.createFromPath(imgFile.getAbsolutePath());
+			    	imagen = (BitmapDrawable) Drawable.createFromPath(imgFile.getAbsolutePath());
 			    	altoOriginal = imagen.getBitmap().getHeight();
 			    	anchoOriginal = imagen.getBitmap().getWidth();
 	            }

@@ -5,6 +5,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Data;
 import android.view.View;
@@ -24,7 +25,7 @@ public class ListaContactos extends ListActivity
 		// Query: contacts with phone shorted by name
 		Cursor mCursor = getContentResolver().query(
 		Data.CONTENT_URI,
-		new String[] { Data._ID, Data.DISPLAY_NAME, Phone.NUMBER,Phone.TYPE },
+		new String[] { BaseColumns._ID, Data.DISPLAY_NAME, Phone.NUMBER,Phone.TYPE },
 			Data.MIMETYPE + "='" + Phone.CONTENT_ITEM_TYPE + "' AND "
 			+ Phone.NUMBER + " IS NOT NULL", null,
 			Data.DISPLAY_NAME + " ASC");

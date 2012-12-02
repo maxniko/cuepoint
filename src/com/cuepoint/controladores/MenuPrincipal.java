@@ -28,6 +28,7 @@ public class MenuPrincipal extends Activity {
 		startActivityForResult(intent, REQUEST_CHOOSE_PHONE);
 	}
 	
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if ((requestCode == REQUEST_CHOOSE_PHONE) && (resultCode == Activity.RESULT_OK)) {
 			try {

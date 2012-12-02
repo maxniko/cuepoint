@@ -58,6 +58,7 @@ public class EnviarSMS extends Activity {
 		startActivityForResult(intent, REQUEST_CHOOSE_PHONE);
 	}
 	
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if ((requestCode == REQUEST_CHOOSE_PHONE) && (resultCode == Activity.RESULT_OK)) {
 			try {
@@ -110,6 +111,7 @@ public class EnviarSMS extends Activity {
 			m.setY(cy);
 			m.setIdPlano(idPlano);
 		}
+		m.setEstado(1); //Mensaje leido
 		msql.nuevoMensaje(this, m);
 		
 		//Guardar el SMS en la base de datos de Android para que sea accesible desde el SO

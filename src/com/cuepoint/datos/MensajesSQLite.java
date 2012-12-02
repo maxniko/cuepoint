@@ -30,7 +30,7 @@ public class MensajesSQLite extends Activity{
         
         //Leer datos de la base de datos
         //Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
-        Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha,coordenadaX,coordenadaY,idPlano " +
+        Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha,coordenadaX,coordenadaY,idPlano,estado " +
         		"FROM Mensajes " +
         		"WHERE tipo<2 ORDER BY idMensaje DESC", null);
         
@@ -52,6 +52,7 @@ public class MensajesSQLite extends Activity{
             	m.setX(c.getFloat(5));
             	m.setY(c.getFloat(6));
             	m.setIdPlano(c.getInt(7));
+            	m.setEstado(c.getInt(8));
             	cr = contexto.getContentResolver();
             	m.setNombre(buscarNombreContacto(m.getNumeroOrigenDestino()));
             	itemsE.add(m);
@@ -71,7 +72,7 @@ public class MensajesSQLite extends Activity{
         
         //Leer datos de la base de datos
         //Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
-        Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha,coordenadaX,coordenadaY,idPlano " +
+        Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha,coordenadaX,coordenadaY,idPlano,estado " +
         		"FROM Mensajes " +
         		"WHERE tipo>1 ORDER BY idMensaje DESC", null);
         
@@ -93,6 +94,7 @@ public class MensajesSQLite extends Activity{
             	m.setX(c.getFloat(5));
             	m.setY(c.getFloat(6));
             	m.setIdPlano(c.getInt(7));
+            	m.setEstado(c.getInt(8));
             	cr = contexto.getContentResolver();
             	m.setNombre(buscarNombreContacto(m.getNumeroOrigenDestino()));
             	itemsR.add(m);
@@ -113,24 +115,26 @@ public class MensajesSQLite extends Activity{
         
         if(mensaje.getIdPlano() == 0)
         {
-	        sb.append("INSERT INTO Mensajes (tipo, nroOrigen, texto, fecha) values (");
+	        sb.append("INSERT INTO Mensajes (tipo, nroOrigen, texto, fecha, estado) values (");
 	        sb.append(mensaje.getTipo() + ",");
 	        sb.append(mensaje.getNumeroOrigenDestino() + ",");
 	        sb.append("'" + mensaje.getTexto() + "','");
-	        sb.append(mensaje.getFecha());
-	        sb.append("');");
+	        sb.append(mensaje.getFecha() + "',");
+	        sb.append(mensaje.getEstado());
+	        sb.append(");");
         }
         else
         {
-        	sb.append("INSERT INTO Mensajes (tipo, nroOrigen, texto, fecha, coordenadaX, coordenadaY, idPlano) values (");
+        	sb.append("INSERT INTO Mensajes (tipo, nroOrigen, texto, fecha, coordenadaX, coordenadaY, idPlano, estado) values (");
 	        sb.append(mensaje.getTipo() + ",");
 	        sb.append(mensaje.getNumeroOrigenDestino() + ",");
 	        sb.append("'" + mensaje.getTexto() + "','");
 	        sb.append(mensaje.getFecha() + "','");
 	        sb.append(mensaje.getX() + "','");
 	        sb.append(mensaje.getY() + "','");
-	        sb.append(mensaje.getIdPlano());
-	        sb.append("');");
+	        sb.append(mensaje.getIdPlano() + "',");
+	        sb.append(mensaje.getEstado());
+	        sb.append(");");
         }
         //Si hemos abierto correctamente la base de datos
         if(db != null)

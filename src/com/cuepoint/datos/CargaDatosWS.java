@@ -12,7 +12,7 @@ public class CargaDatosWS {
 		SoapObject rpc = new SoapObject("http://silviokucharski.com.ar/service","Boletin");
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.bodyOut = rpc;
-		envelope.encodingStyle = SoapSerializationEnvelope.XSD;
+		envelope.encodingStyle = SoapEnvelope.XSD;
 		HttpTransportSE ht = null;
 		try {
 			String conexion = "http://silviokucharski.com.ar/service/servicio.php";

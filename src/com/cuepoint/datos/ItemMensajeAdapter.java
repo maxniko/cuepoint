@@ -44,7 +44,7 @@ public class ItemMensajeAdapter extends BaseAdapter{
 	    if(convertView == null)
 	    {
 	    	LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	    	vi = inflater.inflate(R.layout.planos, null);
+	    	vi = inflater.inflate(R.layout.mensajes, null);
 	    }
 	             
 	    Mensaje item = items.get(position);
@@ -70,6 +70,16 @@ public class ItemMensajeAdapter extends BaseAdapter{
 	    else
 	    {
 	    	img.setImageBitmap(null);
+	    }
+	    ImageView sobre = (ImageView) vi.findViewById(R.id.estadoSMS);
+	    //Si el mensaje no esta leido, asigno el icono del sobre cerrado
+	    if(item.getEstado() == 0)
+	    {
+	    	sobre.setImageResource(R.drawable.no_leido);
+	    }
+	    else
+	    {
+	    	sobre.setImageResource(R.drawable.leido);
 	    }
 	    return vi;
 	  }

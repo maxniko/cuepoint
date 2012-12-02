@@ -16,6 +16,7 @@ public class Mensaje implements Parcelable {
 	private float x;
 	private float y;
 	private int idPlano = 0;
+	private int estado;
 	
 	public Mensaje(int id, int tipo, String texto, int nroOrigen, String fecha) 
 	{
@@ -171,6 +172,14 @@ public class Mensaje implements Parcelable {
 
 	public void setIdPlano(int idPlano) {
 		this.idPlano = idPlano;
+	}
+
+	public int getEstado() {
+		return estado;
+	}
+
+	public void setEstado(int estado) {
+		this.estado = estado;
 	}
 
 	/**
