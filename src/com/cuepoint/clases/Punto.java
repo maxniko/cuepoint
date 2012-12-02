@@ -15,7 +15,8 @@ public class Punto implements Parcelable {
 	
 	public Punto()
 	{
-		
+		x = -1;
+		y = -1;
 	}
 	
 	public Punto(Parcel parcel) {

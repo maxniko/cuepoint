@@ -18,18 +18,18 @@ public class MensajesSQLite extends Activity{
 	ArrayList<Mensaje> itemsR;
 	ContentResolver cr = null;
 	
-	//0: Enviados, 1: Recibidos
+	//Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
 	
 	public ArrayList<Mensaje> getMensajesEnviados(Context contexto)
 	{
 		itemsE = new ArrayList<Mensaje>();
     	
-    	//Abrimos la base de datos 'Planos'
+    	//Abrimos la base de datos 'CuePoint'
 		ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
         SQLiteDatabase db = pdb.getReadableDatabase();
         
         //Leer datos de la base de datos
-      //Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
+        //Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
         Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha,coordenadaX,coordenadaY,idPlano " +
         		"FROM Mensajes " +
         		"WHERE tipo<2 ORDER BY fecha", null);
@@ -62,7 +62,7 @@ public class MensajesSQLite extends Activity{
 	{
 		itemsR = new ArrayList<Mensaje>();
     	
-    	//Abrimos la base de datos 'Planos'
+    	//Abrimos la base de datos 'CuePoint'
 		ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
         SQLiteDatabase db = pdb.getReadableDatabase();
         
@@ -98,7 +98,7 @@ public class MensajesSQLite extends Activity{
 	
 	public void nuevoMensaje(Context contexto, Mensaje mensaje)
 	{
-    	//Abrimos la base de datos 'Planos'
+    	//Abrimos la base de datos 'CuePoint'
 		ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
          
         // Insertar datos en la base de datos
@@ -138,7 +138,7 @@ public class MensajesSQLite extends Activity{
 	
 	public void borrarEnviados(Context contexto)
 	{
-		//Abrimos la base de datos 'Planos'
+		//Abrimos la base de datos 'CuePoint'
 		ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
          
         // Insertar datos en la base de datos

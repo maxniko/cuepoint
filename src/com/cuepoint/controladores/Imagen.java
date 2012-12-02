@@ -35,6 +35,7 @@ import com.cuepoint.actividades.R;
 import com.cuepoint.clases.Mensaje;
 import com.cuepoint.clases.Plano;
 import com.cuepoint.clases.Punto;
+import com.cuepoint.datos.MarcadoresSQLite;
 
 /**
  * @author Silvio
@@ -81,6 +82,9 @@ public class Imagen extends Activity implements OnTouchListener{
 	 //Indica si es una respuesta a un mensaje
 	 boolean respuesta = false;
 	 Mensaje mensaje;
+	 
+	 //Marcador favorito de un plano
+	 Punto marcador;
     
     
 	@Override
@@ -91,6 +95,8 @@ public class Imagen extends Activity implements OnTouchListener{
         getPlanoEnIntent();
         
         cargarImagen();
+        
+        cargarMarcador();
         
         Bundle b = getIntent().getExtras();
         if(b.getBoolean("Respuesta"))
@@ -114,7 +120,30 @@ public class Imagen extends Activity implements OnTouchListener{
 		dibujarMarca();
 	}
 	
-	protected void cargarImagen()
+	private void cargarMarcador()
+	{
+		MarcadoresSQLite m = new MarcadoresSQLite();
+		marcador = m.getMarcadorPorIdPlano(this, imagenPlano.getIdPlano());
+	}
+	
+	private void guardarMarcador()
+	{
+		MarcadoresSQLite m = new MarcadoresSQLite();
+		if(marcador.getX() > 0)
+		{
+			marcador.setX(cx);
+			marcador.setY(cy);
+			m.guardarMarcador(this, marcador, imagenPlano.getIdPlano());
+		}
+		else
+		{
+			marcador.setX(cx);
+			marcador.setY(cy);
+			m.nuevoMarcador(this, marcador, imagenPlano.getIdPlano());
+		}
+	}
+	
+	private void cargarImagen()
 	{
 		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
 		BitmapDrawable d = leerImagenesSD();
@@ -205,6 +234,7 @@ public class Imagen extends Activity implements OnTouchListener{
 			ProgressBar pb = (ProgressBar) findViewById(R.id.barraProgresoZoom);
 			pb.setProgress(0);
 			cargarImagen();
+			cargarMarcador();
 			return true;
 		//Enviar
 		case 1:
@@ -246,9 +276,31 @@ public class Imagen extends Activity implements OnTouchListener{
 			startActivity(in);
 		//Insertar marcador favorito
 		case 6:
+			if(marcador.getX() != -1)
+			{
+				cx = marcador.getX();
+				cy = marcador.getY();
+				dibujarMarca();
+			}
+			else
+			{
+				Toast toast = Toast.makeText(this, "No hay marcadores guardados en este plano", Toast.LENGTH_LONG);
+	    		toast.show();
+			}
 			return true;
 		//Guardar marcador favorito
 		case 7:
+			if(cx > -1 && cy > -1)
+			{
+				guardarMarcador();
+				Toast t = Toast.makeText(this, "Marcador guardado", Toast.LENGTH_SHORT);
+				t.show();
+			}
+			else
+			{
+				Toast toast = Toast.makeText(this, "Debe marcar un punto en el plano antes de guardar", Toast.LENGTH_LONG);
+	    		toast.show();
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
