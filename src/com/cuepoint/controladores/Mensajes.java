@@ -25,7 +25,8 @@ import com.cuepoint.datos.PlanosSQLite;
 public class Mensajes extends Activity{
 	ArrayList<Mensaje> itemsE;
 	ArrayList<Mensaje> itemsR;
-	boolean acepto = false;
+	private static final int ENVIADOS = 1;
+	private static final int RECIBIDOS = 2;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -110,21 +111,13 @@ public class Mensajes extends Activity{
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		MensajesSQLite msql = new MensajesSQLite();
+		
 		switch (item.getItemId()) {
 		case R.id.eliminarEnviados:
-			showDialog(1);
-			if (acepto) {
-				msql.borrarEnviados(this);
-			}
-			acepto = false;
+			showDialog(ENVIADOS);
 			return true;
 		case R.id.eliminarRecibidos:
-			showDialog(2);
-			if (acepto) {
-				msql.borrarRecibidos(this);
-			}
-			acepto = false;
+			showDialog(RECIBIDOS);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -138,11 +131,11 @@ public class Mensajes extends Activity{
 
     	switch(id)
     	{
-    		case 1:
-    			dialogo = crearDialogoConfirmacion("enviados");
+    		case ENVIADOS:
+    			dialogo = crearDialogoConfirmacion("enviados", ENVIADOS);
     			break;
-    		case 2:
-    			dialogo = crearDialogoConfirmacion("recibidos");
+    		case RECIBIDOS:
+    			dialogo = crearDialogoConfirmacion("recibidos", RECIBIDOS);
     			break;
     		default:
     			dialogo = null;
@@ -152,7 +145,7 @@ public class Mensajes extends Activity{
     	return dialogo;
     }
 	
-	private Dialog crearDialogoConfirmacion(String mensaje)
+	private Dialog crearDialogoConfirmacion(String mensaje, final int id)
 	{
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	
@@ -160,14 +153,35 @@ public class Mensajes extends Activity{
     	builder.setMessage("¿Desea eliminar todos los mensajes " + mensaje + "?");
     	builder.setPositiveButton("Aceptar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				acepto = true;
-		    	finish();
+				MensajesSQLite msql = new MensajesSQLite();
+				switch(id)
+		    	{
+		    		case ENVIADOS:
+		    			boolean exitoE = msql.borrarEnviados(Mensajes.this);
+		    			if(exitoE) {
+		    				ListView enviados = (ListView)findViewById(R.id.msjsEnviados);
+		    				itemsE.clear();
+			    			ItemMensajeAdapter adapter = new ItemMensajeAdapter(Mensajes.this, itemsE);
+			    	        enviados.setAdapter(adapter);
+		    			}
+		    			break;
+		    		case RECIBIDOS:
+		    			boolean exitoR = msql.borrarRecibidos(Mensajes.this);
+		    			if(exitoR) {
+		    				ListView recibidos = (ListView) findViewById(R.id.msjsRecibidos);
+		    				itemsR.clear();
+		    				ItemMensajeAdapter ima = new ItemMensajeAdapter(Mensajes.this, itemsR);
+		    				recibidos.setAdapter(ima);
+		    			}
+		    			break;
+		    		default:
+		    			break;
+		    	}
 			}
 		});
     	builder.setNegativeButton("Cancelar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
-				finish();
 			}
 		});
     	

@@ -10,7 +10,7 @@ public class Mensaje implements Parcelable {
 	private int idMensaje;
 	private int tipo;
 	private String nombre;
-	private String textoOpcional;
+	private String textoOpcional = "";
 	private int numeroOrigenDestino;
 	private String fecha;
 	private float x;

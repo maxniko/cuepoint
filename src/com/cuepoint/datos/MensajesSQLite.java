@@ -32,7 +32,7 @@ public class MensajesSQLite extends Activity{
         //Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
         Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha,coordenadaX,coordenadaY,idPlano " +
         		"FROM Mensajes " +
-        		"WHERE tipo<2 ORDER BY fecha", null);
+        		"WHERE tipo<2 ORDER BY idMensaje DESC", null);
         
         //Nos aseguramos de que existe al menos un registro
         if (c.moveToFirst()) {
@@ -42,7 +42,10 @@ public class MensajesSQLite extends Activity{
             	m.setIdMensaje(c.getInt(0));
             	m.setTipo(c.getInt(1));
             	m.setNumeroOrigenDestino(c.getInt(2));
-            	m.setTexto(c.getString(3));
+            	if (c.getString(3) != null)
+            	{
+            		m.setTexto(c.getString(3));
+            	}
             	//long milisegundos = c.getLong(3);
             	//Date f = new Date(milisegundos);
             	m.setFecha(c.getString(4));
@@ -70,7 +73,7 @@ public class MensajesSQLite extends Activity{
         //Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
         Cursor c = db.rawQuery("SELECT idMensaje,tipo,nroOrigen,texto,fecha,coordenadaX,coordenadaY,idPlano " +
         		"FROM Mensajes " +
-        		"WHERE tipo>1 ORDER BY fecha", null);
+        		"WHERE tipo>1 ORDER BY idMensaje DESC", null);
         
         //Nos aseguramos de que existe al menos un registro
         if (c.moveToFirst()) {
@@ -80,7 +83,10 @@ public class MensajesSQLite extends Activity{
             	m.setIdMensaje(c.getInt(0));
             	m.setTipo(c.getInt(1));
             	m.setNumeroOrigenDestino(c.getInt(2));
-            	m.setTexto(c.getString(3));
+            	if (c.getString(3) != null)
+            	{
+            		m.setTexto(c.getString(3));
+            	}
             	//long milisegundos = c.getLong(3);
             	//Date f = new Date(milisegundos);
             	m.setFecha(c.getString(4));
@@ -136,7 +142,7 @@ public class MensajesSQLite extends Activity{
         }
 	}
 	
-	public void borrarEnviados(Context contexto)
+	public boolean borrarEnviados(Context contexto)
 	{
 		//Abrimos la base de datos 'CuePoint'
 		ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
@@ -148,13 +154,14 @@ public class MensajesSQLite extends Activity{
         //Si hemos abierto correctamente la base de datos
         if(db != null)
         {
-            db.execSQL("DELETE FROM Mensajes WHERE tipo = 0;");
+            db.execSQL("DELETE FROM Mensajes WHERE tipo < 2;");
             //Cerramos la base de datos
             db.close();
         }
+		return true;
 	}
 	
-	public void borrarRecibidos(Context contexto)
+	public boolean borrarRecibidos(Context contexto)
 	{
 		//Abrimos la base de datos 'Planos'
 		ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
@@ -166,10 +173,11 @@ public class MensajesSQLite extends Activity{
         //Si hemos abierto correctamente la base de datos
         if(db != null)
         {
-            db.execSQL("DELETE FROM Mensajes WHERE tipo = 1;");
+            db.execSQL("DELETE FROM Mensajes WHERE tipo > 1;");
             //Cerramos la base de datos
             db.close();
         }
+        return true;
 	}
 	
 	protected String buscarNombreContacto(int numero)

@@ -29,5 +29,17 @@
     <string name="boletin">Boletin</string>
     <string name="zoom">Zoom</string>
     <string name="abrir">Abrir</string>
+    <string name="mensajes_enviados">Mensajes enviados</string>
+    <string name="mensajes_recibidos">Mensajes recibidos</string>
+    <string name="ayudaCP">CuePoint es una aplicación que le permite compartir su ubicación dentro de un edificio con sus amigos.\n
+Para enviar su posición realice los siguientes pasos:\n
+1	Desde el menú principal de la aplicación haga click en Enviar Marcador\n
+2	Marque su posición (o la posición que desea enviar) en el plano\n
+3	Haga click en enviar\n
+4	Seleccione el usuario a quien desea enviar el marcador\n
+5	(Opcional) Escriba un mensaje corto (hasta 60 caracteres)\n
+6	Haga click en enviar\n
+        
+    </string>
 
 </resources>

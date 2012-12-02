@@ -6,7 +6,11 @@ package com.cuepoint.controladores;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -86,7 +90,6 @@ public class Imagen extends Activity implements OnTouchListener{
 	 //Marcador favorito de un plano
 	 Punto marcador;
     
-    
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +114,10 @@ public class Imagen extends Activity implements OnTouchListener{
         	dibujarMarca();
         	imagenAccesoEscritura = false;
         }
+        if(!mensaje.getTexto().equals(""))
+        {
+        	showDialog(1);
+        }
     }
 	
 	@Override
@@ -119,6 +126,39 @@ public class Imagen extends Activity implements OnTouchListener{
 		super.onResume();
 		dibujarMarca();
 	}
+	
+	@Override
+    protected Dialog onCreateDialog(int id) 
+	{
+    	Dialog dialogo = null;
+
+    	switch(id)
+    	{
+    		//Dialogo alerta
+    		case 1:
+    			dialogo = crearDialogoMensaje();
+    			break;
+    		default:
+    			dialogo = null;
+    			break;
+    	}
+    
+    	return dialogo;
+    }
+    
+    private Dialog crearDialogoMensaje()
+    {
+    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	
+    	builder.setTitle("Mansaje adicional");
+    	builder.setMessage(mensaje.getTexto());
+    	builder.setPositiveButton("OK", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+    	return builder.create();
+    }
 	
 	private void cargarMarcador()
 	{

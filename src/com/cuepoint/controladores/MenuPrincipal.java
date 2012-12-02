@@ -89,5 +89,12 @@ public class MenuPrincipal extends Activity {
     	intent.setComponent(new ComponentName(this, Mensajes.class));
     	startActivity(intent);
 	}
+	
+	public void ayudaClick(View v)
+	{
+		Intent intent = new Intent();
+    	intent.setComponent(new ComponentName(this, Ayuda.class));
+    	startActivity(intent);
+	}
 
 }

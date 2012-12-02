@@ -31,7 +31,6 @@ public class SMSRecibido extends Activity {
 	private static final int RESPUESTA = 2;
 	
 	Mensaje mensaje = null;
-	String nombre = "";
 	String textoSMS = "";
 	
 	long tiempo = 0;
@@ -136,7 +135,7 @@ public class SMSRecibido extends Activity {
         
         if (mCursor.moveToFirst()) {
             do {
-                nombre = mCursor.getString(nameIndex);
+                mensaje.setNombre(mCursor.getString(nameIndex));
                 mensaje.setNumeroOrigenDestino(Integer.parseInt(mCursor.getString(numberIndex)));
             } while (mCursor.moveToNext());
         }
@@ -176,13 +175,13 @@ public class SMSRecibido extends Activity {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	
     	builder.setTitle("CuePoint");
-    	if (nombre.equals(""))
+    	if (mensaje.getNombre().equals(""))
     	{
     		builder.setMessage("El numero " + mensaje.getNumeroOrigenDestino() + " solicita su ubicacion a traves de CuePoint, ¿Desea responder ahora?");
     	}
     	else
     	{
-    		builder.setMessage(nombre + " solicita su ubicacion a traves de CuePoint, ¿Desea responder ahora?");
+    		builder.setMessage(mensaje.getNombre() + " solicita su ubicacion a traves de CuePoint, ¿Desea responder ahora?");
     	}
     	builder.setPositiveButton("Aceptar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
@@ -222,13 +221,13 @@ public class SMSRecibido extends Activity {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	
     	builder.setTitle("CuePoint");
-    	if (nombre.equals(""))
+    	if (mensaje.getNombre().equals(""))
     	{
     		builder.setMessage("El numero " + mensaje.getNumeroOrigenDestino() + " le envía su ubicacion a traves de CuePoint, ¿Desea ver ahora?");
     	}
     	else
     	{
-    		builder.setMessage(nombre + " envía su ubicacion a traves de CuePoint, ¿Desea ver ahora?");
+    		builder.setMessage(mensaje.getNombre() + " envía su ubicacion a traves de CuePoint, ¿Desea ver ahora?");
     	}
     	builder.setPositiveButton("Aceptar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {

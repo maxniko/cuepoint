@@ -56,11 +56,12 @@
         android:onClick="opcionesClick"
         android:text="@string/menu_settings"
         android:textSize="15sp" />
-
+
     <Button
         android:id="@+id/button6"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:onClick="ayudaClick"
         android:text="@string/ayuda"
         android:textSize="15sp" />
 

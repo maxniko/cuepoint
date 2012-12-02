@@ -4,13 +4,13 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical" >
-
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Mensajes enviados"
+        android:text="@string/mensajes_enviados"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/blanco" />
 
@@ -20,13 +20,13 @@
         android:layout_height="220dp" >
 
     </ListView>
-
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Mensajes recibidos"
+        android:text="@string/mensajes_recibidos"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/blanco" />
 
