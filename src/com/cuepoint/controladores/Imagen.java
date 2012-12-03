@@ -151,7 +151,7 @@ public class Imagen extends Activity implements OnTouchListener{
     {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	
-    	builder.setTitle("Mansaje adicional");
+    	builder.setTitle("Mensaje adicional");
     	builder.setMessage(mensaje.getTexto());
     	builder.setPositiveButton("OK", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {

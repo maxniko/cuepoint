@@ -27,6 +27,7 @@ import com.cuepoint.datos.PlanosSQLite;
 public class MensajesEnviados extends Activity{
 	ArrayList<Mensaje> itemsE;
 	ListView enviados;
+	Mensaje mensaje;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,11 @@ public class MensajesEnviados extends Activity{
 	        	    }
 	        	    else
 	        	    {
-	        	    	
+	        	    	if(!m.getTexto().equals(""))
+	        	    	{
+	        	    		mensaje = m;
+	        	    		showDialog(2);
+	        	    	}
 	        	    }
 	        	  }
 	        	});
@@ -111,6 +116,10 @@ public class MensajesEnviados extends Activity{
     		case 1:
     			dialogo = crearDialogoEliminarMensaje();
     			break;
+    		//Dialogo para mostrar mensaje opcional
+    		case 2:
+    			dialogo = crearDialogoMensaje();
+    			break;
     		default:
     			dialogo = null;
     			break;
@@ -144,4 +153,18 @@ public class MensajesEnviados extends Activity{
     	
     	return builder.create();
 	}
+	
+	protected Dialog crearDialogoMensaje()
+    {
+    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	
+    	builder.setTitle("Mensaje adicional");
+    	builder.setMessage(mensaje.getTexto());
+    	builder.setPositiveButton("OK", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+    	return builder.create();
+    }
 }
