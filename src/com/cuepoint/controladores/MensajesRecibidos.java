@@ -102,7 +102,25 @@ public class MensajesRecibidos extends Activity{
 	@Override
     protected Dialog onCreateDialog(int id) 
 	{
-    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		Dialog dialogo = null;
+
+    	switch(id)
+    	{
+    		//Dialogo confirmación de eliminación de mensajes
+    		case 1:
+    			dialogo = crearDialogoEliminarMensaje();
+    			break;
+    		default:
+    			dialogo = null;
+    			break;
+    	}
+    
+    	return dialogo;
+    }
+	
+	protected Dialog crearDialogoEliminarMensaje()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	
     	builder.setTitle("Mensajes");
     	builder.setMessage("¿Desea eliminar todos los mensajes recibidos?");
@@ -125,5 +143,5 @@ public class MensajesRecibidos extends Activity{
 		});
     	
     	return builder.create();
-    }
+	}
 }

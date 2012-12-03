@@ -103,6 +103,23 @@ public class MensajesEnviados extends Activity{
 	@Override
     protected Dialog onCreateDialog(int id) 
 	{
+		Dialog dialogo = null;
+
+    	switch(id)
+    	{
+    		//Dialogo confirmación de eliminación de mensajes
+    		case 1:
+    			dialogo = crearDialogoEliminarMensaje();
+    			break;
+    		default:
+    			dialogo = null;
+    			break;
+    	}
+    	return dialogo;
+    }
+	
+	protected Dialog crearDialogoEliminarMensaje()
+	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
     	
     	builder.setTitle("Mensajes");
@@ -126,5 +143,5 @@ public class MensajesEnviados extends Activity{
 		});
     	
     	return builder.create();
-    }
+	}
 }
