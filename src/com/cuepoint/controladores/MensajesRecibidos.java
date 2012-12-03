@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
@@ -44,45 +45,76 @@ public class MensajesRecibidos extends Activity{
 	        recibidos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 	        	
 	        	  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	        	    Intent intent = new Intent(view.getContext(), Imagen.class);
-	        	    Mensaje m = itemsR.get(position);
-	        	    if(m.getEstado() == 0)
+	        	    mensaje = itemsR.get(position);
+	        	    if(mensaje.getEstado() == 0)
 	        	    {
-	        	    	m.setEstado(1);
-	        	    	itemsR.set(position, m);
+	        	    	mensaje.setEstado(1);
+	        	    	itemsR.set(position, mensaje);
 	        	    	MensajesSQLite msql = new MensajesSQLite();
-	        	    	msql.marcarLeido(MensajesRecibidos.this, m.getIdMensaje());
+	        	    	msql.marcarLeido(MensajesRecibidos.this, mensaje.getIdMensaje());
 	        	    	msql = null;
 		    			ItemMensajeAdapter adapter = new ItemMensajeAdapter(MensajesRecibidos.this, itemsR);
 		    	        recibidos.setAdapter(adapter);
 	        	    }
-	        	    if (m.getTipo() == 3)
+	        	    if (mensaje.getTipo() == 3)
 	        	    {
-	        	    	//Obtengo los datos del plano desde la base de datos
-	    				PlanosSQLite psql = new PlanosSQLite();
-	    		        Plano p = psql.getPlanoPorId(MensajesRecibidos.this, m.getIdPlano());
-	    		        
-	    		        //Guardo las coordenadas en un objeto Point para pasar a la otra activity
-	    		        Punto xy = new Punto(m.getX(), m.getY());
-	    		        
-	    		        intent.putExtra("Plano", p);
-	    		        intent.putExtra("Punto", xy);
-	    		        intent.putExtra("InsertarMarca", true);
-	    		        intent.putExtra("Mensaje", m);
-	    		        intent.putExtra("Respuesta", true);
-	    		        startActivity(intent);
+	        	    	iniciarActividadImagen();
 	        	    }
 	        	    else
 	        	    {
-	        	    	if(!m.getTexto().equals(""))
+	        	    	if(!mensaje.getTexto().equals(""))
 	        	    	{
-	        	    		mensaje = m;
 	        	    		showDialog(2);
+	        	    	}
+	        	    	else
+	        	    	{
+	        	    		showDialog(3);
 	        	    	}
 	        	    }
 	        	  }
 	        	});
         }
+	}
+	
+	private void iniciarActividadImagen()
+	{
+		//Obtengo los datos del plano desde la base de datos
+		PlanosSQLite psql = new PlanosSQLite();
+		if (mensaje.getTipo() == 3)
+	    {
+			Intent intent = new Intent(this, Imagen.class);
+	        Plano p = psql.getPlanoPorId(MensajesRecibidos.this, mensaje.getIdPlano());
+	        
+	        //Guardo las coordenadas en un objeto Point para pasar a la otra activity
+	        Punto xy = new Punto(mensaje.getX(), mensaje.getY());
+	        
+	        intent.putExtra("Plano", p);
+	        intent.putExtra("Punto", xy);
+	        intent.putExtra("InsertarMarca", true);
+	        intent.putExtra("Mensaje", mensaje);
+	        intent.putExtra("Respuesta", true);
+	        startActivity(intent);
+	    }
+		else
+		{
+			ArrayList<Plano> lista = psql.getPlanos(this);
+	        
+	        if(lista.size() == 1)
+	        {
+	        	Plano plano = lista.get(0);
+	    	    Intent intent = new Intent(this, Imagen.class);
+	    	    intent.putExtra("Plano", plano);
+	    	    intent.putExtra("InsertarMarca", false);
+	    	    intent.putExtra("Respuesta", false);
+	    	    startActivity(intent);
+	        }
+	        else
+	        {
+	        	Intent intent = new Intent();
+	        	intent.setComponent(new ComponentName(this, ListaPlanos.class));
+	        	startActivity(intent);
+	        }
+		}
 	}
 	
 	@Override
@@ -103,6 +135,24 @@ public class MensajesRecibidos extends Activity{
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog) {
+		if(id == 3)
+		{
+			String nombre = "";
+			if(mensaje.getNombre().equals(""))
+			{
+				nombre = Integer.toString(mensaje.getNumeroOrigenDestino());
+			}
+			else
+			{
+				nombre = mensaje.getNombre();
+			}
+			((AlertDialog)dialog).setTitle(nombre);
+		}
+		super.onPrepareDialog(id, dialog);
+	}
 	
 	@Override
     protected Dialog onCreateDialog(int id) 
@@ -119,6 +169,10 @@ public class MensajesRecibidos extends Activity{
     		case 2:
     			dialogo = crearDialogoMensaje();
     			break;
+    		//Dialogo para responder un mensaje
+    		case 3:
+    			dialogo = crearDialogoResponder();
+    			break;
     		default:
     			dialogo = null;
     			break;
@@ -127,6 +181,25 @@ public class MensajesRecibidos extends Activity{
     	return dialogo;
     }
 	
+	private Dialog crearDialogoResponder() {
+		
+    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	
+    	builder.setTitle("Titulo");
+    	builder.setMessage("Desea responder a la persona seleccionada?");
+    	builder.setNegativeButton("Cerrar", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+    	builder.setPositiveButton("Responder", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				iniciarActividadImagen();
+			}
+		});
+    	return builder.create();
+	}
+
 	protected Dialog crearDialogoEliminarMensaje()
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -160,7 +233,7 @@ public class MensajesRecibidos extends Activity{
     	
     	builder.setTitle("Mensaje adicional");
     	builder.setMessage(mensaje.getTexto());
-    	builder.setPositiveButton("OK", new OnClickListener() {
+    	builder.setPositiveButton("Cerrar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
 			}

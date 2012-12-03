@@ -153,7 +153,7 @@ public class Imagen extends Activity implements OnTouchListener{
     	
     	builder.setTitle("Mensaje adicional");
     	builder.setMessage(mensaje.getTexto());
-    	builder.setPositiveButton("OK", new OnClickListener() {
+    	builder.setPositiveButton("Cerrar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
 			}
@@ -280,6 +280,7 @@ public class Imagen extends Activity implements OnTouchListener{
 		//Enviar
 		case 1:
 			Intent i = new Intent();
+			//Es una respuesta para una persona en particular
 			if(respuesta)
 			{
 				Bundle bundle = new Bundle();
@@ -299,6 +300,7 @@ public class Imagen extends Activity implements OnTouchListener{
 				i.setComponent(new ComponentName(this, EnviarSMS.class));
 				startActivity(i);
 			}
+			//No es una respuesta entonces se muestra la lista de contactos
 			else
 			{
 				i.setComponent(new ComponentName(this, ListaContactos.class));
@@ -319,6 +321,7 @@ public class Imagen extends Activity implements OnTouchListener{
 		case 6:
 			if(marcador.getX() != -1)
 			{
+				imagenAccesoEscritura = true;
 				cx = marcador.getX();
 				cy = marcador.getY();
 				dibujarMarca();

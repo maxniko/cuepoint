@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -44,46 +45,54 @@ public class MensajesEnviados extends Activity{
 	        enviados.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 	        	
 	        	  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-	        	    Intent intent = new Intent(view.getContext(), Imagen.class);
-	        	    Mensaje m = itemsE.get(position);
+	        	    mensaje = itemsE.get(position);
 	        	    //Si es un mensaje no leido se actualiza el estado a leído
-	        	    if(m.getEstado() == 0)
+	        	    if(mensaje.getEstado() == 0)
 	        	    {
-	        	    	m.setEstado(1);
-	        	    	itemsE.set(position, m);
+	        	    	mensaje.setEstado(1);
+	        	    	itemsE.set(position, mensaje);
 	        	    	MensajesSQLite msql = new MensajesSQLite();
-	        	    	msql.marcarLeido(MensajesEnviados.this, m.getIdMensaje());
+	        	    	msql.marcarLeido(MensajesEnviados.this, mensaje.getIdMensaje());
 	        	    	msql = null;
 		    			ItemMensajeAdapter adapter = new ItemMensajeAdapter(MensajesEnviados.this, itemsE);
 		    	        enviados.setAdapter(adapter);
 	        	    }
-	        	    if (m.getTipo() == 1)
+	        	    if (mensaje.getTipo() == 1)
 	        	    {
-	        	    	//Obtengo los datos del plano desde la base de datos
-	    				PlanosSQLite psql = new PlanosSQLite();
-	    		        Plano p = psql.getPlanoPorId(MensajesEnviados.this, m.getIdPlano());
-	    		        
-	    		        //Guardo las coordenadas en un objeto Point para pasar a la otra activity
-	    		        Punto xy = new Punto(m.getX(), m.getY());
-	    		        
-	    		        intent.putExtra("Plano", p);
-	    		        intent.putExtra("Punto", xy);
-	    		        intent.putExtra("InsertarMarca", true);
-	    		        intent.putExtra("Mensaje", m);
-	    		        intent.putExtra("Respuesta", true);
-	    		        startActivity(intent);
+	        	    	iniciarActividadImagen();
 	        	    }
 	        	    else
 	        	    {
-	        	    	if(!m.getTexto().equals(""))
+	        	    	if(!mensaje.getTexto().equals(""))
 	        	    	{
-	        	    		mensaje = m;
 	        	    		showDialog(2);
+	        	    	}
+	        	    	else
+	        	    	{
+	        	    		showDialog(3);
 	        	    	}
 	        	    }
 	        	  }
 	        	});
         }
+	}
+	
+	private void iniciarActividadImagen()
+	{
+		Intent intent = new Intent(this, Imagen.class);
+		//Obtengo los datos del plano desde la base de datos
+		PlanosSQLite psql = new PlanosSQLite();
+        Plano p = psql.getPlanoPorId(MensajesEnviados.this, mensaje.getIdPlano());
+        
+        //Guardo las coordenadas en un objeto Point para pasar a la otra activity
+        Punto xy = new Punto(mensaje.getX(), mensaje.getY());
+        
+        intent.putExtra("Plano", p);
+        intent.putExtra("Punto", xy);
+        intent.putExtra("InsertarMarca", true);
+        intent.putExtra("Mensaje", mensaje);
+        intent.putExtra("Respuesta", true);
+        startActivity(intent);
 	}
 	
 	@Override
@@ -106,6 +115,24 @@ public class MensajesEnviados extends Activity{
 	}
 	
 	@Override
+	protected void onPrepareDialog(int id, Dialog dialog) {
+		if(id == 3)
+		{
+			String nombre = "";
+			if(mensaje.getNombre().equals(""))
+			{
+				nombre = Integer.toString(mensaje.getNumeroOrigenDestino());
+			}
+			else
+			{
+				nombre = mensaje.getNombre();
+			}
+			((AlertDialog)dialog).setTitle(nombre);
+		}
+		super.onPrepareDialog(id, dialog);
+	}
+	
+	@Override
     protected Dialog onCreateDialog(int id) 
 	{
 		Dialog dialogo = null;
@@ -119,6 +146,10 @@ public class MensajesEnviados extends Activity{
     		//Dialogo para mostrar mensaje opcional
     		case 2:
     			dialogo = crearDialogoMensaje();
+    			break;
+    		//Dialogo para reenviar un mensaje
+    		case 3:
+    			dialogo = crearDialogoReenviar();
     			break;
     		default:
     			dialogo = null;
@@ -160,11 +191,54 @@ public class MensajesEnviados extends Activity{
     	
     	builder.setTitle("Mensaje adicional");
     	builder.setMessage(mensaje.getTexto());
-    	builder.setPositiveButton("OK", new OnClickListener() {
+    	builder.setPositiveButton("Reenviar", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				reenviarMensaje();
+			}
+		});
+    	builder.setNegativeButton("Cerrar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
 			}
 		});
     	return builder.create();
     }
+	
+	protected Dialog crearDialogoReenviar()
+    {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	
+    	builder.setTitle("Titulo");
+    	builder.setMessage("Desea reenviar la solicitud a la persona seleccionada?");
+    	builder.setNegativeButton("Cerrar", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+    	builder.setPositiveButton("Reenviar", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				reenviarMensaje();
+			}
+		});
+    	return builder.create();
+    }
+	
+	private void reenviarMensaje()
+	{
+		Intent i = new Intent();
+		Bundle bundle = new Bundle();
+		if(mensaje.getNombre().equals(""))
+		{
+			bundle.putString("nombre", Integer.toString(mensaje.getNumeroOrigenDestino()));
+		}
+		else
+		{
+			bundle.putString("nombre", mensaje.getNombre());
+		}
+		bundle.putString("numero", Integer.toString(mensaje.getNumeroOrigenDestino()));
+		bundle.putInt("idPlano", 0);
+        i.putExtras(bundle);
+		i.setComponent(new ComponentName(this, EnviarSMS.class));
+		startActivity(i);
+	}
 }
