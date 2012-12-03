@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TabHost;
 
 import com.cuepoint.actividades.R;
+import com.cuepoint.actividades.R.color;
 import com.cuepoint.clases.Mensaje;
 
 public class Mensajes extends TabActivity{
@@ -24,11 +26,12 @@ public class Mensajes extends TabActivity{
 		TabHost.TabSpec spec;
 		Intent intent;
 		Resources res = getResources();
+		//tabHost.getTabWidget().setBackgroundColor(Color.RED);
 		
 		intent = new Intent().setClass(this, MensajesEnviados.class);
 		spec = tabHost.newTabSpec("Enviados").setIndicator("Enviados", res.getDrawable(R.drawable.enviados)).setContent(intent);
 		tabHost.addTab(spec);
-		
+				
 		intent = new Intent().setClass(this, MensajesRecibidos.class);
 		spec = tabHost.newTabSpec("Recibidos").setIndicator("Recibidos", res.getDrawable(R.drawable.recibidos)).setContent(intent);
 		tabHost.addTab(spec);

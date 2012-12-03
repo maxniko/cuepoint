@@ -215,4 +215,25 @@ public class MensajesSQLite extends Activity{
         return nombre;
 	}
 
+	public void marcarLeido(Context contexto, int idMensaje)
+	{
+		//Abrimos la base de datos 'CuePoint'
+		ConexionSQLite pdb = new ConexionSQLite(contexto, "CuePoint", null, 1);
+         
+        // Insertar datos en la base de datos
+        SQLiteDatabase db = pdb.getWritableDatabase();
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append("UPDATE Mensajes set estado = 1 WHERE idMensaje = ");
+        sb.append(idMensaje + ";");
+        
+        //Si hemos abierto correctamente la base de datos
+        if(db != null)
+        {
+        	Log.d("UPDATE", sb.toString());
+            db.execSQL(sb.toString());
+            //Cerramos la base de datos
+            db.close();
+        }
+	}
 }
