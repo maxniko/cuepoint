@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TabHost;
 
 import com.cuepoint.actividades.R;
-import com.cuepoint.actividades.R.color;
 import com.cuepoint.clases.Mensaje;
 
 public class Mensajes extends TabActivity{
