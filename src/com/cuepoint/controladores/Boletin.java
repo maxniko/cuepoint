@@ -3,12 +3,14 @@ package com.cuepoint.controladores;
 import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import com.cuepoint.actividades.R;
+import com.cuepoint.datos.CargaDatosWS;
 
 public class Boletin extends Activity{
-	WebView boletin;
-	//TextView boletin;
+	//WebView boletin;
+	TextView txtboletin;
 	String res = "";
 	//private ProgressDialog pd;
 
@@ -18,8 +20,13 @@ public class Boletin extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p06_boletin);
         
-        boletin = (WebView) findViewById(R.id.boletin);
-        boletin.loadUrl("http://www.uap.edu.ar/es/boletiniglesia");
+        txtboletin = (TextView) findViewById(R.id.textView1);
+        //boletin = (WebView) findViewById(R.id.boletin);
+        //boletin.loadUrl("http://www.uap.edu.ar/es/boletiniglesia");
+        
+        CargaDatosWS c = new CargaDatosWS();
+        String b = c.getBoletin();
+        txtboletin.setText(b);
         //boletin = (TextView) findViewById(R.id.boletin);
         // Usamos un AsyncTask, para poder mostrar una ventana de por favor espere, mientras se consulta el servicio web
 		 //new DownloadTask2().execute("");
