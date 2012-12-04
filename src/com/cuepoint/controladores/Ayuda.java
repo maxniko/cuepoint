@@ -15,7 +15,7 @@ public class Ayuda extends Activity{
         setContentView(R.layout.p08_ayuda);
         
         WebView ayuda = (WebView) findViewById(R.id.webViewAyuda);
-        ayuda.loadUrl("file:///android_asset/AyudaCP.htm");
+        ayuda.loadUrl("file:///android_asset/AyudaCP.html");
     }
 	
 }

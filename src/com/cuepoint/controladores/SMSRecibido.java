@@ -196,6 +196,8 @@ public class SMSRecibido extends Activity {
 		    	    intent.putExtra("InsertarMarca", false);
 		    	    intent.putExtra("Respuesta", true);
 			        intent.putExtra("Mensaje", mensaje);
+			        //Si el texto esta vacío envía el flag falso para no mostrar el mensaje
+			        intent.putExtra("MostrarMensaje", (mensaje.getTexto().equals("")) ? false : true );
 		    	    startActivity(intent);
 		        }
 		        else
@@ -246,6 +248,8 @@ public class SMSRecibido extends Activity {
 		        intent.putExtra("InsertarMarca", true);
 	    	    intent.putExtra("Respuesta", true);
 		        intent.putExtra("Mensaje", mensaje);
+		        //Si el texto esta vacío envía el flag falso para no mostrar el mensaje
+		        intent.putExtra("MostrarMensaje", (mensaje.getTexto().equals("")) ? false : true );
 		        startActivity(intent);
 		    	finish();
 			}

@@ -92,6 +92,8 @@ public class MensajesEnviados extends Activity{
         intent.putExtra("InsertarMarca", true);
         intent.putExtra("Mensaje", mensaje);
         intent.putExtra("Respuesta", true);
+        //Si el texto esta vacío envía el flag falso para no mostrar el mensaje
+        intent.putExtra("MostrarMensaje", (mensaje.getTexto().equals("")) ? false : true );
         startActivity(intent);
 	}
 	

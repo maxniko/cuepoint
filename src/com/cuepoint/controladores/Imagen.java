@@ -86,7 +86,7 @@ public class Imagen extends Activity implements OnTouchListener{
 	 
 	 //Indica si es una respuesta a un mensaje
 	 boolean respuesta = false;
-	 Mensaje mensaje;
+	 Mensaje mensaje = new Mensaje();
 	 
 	 //Marcador favorito de un plano
 	 Punto marcador;
@@ -103,21 +103,23 @@ public class Imagen extends Activity implements OnTouchListener{
         cargarMarcador();
         
         Bundle b = getIntent().getExtras();
-        if(b.getBoolean("Respuesta"))
+        respuesta = b.getBoolean("Respuesta");
+        boolean insertarMarca = b.getBoolean("InsertarMarca");
+        boolean mostrarMensaje = b.getBoolean("MostrarMensaje");
+        if(respuesta)
         {
         	mensaje = (Mensaje) b.getParcelable("Mensaje");
-        	respuesta = true;
         }
-        if(b.getBoolean("InsertarMarca"))
+        if(insertarMarca)
         {
         	cx = ((Punto) b.getParcelable("Punto")).getX();
         	cy = ((Punto) b.getParcelable("Punto")).getY();
         	dibujarMarca();
         	imagenAccesoEscritura = false;
         }
-        if(!mensaje.getTexto().equals(""))
+        if(mostrarMensaje)
         {
-        	showDialog(1);
+	        showDialog(1);
         }
     }
 	

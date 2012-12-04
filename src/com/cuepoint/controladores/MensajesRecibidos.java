@@ -93,6 +93,8 @@ public class MensajesRecibidos extends Activity{
 	        intent.putExtra("InsertarMarca", true);
 	        intent.putExtra("Mensaje", mensaje);
 	        intent.putExtra("Respuesta", true);
+	        //Si el texto esta vacío envía el flag falso para no mostrar el mensaje
+	        intent.putExtra("MostrarMensaje", (mensaje.getTexto().equals("")) ? false : true );
 	        startActivity(intent);
 	    }
 		else
@@ -105,7 +107,9 @@ public class MensajesRecibidos extends Activity{
 	    	    Intent intent = new Intent(this, Imagen.class);
 	    	    intent.putExtra("Plano", plano);
 	    	    intent.putExtra("InsertarMarca", false);
-	    	    intent.putExtra("Respuesta", false);
+		        intent.putExtra("Mensaje", mensaje);
+		        intent.putExtra("Respuesta", true);
+		        intent.putExtra("MostrarMensaje", false );
 	    	    startActivity(intent);
 	        }
 	        else
@@ -233,7 +237,12 @@ public class MensajesRecibidos extends Activity{
     	
     	builder.setTitle("Mensaje adicional");
     	builder.setMessage(mensaje.getTexto());
-    	builder.setPositiveButton("Cerrar", new OnClickListener() {
+    	builder.setPositiveButton("Responder", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				iniciarActividadImagen();
+			}
+		});
+    	builder.setNegativeButton("Cerrar", new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				dialog.cancel();
 			}

@@ -60,6 +60,7 @@ public class MenuPrincipal extends Activity {
     	    intent.putExtra("Plano", plano);
     	    intent.putExtra("InsertarMarca", false);
     	    intent.putExtra("Respuesta", false);
+	        intent.putExtra("MostrarMensaje", false );
     	    startActivity(intent);
         }
         else
