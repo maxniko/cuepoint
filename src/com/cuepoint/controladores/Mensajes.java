@@ -25,7 +25,7 @@ public class Mensajes extends TabActivity{
 			public void onTabChanged(String arg0) {
 				for(int i=0;i<tabHost.getTabWidget().getChildCount();i++)
 			    {
-					tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.GRAY); //unselected
+					tabHost.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#10494A")); //unselected
 					RelativeLayout rl = (RelativeLayout) tabHost.getTabWidget().getChildAt(i);
 			        TextView textView = (TextView) rl.getChildAt(1);//          
 			        textView.setTextColor(Color.parseColor("#FFFFFF"));
