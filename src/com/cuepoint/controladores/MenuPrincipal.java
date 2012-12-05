@@ -7,8 +7,11 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
+
 import com.cuepoint.actividades.R;
 import com.cuepoint.clases.Plano;
+import com.cuepoint.datos.CargaDatosWS;
 import com.cuepoint.datos.PlanosSQLite;
 
 public class MenuPrincipal extends Activity {
@@ -41,6 +44,19 @@ public class MenuPrincipal extends Activity {
 		        i.putExtras(bundle);
 				i.setComponent(new ComponentName(this, EnviarSMS.class));
 				startActivity(i);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		else if((requestCode == 2) && (resultCode == Activity.RESULT_OK))
+		{
+			try {
+				String nombre = data.getStringExtra("nombre");
+				String numero = data.getStringExtra("numero");
+				CargaDatosWS cd = new CargaDatosWS();
+				String res = cd.consultaUsuario(numero);
+		        Toast t = Toast.makeText(MenuPrincipal.this, res + " ", Toast.LENGTH_LONG);
+		        t.show();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -97,6 +113,13 @@ public class MenuPrincipal extends Activity {
 		Intent intent = new Intent();
     	intent.setComponent(new ComponentName(this, Ayuda.class));
     	startActivity(intent);
+	}
+	
+	public void buscarContactoClick(View v)
+	{
+		Intent intent = new Intent();
+    	intent.setComponent(new ComponentName(this, ListaContactos.class));
+		startActivityForResult(intent, 2);
 	}
 
 }

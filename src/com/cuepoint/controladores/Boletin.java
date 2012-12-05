@@ -2,18 +2,19 @@ package com.cuepoint.controladores;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.TextView;
-
+import android.telephony.TelephonyManager;
+import android.webkit.WebView;
 import com.cuepoint.actividades.R;
 import com.cuepoint.datos.CargaDatosWS;
 
 public class Boletin extends Activity{
-	//WebView boletin;
-	TextView txtboletin;
+	WebView boletin;
 	String res = "";
 	private ProgressDialog pd;
+	String mPhoneNumber;
 
 	
 	@Override
@@ -21,8 +22,11 @@ public class Boletin extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p06_boletin);
         
-        txtboletin = (TextView) findViewById(R.id.textView1);
-        //boletin = (WebView) findViewById(R.id.boletin);
+        TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+        mPhoneNumber = tMgr.getLine1Number();
+        
+        boletin = (WebView) findViewById(R.id.boletin);
+        
         //boletin.loadUrl("http://www.uap.edu.ar/es/boletiniglesia");
         
         // Usamos un AsyncTask, para poder mostrar una ventana de por favor espere, mientras se consulta el servicio web
@@ -44,8 +48,8 @@ public class Boletin extends Activity{
 			//Se elimina la pantalla de por favor espere.
 			pd.dismiss();
 			//Se muestra mensaje con la respuesta del servicio web
-			txtboletin.setText(res);
 			super.onPostExecute(result);
+			boletin.loadDataWithBaseURL("", res, "", "utf-8", "");
 		}
 	}
 }

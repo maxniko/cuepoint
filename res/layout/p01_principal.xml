@@ -40,6 +40,14 @@
         android:onClick="verBoletinClick"
         android:text="@string/ver_boletin"
         android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/Button02"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="buscarContactoClick"
+        android:text="@string/buscar_contacto"
+        android:textSize="15sp" />
 
     <Button
         android:id="@+id/Button01"
