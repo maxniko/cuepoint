@@ -16,5 +16,12 @@
 		   android:dialogTitle="Seleccionar un color"
 		   android:entries="@array/colores"
 		   android:entryValues="@array/idcolor" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Notificarse a la Base de Datos">
+        <CheckBoxPreference
+		    android:key="visible"
+		    android:title="Reportar llegada"
+		    android:summary="Estar visible para los usuarios"
+		    android:defaultValue="true" />
     </PreferenceCategory> 
 </PreferenceScreen>

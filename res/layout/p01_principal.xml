@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/background"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="30dip"
+    android:background="@color/background"
     android:gravity="center_horizontal"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingBottom="15dip"
+    android:paddingLeft="30dip"
+    android:paddingRight="30dip"
+    android:paddingTop="15dip" >
 
     <TextView
         android:id="@+id/textView1"
@@ -40,7 +43,7 @@
         android:onClick="verBoletinClick"
         android:text="@string/ver_boletin"
         android:textSize="15sp" />
-
+
     <Button
         android:id="@+id/Button02"
         android:layout_width="fill_parent"

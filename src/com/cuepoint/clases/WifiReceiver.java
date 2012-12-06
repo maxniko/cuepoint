@@ -14,18 +14,19 @@ public class WifiReceiver extends BroadcastReceiver  {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		boolean noConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-        String reason = intent.getStringExtra(ConnectivityManager.EXTRA_REASON);
-        boolean isFailover = intent.getBooleanExtra(ConnectivityManager.EXTRA_IS_FAILOVER, false);
+		//boolean noConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
+        //String reason = intent.getStringExtra(ConnectivityManager.EXTRA_REASON);
+        //boolean isFailover = intent.getBooleanExtra(ConnectivityManager.EXTRA_IS_FAILOVER, false);
 
         NetworkInfo currentNetworkInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-        NetworkInfo otherNetworkInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_OTHER_NETWORK_INFO);
+        //NetworkInfo otherNetworkInfo = (NetworkInfo) intent.getParcelableExtra(ConnectivityManager.EXTRA_OTHER_NETWORK_INFO);
         
         if(currentNetworkInfo.isConnected()){
         	WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         	WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         	if (WifiInfo.getDetailedStateOf(wifiInfo.getSupplicantState()) == NetworkInfo.DetailedState.CONNECTED) {
-        	    if (wifiInfo.getSSID().equals("CuePoint"))
+        		Toast.makeText(context, "Connected", Toast.LENGTH_LONG).show();
+        		if (wifiInfo.getSSID().equals("CuePoint"))
         	    {
         	    	
         	    }

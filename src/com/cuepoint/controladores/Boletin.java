@@ -3,8 +3,10 @@ package com.cuepoint.controladores;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.webkit.WebView;
 import com.cuepoint.actividades.R;
@@ -13,8 +15,10 @@ import com.cuepoint.datos.CargaDatosWS;
 public class Boletin extends Activity{
 	WebView boletin;
 	String res = "";
+	String reporte = "";
 	private ProgressDialog pd;
-	String mPhoneNumber;
+	String miNumero;
+	boolean visible;
 
 	
 	@Override
@@ -23,11 +27,13 @@ public class Boletin extends Activity{
         setContentView(R.layout.p06_boletin);
         
         TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
-        mPhoneNumber = tMgr.getLine1Number();
+        miNumero = tMgr.getLine1Number();
         
         boletin = (WebView) findViewById(R.id.boletin);
         
-        //boletin.loadUrl("http://www.uap.edu.ar/es/boletiniglesia");
+        PreferenceManager.setDefaultValues(this, R.xml.preferencias, false);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		visible = (pref.getBoolean("visible", true));
         
         // Usamos un AsyncTask, para poder mostrar una ventana de por favor espere, mientras se consulta el servicio web
 		new DownloadTask2().execute("");
@@ -41,6 +47,7 @@ public class Boletin extends Activity{
 			CargaDatosWS ws=new CargaDatosWS();
 			//Se invoca nuestro metodo
 			res=ws.getBoletin();
+			reporte=ws.reportarUsuario(miNumero, visible);
 			return 1;
 		}
 

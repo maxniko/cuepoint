@@ -1,10 +1,15 @@
 package com.cuepoint.controladores;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -17,6 +22,10 @@ import com.cuepoint.datos.PlanosSQLite;
 public class MenuPrincipal extends Activity {
 	
 	private static final int REQUEST_CHOOSE_PHONE = 1;
+	String res = "";
+	String nombre = "";
+	String numero = "";
+	private ProgressDialog pd;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,12 +60,9 @@ public class MenuPrincipal extends Activity {
 		else if((requestCode == 2) && (resultCode == Activity.RESULT_OK))
 		{
 			try {
-				String nombre = data.getStringExtra("nombre");
-				String numero = data.getStringExtra("numero");
-				CargaDatosWS cd = new CargaDatosWS();
-				String res = cd.consultaUsuario(numero);
-		        Toast t = Toast.makeText(MenuPrincipal.this, res + " ", Toast.LENGTH_LONG);
-		        t.show();
+				nombre = data.getStringExtra("nombre");
+				numero = data.getStringExtra("numero");
+				buscarContacto();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -122,4 +128,62 @@ public class MenuPrincipal extends Activity {
 		startActivityForResult(intent, 2);
 	}
 
+	private void buscarContacto()
+	{
+		new DownloadTask2().execute(numero);
+		pd = ProgressDialog.show(this, "Por favor espere","Consultando Base de Datos", true, false);
+	}
+	
+	//Tarea en Background
+	private class DownloadTask2 extends AsyncTask<String, Void, Object> {
+		protected Integer doInBackground(String... args) {
+			CargaDatosWS cd = new CargaDatosWS();
+			res = cd.consultaUsuario(args[0]);
+			return 1;
+		}
+
+		protected void onPostExecute(Object result) {
+			//Se elimina la pantalla de por favor espere.
+			pd.dismiss();
+			if(res.equals("false"))
+			{
+				Toast.makeText(MenuPrincipal.this, nombre + " no se ha notificado", Toast.LENGTH_LONG).show();
+			}
+			else
+			{
+				try
+				{
+					SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+					Date fechaDate = null;
+					fechaDate = formato.parse(res);
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(fechaDate);
+					String hora = "";
+					if(cal.get(Calendar.HOUR_OF_DAY) < 10)
+					{
+						hora = "0" + cal.get(Calendar.HOUR_OF_DAY);
+					}
+					else
+					{
+						hora = "" + cal.get(Calendar.HOUR_OF_DAY);
+					}
+					if(cal.get(Calendar.MINUTE) < 10)
+					{
+						hora = hora + ":0" + cal.get(Calendar.MINUTE);
+					}
+					else
+					{
+						hora = hora + ":" + cal.get(Calendar.MINUTE);
+					}
+					Toast.makeText(MenuPrincipal.this, nombre + " se ha notificado a la hora " + hora, Toast.LENGTH_LONG).show();
+				}
+				catch(Exception e)
+				{
+					Toast.makeText(MenuPrincipal.this, "Ocurrió un error al obtener los datos", Toast.LENGTH_LONG).show();
+				}
+			}
+			//Se muestra mensaje con la respuesta del servicio web
+			super.onPostExecute(result);
+		}
+	}
 }
