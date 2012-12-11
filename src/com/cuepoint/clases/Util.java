@@ -13,7 +13,7 @@ public class Util {
         c.setTimeZone(TimeZone.getTimeZone("America/Argentina/Buenos_Aires"));
 		StringBuilder f = new StringBuilder();
 		f.append(agregarCero(c.get(Calendar.DAY_OF_MONTH)) + "-");
-		f.append(agregarCero(c.get(Calendar.MONTH)) + "-");
+		f.append(agregarCero(c.get(Calendar.MONTH) + 1) + "-");
 		f.append(c.get(Calendar.YEAR) + ", ");
 		f.append(agregarCero(c.get(Calendar.HOUR_OF_DAY)) + ":");
 		f.append(agregarCero(c.get(Calendar.MINUTE)) + ":");
@@ -29,5 +29,17 @@ public class Util {
 			resultado = "0" + Integer.toString(numero);
 		}
 		return resultado;
+	}
+	
+	public String extraerNumero(String num)
+	{
+		String numero = "";
+		for (Character c : num.toCharArray()) {
+			if(Character.isDigit(c))
+			{
+				numero += c.toString();
+			}
+		}
+		return numero;
 	}
 }

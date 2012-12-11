@@ -123,7 +123,7 @@ public class MensajesEnviados extends Activity{
 			String nombre = "";
 			if(mensaje.getNombre().equals(""))
 			{
-				nombre = Integer.toString(mensaje.getNumeroOrigenDestino());
+				nombre = mensaje.getNumeroOrigenDestino();
 			}
 			else
 			{
@@ -231,13 +231,13 @@ public class MensajesEnviados extends Activity{
 		Bundle bundle = new Bundle();
 		if(mensaje.getNombre().equals(""))
 		{
-			bundle.putString("nombre", Integer.toString(mensaje.getNumeroOrigenDestino()));
+			bundle.putString("nombre", mensaje.getNumeroOrigenDestino());
 		}
 		else
 		{
 			bundle.putString("nombre", mensaje.getNombre());
 		}
-		bundle.putString("numero", Integer.toString(mensaje.getNumeroOrigenDestino()));
+		bundle.putString("numero", mensaje.getNumeroOrigenDestino());
 		bundle.putInt("idPlano", 0);
         i.putExtras(bundle);
 		i.setComponent(new ComponentName(this, EnviarSMS.class));

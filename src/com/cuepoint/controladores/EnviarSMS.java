@@ -101,9 +101,9 @@ public class EnviarSMS extends Activity {
 			m.setTipo(0);
 		}
 		m.setTexto(msj);
-		m.setNumeroOrigenDestino((Integer.parseInt(numero)));
-		Date d = new Date();
 		Util u = new Util();
+		m.setNumeroOrigenDestino(u.extraerNumero(numero));
+		Date d = new Date();
 		m.setFecha(u.getFechaFormateada(d));
 		if (idPlano > 0)
 		{

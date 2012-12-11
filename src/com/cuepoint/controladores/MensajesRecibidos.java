@@ -147,7 +147,7 @@ public class MensajesRecibidos extends Activity{
 			String nombre = "";
 			if(mensaje.getNombre().equals(""))
 			{
-				nombre = Integer.toString(mensaje.getNumeroOrigenDestino());
+				nombre = mensaje.getNumeroOrigenDestino();
 			}
 			else
 			{

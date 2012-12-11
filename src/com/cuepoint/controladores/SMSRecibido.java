@@ -44,7 +44,7 @@ public class SMSRecibido extends Activity {
         try
         {
         	//Obtengo el numero de quien mando el sms
-        	mensaje.setNumeroOrigenDestino(Integer.parseInt(i.getStringExtra("NumeroOrigen")));
+        	mensaje.setNumeroOrigenDestino(i.getStringExtra("NumeroOrigen"));
         	//Obtengo el texto del mensaje
         	textoSMS = i.getStringExtra("Texto");
         	//Obtengo la fecha en milisegundos
@@ -135,7 +135,7 @@ public class SMSRecibido extends Activity {
         if (mCursor.moveToFirst()) {
             do {
                 mensaje.setNombre(mCursor.getString(nameIndex));
-                mensaje.setNumeroOrigenDestino(Integer.parseInt(mCursor.getString(numberIndex)));
+                mensaje.setNumeroOrigenDestino(mCursor.getString(numberIndex));
             } while (mCursor.moveToNext());
         }
 
