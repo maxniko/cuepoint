@@ -288,13 +288,13 @@ public class Imagen extends Activity implements OnTouchListener{
 				Bundle bundle = new Bundle();
 				if(mensaje.getNombre().equals(""))
 				{
-					bundle.putString("nombre", Integer.toString(mensaje.getNumeroOrigenDestino()));
+					bundle.putString("nombre", mensaje.getNumeroOrigenDestino());
 				}
 				else
 				{
 					bundle.putString("nombre", mensaje.getNombre());
 				}
-				bundle.putString("numero", Integer.toString(mensaje.getNumeroOrigenDestino()));
+				bundle.putString("numero", mensaje.getNumeroOrigenDestino());
 		        bundle.putFloat("x", cx);
 		        bundle.putFloat("y", cy);
 		        bundle.putInt("idPlano", imagenPlano.getIdPlano());

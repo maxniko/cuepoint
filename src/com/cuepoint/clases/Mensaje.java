@@ -11,14 +11,14 @@ public class Mensaje implements Parcelable {
 	private int tipo;
 	private String nombre;
 	private String textoOpcional = "";
-	private int numeroOrigenDestino;
+	private String numeroOrigenDestino;
 	private String fecha;
 	private float x;
 	private float y;
 	private int idPlano = 0;
 	private int estado;
 	
-	public Mensaje(int id, int tipo, String texto, int nroOrigen, String fecha) 
+	public Mensaje(int id, int tipo, String texto, String nroOrigen, String fecha) 
 	{
 		this.idMensaje = id;
 		this.tipo = tipo;
@@ -49,7 +49,7 @@ public class Mensaje implements Parcelable {
 		parcel.writeInt(tipo);
 		parcel.writeString(nombre);
 		parcel.writeString(textoOpcional);
-		parcel.writeInt(numeroOrigenDestino);
+		parcel.writeString(numeroOrigenDestino);
 		parcel.writeString(fecha);
 		parcel.writeFloat(x);
 		parcel.writeFloat(y);
@@ -61,7 +61,7 @@ public class Mensaje implements Parcelable {
 		tipo = parcel.readInt();
 		nombre = parcel.readString();
 		textoOpcional = parcel.readString();
-		numeroOrigenDestino = parcel.readInt();
+		numeroOrigenDestino = parcel.readString();
 		fecha = parcel.readString();
 		x = parcel.readFloat();
 		y = parcel.readFloat();
@@ -142,11 +142,11 @@ public class Mensaje implements Parcelable {
 		this.fecha = f;
 	}
 
-	public int getNumeroOrigenDestino() {
+	public String getNumeroOrigenDestino() {
 		return numeroOrigenDestino;
 	}
 
-	public void setNumeroOrigenDestino(int numeroOrigenDestino) {
+	public void setNumeroOrigenDestino(String numeroOrigenDestino) {
 		this.numeroOrigenDestino = numeroOrigenDestino;
 	}
 

@@ -41,7 +41,7 @@ public class MensajesSQLite extends Activity{
             	Mensaje m = new Mensaje();
             	m.setIdMensaje(c.getInt(0));
             	m.setTipo(c.getInt(1));
-            	m.setNumeroOrigenDestino(c.getInt(2));
+            	m.setNumeroOrigenDestino(c.getString(2));
             	if (c.getString(3) != null)
             	{
             		m.setTexto(c.getString(3));
@@ -83,7 +83,7 @@ public class MensajesSQLite extends Activity{
             	Mensaje m = new Mensaje();
             	m.setIdMensaje(c.getInt(0));
             	m.setTipo(c.getInt(1));
-            	m.setNumeroOrigenDestino(c.getInt(2));
+            	m.setNumeroOrigenDestino(c.getString(2));
             	if (c.getString(3) != null)
             	{
             		m.setTexto(c.getString(3));
@@ -184,7 +184,7 @@ public class MensajesSQLite extends Activity{
         return true;
 	}
 	
-	protected String buscarNombreContacto(int numero)
+	protected String buscarNombreContacto(String numero)
 	{
 		String nombre = "";
 		// Query: contacto con el numero de telefono ingresado

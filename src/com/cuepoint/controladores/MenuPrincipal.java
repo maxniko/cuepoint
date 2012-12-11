@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.cuepoint.actividades.R;
 import com.cuepoint.clases.Plano;
+import com.cuepoint.clases.Util;
 import com.cuepoint.datos.CargaDatosWS;
 import com.cuepoint.datos.PlanosSQLite;
 
@@ -62,6 +63,12 @@ public class MenuPrincipal extends Activity {
 			try {
 				nombre = data.getStringExtra("nombre");
 				numero = data.getStringExtra("numero");
+				Util u = new Util();
+				numero = u.extraerNumero(numero);
+				if(numero.length() > 7)
+				{
+					numero = numero.substring(numero.length() - 7, numero.length());
+				}
 				buscarContacto();
 			} catch (Exception e) {
 				e.printStackTrace();
