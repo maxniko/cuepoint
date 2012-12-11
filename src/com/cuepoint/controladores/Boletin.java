@@ -18,7 +18,7 @@ public class Boletin extends Activity{
 	String reporte = "";
 	private ProgressDialog pd;
 	String miNumero;
-	boolean visible;
+	int visible;
 
 	
 	@Override
@@ -33,7 +33,15 @@ public class Boletin extends Activity{
         
         PreferenceManager.setDefaultValues(this, R.xml.preferencias, false);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-		visible = (pref.getBoolean("visible", true));
+		boolean v = (pref.getBoolean("visible", true));
+		if(v)
+		{
+			visible = 0;
+		}
+		else
+		{
+			visible = 1;
+		}
         
         // Usamos un AsyncTask, para poder mostrar una ventana de por favor espere, mientras se consulta el servicio web
 		new DownloadTask2().execute("");
