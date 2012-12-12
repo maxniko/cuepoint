@@ -31,7 +31,7 @@ public class Util {
 		return resultado;
 	}
 	
-	public String extraerNumero(String num)
+	public static String extraerNumero(String num)
 	{
 		String numero = "";
 		for (Character c : num.toCharArray()) {

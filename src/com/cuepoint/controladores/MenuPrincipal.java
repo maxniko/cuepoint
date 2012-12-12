@@ -63,8 +63,7 @@ public class MenuPrincipal extends Activity {
 			try {
 				nombre = data.getStringExtra("nombre");
 				numero = data.getStringExtra("numero");
-				Util u = new Util();
-				numero = u.extraerNumero(numero);
+				numero = Util.extraerNumero(numero);
 				if(numero.length() > 7)
 				{
 					numero = numero.substring(numero.length() - 7, numero.length());
