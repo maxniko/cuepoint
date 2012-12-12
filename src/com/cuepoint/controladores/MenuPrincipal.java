@@ -143,12 +143,14 @@ public class MenuPrincipal extends Activity {
 	
 	//Tarea en Background
 	private class DownloadTask2 extends AsyncTask<String, Void, Object> {
+		@Override
 		protected Integer doInBackground(String... args) {
 			CargaDatosWS cd = new CargaDatosWS();
 			res = cd.consultaUsuario(args[0]);
 			return 1;
 		}
 
+		@Override
 		protected void onPostExecute(Object result) {
 			//Se elimina la pantalla de por favor espere.
 			pd.dismiss();

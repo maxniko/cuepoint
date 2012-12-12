@@ -36,6 +36,12 @@ public class MensajesEnviados extends Activity{
 		setContentView(R.layout.p10_sms_enviados);
 		
 		enviados = (ListView)findViewById(R.id.msjsEnviados);
+		
+		actualizarListaMensajes();
+	}
+	
+	private void actualizarListaMensajes()
+	{
 		MensajesSQLite m = new MensajesSQLite();
 		itemsE = m.getMensajesEnviados(this);
 		
@@ -75,6 +81,13 @@ public class MensajesEnviados extends Activity{
 	        	  }
 	        	});
         }
+	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		actualizarListaMensajes();
 	}
 	
 	private void iniciarActividadImagen()

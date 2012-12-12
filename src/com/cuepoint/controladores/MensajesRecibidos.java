@@ -36,6 +36,12 @@ public class MensajesRecibidos extends Activity{
 		setContentView(R.layout.p10_sms_recibidos);
 		
 		recibidos = (ListView)findViewById(R.id.msjsRecibidos);
+		
+		actualizarListaMensajes();
+	}
+	
+	private void actualizarListaMensajes()
+	{
 		MensajesSQLite m = new MensajesSQLite();
 		itemsR = m.getMensajesRecibidos(this);
 		
@@ -74,6 +80,13 @@ public class MensajesRecibidos extends Activity{
 	        	  }
 	        	});
         }
+	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		actualizarListaMensajes();
 	}
 	
 	private void iniciarActividadImagen()

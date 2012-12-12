@@ -51,6 +51,7 @@ public class Boletin extends Activity{
 	
 	//Tarea en Background
 	private class DownloadTask2 extends AsyncTask<String, Void, Object> {
+		@Override
 		protected Integer doInBackground(String... args) {
 			CargaDatosWS ws=new CargaDatosWS();
 			//Se invoca nuestro metodo
@@ -59,6 +60,7 @@ public class Boletin extends Activity{
 			return 1;
 		}
 
+		@Override
 		protected void onPostExecute(Object result) {
 			//Se elimina la pantalla de por favor espere.
 			pd.dismiss();
