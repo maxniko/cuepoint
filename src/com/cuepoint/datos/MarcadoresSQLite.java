@@ -3,8 +3,6 @@ package com.cuepoint.datos;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-
 import com.cuepoint.clases.Punto;
 
 public class MarcadoresSQLite
@@ -22,12 +20,11 @@ public class MarcadoresSQLite
         sb.append(punto.getX() + ",");
         sb.append(punto.getY() + ",");
         sb.append(idPlano);
-        sb.append(";");
+        sb.append(");");
         
         //Si hemos abierto correctamente la base de datos
         if(db != null)
         {
-        	Log.d("Insert", sb.toString());
             db.execSQL(sb.toString());
             //Cerramos la base de datos
             db.close();
@@ -77,7 +74,6 @@ public class MarcadoresSQLite
         //Si hemos abierto correctamente la base de datos
         if(db != null)
         {
-        	Log.d("UPDATE", sb.toString());
             db.execSQL(sb.toString());
             //Cerramos la base de datos
             db.close();
