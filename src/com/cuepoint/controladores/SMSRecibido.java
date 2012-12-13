@@ -25,18 +25,24 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Data;
 import android.util.Log;
 
-public class SMSRecibido extends Activity {
-	
+/**
+ * Gestiona la llegada de un SMS y las acciones a tomar
+ */
+public class SMSRecibido extends Activity
+{
+	//Variables globales
 	private static final int SOLICITUD = 1;
 	private static final int RESPUESTA = 2;
 	
 	Mensaje mensaje = null;
 	String textoSMS = "";
 	
+	//Fecha del mensaje en milisegundos
 	long tiempo = 0;
 	
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+	{
         super.onCreate(savedInstanceState);
         
         mensaje = new Mensaje();
@@ -56,10 +62,13 @@ public class SMSRecibido extends Activity {
         {
         	Log.e("SMSRecibido", "No se pudo leer el numero, texto o fecha");
         }
-        
+        //Guardo el tipo de mensaje
         verTipoMensaje();
+        //Busco en el móvil el nombre de la persona que envió el mensaje
         buscarNombreContacto();
-        extraerTextoDeMensaje();
+        //Guardar texto opcional en caso de que exista
+        extraerTextoOpcionalDeMensaje();
+        //Vibra por 2 segundos
         vibrar(2000);
         if (mensaje.getTipo() == 2) {
         	showDialog(SOLICITUD);
@@ -68,6 +77,10 @@ public class SMSRecibido extends Activity {
         }
     }
 	
+	/**
+	 * Asigna un tipo de mensaje dependiendo si es una solicitud o una respuesta
+	 * Tipos de mensajes: 0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta
+	 */
 	protected void verTipoMensaje()
 	{
 		//Tipo de mensaje (0: enviado solicitud, 1: enviado respuesta, 2: recibido solicitud, 3: recibido respuesta)
@@ -92,7 +105,10 @@ public class SMSRecibido extends Activity {
 		}
 	}
 	
-	protected void extraerTextoDeMensaje()
+	/**
+	 * Guarda el texto opcional que pudiera traer el sms
+	 */
+	protected void extraerTextoOpcionalDeMensaje()
 	{
 		String [] palabra = textoSMS.split(">");
 		if(palabra.length > 1)
@@ -101,6 +117,10 @@ public class SMSRecibido extends Activity {
 		}
 	}
 	
+	/**
+	 * Se encarga de vibrar la cantidad de milisegundos enviados por parámetro
+	 * @param milisegundos
+	 */
 	protected void vibrar(long milisegundos)
 	{
 		//El vibrador del dispositivo
@@ -108,9 +128,12 @@ public class SMSRecibido extends Activity {
         vibrator.vibrate(milisegundos);
 	}
 	
+	/**
+	 * Busca en la agenda del teléfono el nombre de la persona que envió el sms
+	 */
 	protected void buscarNombreContacto()
 	{
-		// Query: contacto con el numero de telefono ingresado
+		//Query: contacto con el numero de telefono ingresado
         //lanzamos una query al Content provider por medio del "contentresolver"
         //y guardamos la tabla de los resultados que nos devuelve con un Cursor
         //para iterar despues en las filas con el objeto de clase Cursor. 
@@ -121,11 +144,11 @@ public class SMSRecibido extends Activity {
  			Phone.NUMBER + " LIKE ? ",
  			new String[] { "%"+ mensaje.getNumeroOrigenDestino() +"%" },
  			Data.DISPLAY_NAME + " ASC");
- 		//estructura query= (tabla objetivo, campos a consultar, where, parametros, ordered by)
-        //ordenamos por orden alfabetico con campo Display_name.
+ 		//Estructura query= (tabla objetivo, campos a consultar, where, parametros, order by)
+        //Ordenamos por orden alfabetico con campo Display_name.
 
- 		// Esto asocia el ciclo de vida del cursor al ciclo de vida de la Activity. Si
-        // la Activity para, el sistema libera el Cursor. No quedan recursos bloqueados.
+ 		//Esto asocia el ciclo de vida del cursor al ciclo de vida de la Activity. Si
+        //la Activity para, el sistema libera el Cursor. No quedan recursos bloqueados.
  		startManagingCursor(mCursor);
 
  		int nameIndex = mCursor.getColumnIndexOrThrow(Data.DISPLAY_NAME);
@@ -138,9 +161,11 @@ public class SMSRecibido extends Activity {
                 mensaje.setNumeroOrigenDestino(mCursor.getString(numberIndex));
             } while (mCursor.moveToNext());
         }
-
 	}
 	
+	/**
+	 * Guarda un mensaje recibido en la base de datos de la aplicación
+	 */
 	protected void guardarMensajeEnSQLite()
 	{
 		MensajesSQLite msql = new MensajesSQLite();
@@ -169,6 +194,10 @@ public class SMSRecibido extends Activity {
     	return dialogo;
     }
     
+	/**
+	 * Crea un diálogo para alertar al usuario sobre la llegada de un sms con una solicitud de posición
+	 * @return
+	 */
     private Dialog crearDialogoSolicitud()
     {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -220,6 +249,10 @@ public class SMSRecibido extends Activity {
     	return builder.create();
     }
     
+    /**
+	 * Crea un diálogo para alertar al usuario sobre la llegada de un sms con una respuesta de posición
+	 * @return
+	 */
     private Dialog crearDialogoRespuesta()
     {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -263,5 +296,4 @@ public class SMSRecibido extends Activity {
     	
     	return builder.create();
     }
-    
 }

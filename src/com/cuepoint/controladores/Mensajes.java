@@ -11,11 +11,17 @@ import android.widget.TextView;
 
 import com.cuepoint.actividades.R;
 
-public class Mensajes extends TabActivity{
+/**
+ * Clase encargada de gestionar la pantalla de mensajes enviados y recibidos
+ */
+public class Mensajes extends TabActivity
+{
+	//Variables globales
 	TabHost tabHost;
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.p07_mensajes);
 		
@@ -39,14 +45,17 @@ public class Mensajes extends TabActivity{
 		Intent intent;
 		Resources res = getResources();
 		
+		//Nueva pestaña para los mensajes enviados
 		intent = new Intent().setClass(this, MensajesEnviados.class);
 		spec = tabHost.newTabSpec("Enviados").setIndicator("Enviados", res.getDrawable(R.drawable.enviados)).setContent(intent);
 		tabHost.addTab(spec);
-				
+		
+		//Nueva pestaña para los mensajes recibidos
 		intent = new Intent().setClass(this, MensajesRecibidos.class);
 		spec = tabHost.newTabSpec("Recibidos").setIndicator("Recibidos", res.getDrawable(R.drawable.recibidos)).setContent(intent);
 		tabHost.addTab(spec);
 		
+		//Cambiar el color al texto 'Enviados' y 'Recibidos'
 		RelativeLayout rl = (RelativeLayout) tabHost.getTabWidget().getChildAt(1);
         TextView textView = (TextView) rl.getChildAt(1);//          
         textView.setTextColor(Color.parseColor("#FFFFFF"));

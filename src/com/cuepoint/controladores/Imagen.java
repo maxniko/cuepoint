@@ -43,11 +43,12 @@ import com.cuepoint.clases.Punto;
 import com.cuepoint.datos.MarcadoresSQLite;
 
 /**
- * @author Silvio
- *
+ * Clase que se encarga del manejo de un plano en pantalla: zoom, desplazamiento,
+ * inserción de marcadores, busqueda y lectura de planos
  */
-public class Imagen extends Activity implements OnTouchListener{
-	//variables para la escala
+public class Imagen extends Activity implements OnTouchListener
+{
+	//Variables para la escala
     static final int ZOOM_MAX = 10;
     static final int ZOOM_MIN = 0;
     private int ZOOM_ACTUAL = 0;
@@ -56,24 +57,26 @@ public class Imagen extends Activity implements OnTouchListener{
     
     private static final int REQUEST_CHOOSE_PHONE = 1;
     
-	 // Estas matrices serán usadas para el zoom y mover la imagen
+	 //Matrices que serán usadas para el zoom y mover la imagen
 	 Matrix matrix = new Matrix();
 	 Matrix savedMatrix = new Matrix();
 	 
-	 // We can be in one of these 3 states  
+	 //Estados en los que puede estar la aplicación luego de tocar la pantalla  
 	 static final int NONE = 0;
 	 static final int DRAG = 1;
 	 int mode = NONE;
 	  
-	 // Remember some things for zooming  
+	 //Punto donde el usuario hizo el primer toque en la pantalla  
 	 PointF start = new PointF();
 	 
+	 //Porcentaje de escala que hay que aplicar al marcador con respecto a la imagen
 	 private int escalaMarcador = 20;
 	 
-	 //coordenadas del marcador
+	 //Coordenadas del marcador
 	 float cx = -1;
 	 float cy = -1;
 	 
+	 //Medidas de la imagen del plano
 	 float altoOriginal;
 	 float anchoOriginal;
 	 
@@ -92,7 +95,8 @@ public class Imagen extends Activity implements OnTouchListener{
 	 Punto marcador;
     
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+	{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p02_plano);
         
@@ -134,10 +138,9 @@ public class Imagen extends Activity implements OnTouchListener{
     protected Dialog onCreateDialog(int id) 
 	{
     	Dialog dialogo = null;
-
     	switch(id)
     	{
-    		//Dialogo alerta
+    		//Dialogo para mostrar el mensaje opcional
     		case 1:
     			dialogo = crearDialogoMensaje();
     			break;
@@ -145,10 +148,13 @@ public class Imagen extends Activity implements OnTouchListener{
     			dialogo = null;
     			break;
     	}
-    
     	return dialogo;
     }
     
+	/**
+	 * Crea un Objeto Dialog con los datos a mostrar en pantalla
+	 * @return Objeto Dialog
+	 */
     private Dialog crearDialogoMensaje()
     {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -162,13 +168,20 @@ public class Imagen extends Activity implements OnTouchListener{
 		});
     	return builder.create();
     }
-	
+
+    /**
+     * Obtiene el marcador favorito desde la base de datos
+     */
 	private void cargarMarcador()
 	{
 		MarcadoresSQLite m = new MarcadoresSQLite();
 		marcador = m.getMarcadorPorIdPlano(this, imagenPlano.getIdPlano());
 	}
 	
+	/**
+	 * Guarda un marcador en la base de datos. Si ya existe un marcador lo actualiza,
+	 * de lo contrario agrega uno nuevo
+	 */
 	private void guardarMarcador()
 	{
 		MarcadoresSQLite m = new MarcadoresSQLite();
@@ -186,6 +199,9 @@ public class Imagen extends Activity implements OnTouchListener{
 		}
 	}
 	
+	/**
+	 * Carga un plano desde la tarjeta SD, aplicandole escala para que quepa en la pantalla
+	 */
 	private void cargarImagen()
 	{
 		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
@@ -218,7 +234,11 @@ public class Imagen extends Activity implements OnTouchListener{
 	 	 this.liberarMemoria(findViewById(R.id.LinearLayoutImagen));
 	 	 System.gc();
 	}
-	 
+	
+	/**
+	 * Libera recursos de la memoria para evitar 'ahogar' el móvil
+	 * @param view Layout donde se encuentran los componentes de la pantalla
+	 */
 	public void liberarMemoria(View view)
 	{
 		if (view.getBackground() != null)
@@ -235,6 +255,10 @@ public class Imagen extends Activity implements OnTouchListener{
 		}
 	}
 	
+	/**
+	 * Agrega las opciones del menú antes de ser mostrado en pantalla, según las características del entorno
+	 * @param menu Objeto Menu
+	 */
 	private void construirMenu(Menu menu)
 	{
 		if(imagenAccesoEscritura && cx != -1 && cx != -1)
@@ -253,33 +277,25 @@ public class Imagen extends Activity implements OnTouchListener{
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
 		construirMenu(menu);
 		return true;
 	}
 	
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
 		menu.clear();
 		construirMenu(menu);
 		return super.onPrepareOptionsMenu(menu);
 	}
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		switch (item.getItemId()) {
-		//Responder
-		case 4:
-			cx = 0;
-			cy = 0;
-			imagenAccesoEscritura = true;
-			ZOOM_ACTUAL = 0;
-			ProgressBar pb = (ProgressBar) findViewById(R.id.barraProgresoZoom);
-			pb.setProgress(0);
-			cargarImagen();
-			cargarMarcador();
-			return true;
-		//Enviar
+		//Menú Enviar
 		case 1:
 			Intent i = new Intent();
 			//Es una respuesta para una persona en particular
@@ -309,18 +325,29 @@ public class Imagen extends Activity implements OnTouchListener{
 				startActivityForResult(i, REQUEST_CHOOSE_PHONE);
 			}
 			return true;
-		//Cancelar
+		//Menú Cancelar
 		case 2:
 			System.gc();
 			finish();
 			return true;
-		//Opciones
+		//Menú Opciones
 		case 3:
 			Intent in = new Intent();
 			in.setComponent(new ComponentName(this, Preferencias.class));
 			startActivity(in);
 			return true;
-		//Insertar marcador favorito
+		//Menú Responder
+		case 4:
+			cx = 0;
+			cy = 0;
+			imagenAccesoEscritura = true;
+			ZOOM_ACTUAL = 0;
+			ProgressBar pb = (ProgressBar) findViewById(R.id.barraProgresoZoom);
+			pb.setProgress(0);
+			cargarImagen();
+			cargarMarcador();
+			return true;
+		//Submenú Insertar marcador favorito
 		case 6:
 			if(marcador.getX() != -1)
 			{
@@ -335,7 +362,7 @@ public class Imagen extends Activity implements OnTouchListener{
 	    		toast.show();
 			}
 			return true;
-		//Guardar marcador favorito
+		//Submenú Guardar marcador favorito
 		case 7:
 			if(cx > -1 && cy > -1)
 			{
@@ -355,7 +382,8 @@ public class Imagen extends Activity implements OnTouchListener{
 	}
 	
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
 		if ((requestCode == REQUEST_CHOOSE_PHONE) && (resultCode == Activity.RESULT_OK)) {
 			try {
 				Intent i = new Intent();
@@ -375,19 +403,26 @@ public class Imagen extends Activity implements OnTouchListener{
 		}
 	}
 	
+	/**
+	 * Obtiene el objeto Plano que se envió desde la otra activity
+	 */
 	private void getPlanoEnIntent()
 	{
 		Bundle b = getIntent().getExtras();
 		imagenPlano = b.getParcelable("Plano");
 	}
 	
+	/**
+	 * Obtiene una imagen desde la tarjeta SD
+	 * @return Objeto BitmapDrawable con la imagen cargada, o null si no se la encontró
+	 */
 	private BitmapDrawable leerImagenesSD()
 	{
 		BitmapDrawable imagen = null;
 		boolean sdDisponible = false;
 		boolean sdAccesoEscritura = false;
 		
-		//Comprobamos el estado de la memoria externa (tarjeta SD)
+		//Comprobamos el estado de la memoria SD
 		String estado = Environment.getExternalStorageState();
 		
 		if (estado.equals(Environment.MEDIA_MOUNTED))
@@ -405,18 +440,17 @@ public class Imagen extends Activity implements OnTouchListener{
 		    sdDisponible = false;
 		    sdAccesoEscritura = false;
 		}
-		
 		try
 		{
 			if (sdDisponible & sdAccesoEscritura)
 			{
 				//Obtenemos la ruta a la tarjeta SD
 			    File ruta_sd = Environment.getExternalStorageDirectory();
-			    
 			    //Obtenemos la ruta al archivo del plano
 			    File imgFile = new File(ruta_sd.getAbsolutePath(), imagenPlano.getRutaImagen());
-			    
-			    if(imgFile.exists()){
+			    //Si existe la imagen se carga en la variable global
+			    if(imgFile.exists())
+			    {
 			    	imagen = (BitmapDrawable) Drawable.createFromPath(imgFile.getAbsolutePath());
 			    	altoOriginal = imagen.getBitmap().getHeight();
 			    	anchoOriginal = imagen.getBitmap().getWidth();
@@ -432,6 +466,11 @@ public class Imagen extends Activity implements OnTouchListener{
 		return imagen;
 	}
 	
+	/**
+	 * Permite limitar la traslación de la imagen por fuera de la pantalla del movil.
+	 * Si ocurre eso, la imagen vuelve a la posición tocando el borde de la pantalla.
+	 * @param plano Objeto ImageView
+	 */
 	private void limitarDesplazamientoFueraPantalla(ImageView plano)
 	{
 		//Extraer los parámetros de la matriz referentes a la imagen.
@@ -456,50 +495,62 @@ public class Imagen extends Activity implements OnTouchListener{
  		float desplazarY = 0;
  		
         //Si la imagen se sale por el borde izquierdo pero no por el derecho
-        if (imagenX < 0 && (imagenX + anchoImagen) < anchoIV){
+        if (imagenX < 0 && (imagenX + anchoImagen) < anchoIV)
+        {
         	//La imagen es más grande que la pantalla
-        	if(anchoImagen >= anchoIV){
+        	if(anchoImagen >= anchoIV)
+        	{
         		//Distancia del borde derecho de la imagen con el borde derecho del ImageView
         		desplazarX = anchoIV - (imagenX + anchoImagen);
         	}
-        	else{
+        	else
+        	{
         		//Distancia del borde izquierdo de la imagen con el borde izquierdo del ImageView
         		desplazarX = (-1) * imagenX;
         	}
         }
         
         //Si la imagen se sale por el borde derecho pero no por el izquierdo
-        if((imagenX + anchoImagen) > anchoIV && imagenX > 0){
+        if((imagenX + anchoImagen) > anchoIV && imagenX > 0)
+        {
         	//La imagen es más grande que la pantalla
-        	if(anchoImagen >= anchoIV){
+        	if(anchoImagen >= anchoIV)
+        	{
         		//Distancia del borde derecho de la imagen con el borde derecho del ImageView
         		desplazarX = (-1) * imagenX;
         	}
-        	else{
+        	else
+        	{
         		//Distancia del borde izquierdo de la imagen con el borde izquierdo del ImageView
         		desplazarX = anchoIV - (imagenX + anchoImagen);
         	}
         }
         
         //Si la imagen se sale por el borde superior
-        if (imagenY < 0 && (imagenY + altoImagen) < altoIV){
-        	if(altoImagen >= altoIV){
+        if (imagenY < 0 && (imagenY + altoImagen) < altoIV)
+        {
+        	if(altoImagen >= altoIV)
+        	{
         		//Distancia del borde inferior de la imagen con el borde inferior del ImageView
         		desplazarY = altoIV - (imagenY + altoImagen);
         	}
-        	else{
+        	else
+        	{
         		//Distancia del borde superior de la imagen con el borde superior del ImageView
         		desplazarY = (-1) * imagenY;
         	}
         }
         
         //Si la imagen se sale por el borde inferior
-        if((imagenY + altoImagen) > altoIV && imagenY > 0){
-        	if(altoImagen >= altoIV){
+        if((imagenY + altoImagen) > altoIV && imagenY > 0)
+        {
+        	if(altoImagen >= altoIV)
+        	{
         		//Distancia del borde inferior de la imagen con el borde inferior del ImageView
         		desplazarY = (-1) * imagenY;
         	}
-        	else{
+        	else
+        	{
         		//Distancia del borde superior de la imagen con el borde superior del ImageView
         		desplazarY = altoIV - (imagenY + altoImagen);
         	}
@@ -508,19 +559,22 @@ public class Imagen extends Activity implements OnTouchListener{
         plano.setImageMatrix(matrix);
 	}
 	
+	/**
+	 * Acciones a tomar cuando el usuario toca la pantalla
+	 */
 	public boolean onTouch(View v, MotionEvent event)
-	 {
+	{
 		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
 		matrix.set(plano.getImageMatrix());
-		 // Handle touch events here...
-		 switch (event.getAction() & MotionEvent.ACTION_MASK)
-		 {
+		switch (event.getAction() & MotionEvent.ACTION_MASK)
+		{
+			//Acción al toque inicial en la pantalla
 		 	case MotionEvent.ACTION_DOWN:
 		 		savedMatrix.set(matrix);
 		 		start.set(event.getX(), event.getY());
 		 		mode = NONE;
 		 		break;
-		 		
+		 	//Acción al levantar el dedo de la pantalla
 		 	case MotionEvent.ACTION_UP:
 		 		if (mode == NONE && imagenAccesoEscritura)
 		 		{
@@ -537,18 +591,22 @@ public class Imagen extends Activity implements OnTouchListener{
 		    		toast.show();
 		 		}
 		 		break;
-		 		
+		 	//Acción al desplazar el dedo sobre la pantalla
 		 	case MotionEvent.ACTION_MOVE:
 		 		mode = DRAG;
 		 		matrix.set(savedMatrix);
 		 		matrix.postTranslate(event.getX() - start.x, event.getY() - start.y);
 		 		break;
 		 }
-		 
 		 plano.setImageMatrix(matrix);
-		 return true; // indicate event was handled  
-	 }
+		 return true; 
+	}
 	
+	/**
+	 * Calcula la posición en la imagen donde el usuario toco la pantalla
+	 * @param x
+	 * @param y
+	 */
 	private void calcularCoordenadasImagen(float x, float y)
 	{
 		ImageView plano = (ImageView) findViewById(R.id.imageViewPlano);
@@ -576,6 +634,9 @@ public class Imagen extends Activity implements OnTouchListener{
 		cy = (-desplazamientoY + y) / altoRatio;
 	}
 	
+	/**
+	 * Dibuja el marcador en la imagen del plano según las coordenadas x e y calculadas
+	 */
 	private void dibujarMarca()
 	{
 		if(cx > -1 && cy > -1)
@@ -604,6 +665,11 @@ public class Imagen extends Activity implements OnTouchListener{
 		}
 	}
 
+	/**
+	 * Obtiene una imagen usada como marcador según las preferencias del usuario
+	 * @param anchoPlano Ancho de la imagen del plano
+	 * @return Objeto Bitmap que contiene el marcador
+	 */
 	private Bitmap getMarcador(int anchoPlano)
 	{
 		Bitmap m = null;
@@ -613,6 +679,7 @@ public class Imagen extends Activity implements OnTouchListener{
 		int recurso = 0;
 		switch(tipo)
 		{
+		//Marcador tipo círculo
 		case 1:
 			switch (color)
 			{
@@ -629,7 +696,7 @@ public class Imagen extends Activity implements OnTouchListener{
 				break;
 			}
 			break;
-			
+		//Marcador tipo cruz
 		case 2:
 			switch (color)
 			{
@@ -650,6 +717,11 @@ public class Imagen extends Activity implements OnTouchListener{
 		return m;
 	}
 	
+	/**
+	 * Cuando se hace zoom, se mantiene el mismo centro de la imagen en medio de la pantalla
+	 * @param tipoZoom Entero que distingue entre zoom in y zoom out
+	 * @return Objeto Punto con las distancias que hay que desplazar la imagen
+	 */
 	private Punto desplazarCentroPantalla(int tipoZoom)
 	{
 		Punto p = new Punto();
@@ -690,6 +762,10 @@ public class Imagen extends Activity implements OnTouchListener{
  		return p;
 	}
 	
+	/**
+	 * Aumenta el tamaño de la imagen en pantalla manteniendo el mismo centro
+	 * @param v
+	 */
 	public void onClickZoomIn(View v)
 	{
 		if (ZOOM_ACTUAL < ZOOM_MAX)
@@ -707,7 +783,10 @@ public class Imagen extends Activity implements OnTouchListener{
 			limitarDesplazamientoFueraPantalla(iv);
 		}
 	}
-		
+	
+	/**
+	 * Disminuye el tamaño de la imagen en pantalla manteniendo el mismo centro
+	 */
 	public void onClickZoomOut(View v)
 	{
 		if(ZOOM_ACTUAL > ZOOM_MIN)
@@ -725,7 +804,10 @@ public class Imagen extends Activity implements OnTouchListener{
 			limitarDesplazamientoFueraPantalla(iv);
 		}
 	}
-		
+	
+	/**
+	 * Actualiza el progreso de la barra que muestra el estado del zoom
+	 */
 	private void actualizarBarraZoom()
 	{
 		ProgressBar s = (ProgressBar) findViewById(R.id.barraProgresoZoom);

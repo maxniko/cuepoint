@@ -25,13 +25,19 @@ import com.cuepoint.datos.ItemMensajeAdapter;
 import com.cuepoint.datos.MensajesSQLite;
 import com.cuepoint.datos.PlanosSQLite;
 
-public class MensajesEnviados extends Activity{
+/**
+ * Clase encargada de gestionar la pestaña de mensajes enviados
+ */
+public class MensajesEnviados extends Activity
+{
+	//Variables globales
 	ArrayList<Mensaje> itemsE;
 	ListView enviados;
 	Mensaje mensaje;
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.p10_sms_enviados);
 		
@@ -40,6 +46,10 @@ public class MensajesEnviados extends Activity{
 		actualizarListaMensajes();
 	}
 	
+	/**
+	 * Refresca el contenido de la lista de mensajes
+	 * Implementa el método onItemClic para realizar una acción al seleccionar un mensaje
+	 */
 	private void actualizarListaMensajes()
 	{
 		MensajesSQLite m = new MensajesSQLite();
@@ -90,6 +100,9 @@ public class MensajesEnviados extends Activity{
 		actualizarListaMensajes();
 	}
 	
+	/**
+	 * Inicia una nueva actividad y muestra un plano
+	 */
 	private void iniciarActividadImagen()
 	{
 		Intent intent = new Intent(this, Imagen.class);
@@ -173,6 +186,10 @@ public class MensajesEnviados extends Activity{
     	return dialogo;
     }
 	
+	/**
+	 * Cuadro de diálogo para confirmar la eliminación de todos los mensajes
+	 * @return
+	 */
 	protected Dialog crearDialogoEliminarMensaje()
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -200,6 +217,10 @@ public class MensajesEnviados extends Activity{
     	return builder.create();
 	}
 	
+	/**
+	 * Cuadro de diálogo para mostrar un mensaje adicional que tenga el sms
+	 * @return
+	 */
 	protected Dialog crearDialogoMensaje()
     {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -219,6 +240,10 @@ public class MensajesEnviados extends Activity{
     	return builder.create();
     }
 	
+	/**
+	 * Cuadro de diálogo para confirmar el reenvío de un mensaje
+	 * @return
+	 */
 	protected Dialog crearDialogoReenviar()
     {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -238,6 +263,9 @@ public class MensajesEnviados extends Activity{
     	return builder.create();
     }
 	
+	/**
+	 * Se encarga de iniciar otra actividad con los datos necesarios para reenviar un mensaje
+	 */
 	private void reenviarMensaje()
 	{
 		Intent i = new Intent();

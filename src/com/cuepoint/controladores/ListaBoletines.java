@@ -13,13 +13,17 @@ import com.cuepoint.actividades.R;
 import com.cuepoint.clases.Boletin;
 import com.cuepoint.datos.BoletinesSQLite;
 
+/**
+ * Se encarga de mostrar la lista de boletines guardados en la memoria del telefono
+ */
 public class ListaBoletines extends ListActivity
 {
 	ListView boletines;
 	ArrayList<String> lista;
 	
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+	{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p11_boletines);
         setTitle("Elija un boletín");
@@ -31,11 +35,11 @@ public class ListaBoletines extends ListActivity
         lista = bsql.getBoletines(this);
         
         boletines.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lista));
-		
 	}
 
 		@Override
-		protected void onListItemClick(ListView l, View v, int position, long id) {
+		protected void onListItemClick(ListView l, View v, int position, long id)
+		{
 			Intent result = new Intent();
 
 			Boletin b = new Boletin();
@@ -43,7 +47,6 @@ public class ListaBoletines extends ListActivity
 			result.putExtra("boletin", b);
 			setResult(Activity.RESULT_OK, result);
 
-			// Close this activity (return to caller)
 			finish();
 		}
 	}

@@ -28,17 +28,23 @@ import com.cuepoint.clases.Boletin;
 import com.cuepoint.datos.BoletinesSQLite;
 import com.cuepoint.datos.CargaDatosWS;
 
-public class Boletines extends Activity{
+/**
+ * Clase que se encarga de la administración de boletines, como guardar,
+ * mostrar y descargar nuevos boletines.
+ */
+public class Boletines extends Activity
+{
+	//Variables globales
 	WebView boletin;
 	String res = "";
 	String reporte = "";
 	private ProgressDialog pd;
 	String miNumero;
 	int visible;
-
 	
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) 
+	{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p06_boletin);
 
@@ -65,9 +71,11 @@ public class Boletines extends Activity{
 	
 	private void descargarBoletin()
 	{
+		//Obtener el numero de teléfono de este movil
 		TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
         miNumero = tMgr.getLine1Number();
         
+        //Chequear las preferencias para saber si el usuario desea estar visible o no
         PreferenceManager.setDefaultValues(this, R.xml.preferencias, false);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 		boolean v = (pref.getBoolean("visible", true));
@@ -81,17 +89,21 @@ public class Boletines extends Activity{
 		}
         
         // Usamos un AsyncTask, para poder mostrar una ventana de por favor espere, mientras se consulta el servicio web
-		new DownloadTask2().execute("");
+		new TareaEnBackground().execute("");
 		pd = ProgressDialog.show(this, "Por favor espere","Consultando Boletín", true, false);
 	}
 	
-	//Tarea en Background
-	private class DownloadTask2 extends AsyncTask<String, Void, Object> {
+	/**
+	 *  Clase que extiende de AsyncTask para realizar el acceso al web service en segundo plano
+	 */
+	private class TareaEnBackground extends AsyncTask<String, Void, Object>
+	{
 		@Override
 		protected Integer doInBackground(String... args) {
 			CargaDatosWS ws=new CargaDatosWS();
-			//Se invoca nuestro metodo
+			//Se invoca el método para descargar el boletin y guardarlo como String en una variable
 			res=ws.getBoletin();
+			//Se invoca el método que reporta un usuario a la base de datos usando su número de teléfono
 			reporte=ws.reportarUsuario(miNumero, visible);
 			return 1;
 		}
@@ -100,20 +112,24 @@ public class Boletines extends Activity{
 		protected void onPostExecute(Object result) {
 			//Se elimina la pantalla de por favor espere.
 			pd.dismiss();
-			//Se muestra mensaje con la respuesta del servicio web
 			super.onPostExecute(result);
 			
+			//Se obtiene la fecha del boletín que se encuentra en el archivo html dentro de un tipo de dato oculto
 			int indice = res.indexOf("INPUT TYPE=\"hidden\" NAME=\"fecha\" VALUE=\"", 20);
 			Boletin b = new Boletin();
-			b.setNombre(res.substring(indice + 40, indice + 48));
+			b.setNombre(res.substring(indice + 40, indice + 49));
 			b.setTexto(res);
-			guardarBoletin(b);
+			guardarBoletinEnArchivo(b);
 			
 			boletin.loadDataWithBaseURL("", res, "", "utf-8", "");
 		}
 	}
 	
-	private void guardarBoletin(Boletin b)
+	/**
+	 * Guarda el boletín como archivo de texto dentro de la memoria del teléfono
+	 * @param b Objeto Boletín con los datos a guardar
+	 */
+	private void guardarBoletinEnArchivo(Boletin b)
 	{
 		BoletinesSQLite bsql = new BoletinesSQLite();
 		if(bsql.getBoletinPorFecha(this, b.getNombre()) == null)
@@ -134,6 +150,11 @@ public class Boletines extends Activity{
 		}
 	}
 	
+	/**
+	 * Obtiene un boletin previamente guardado en la memoria del teléfono
+	 * @param b Objeto Boletín para extraer el nombre del archivo
+	 * @return Texto del boletín
+	 */
 	private String leerBoletinGuardado(Boletin b)
 	{
 		try
@@ -151,11 +172,15 @@ public class Boletines extends Activity{
 		}
 		catch (Exception e)
 		{
-			
+			e.printStackTrace();
 		}
 		return b.getTexto();
 	}
 	
+	/**
+	 * Agrega las opciones del menú antes de ser mostrado en pantalla
+	 * @param menu Objeto Menu
+	 */
 	private void construirMenu(Menu menu)
 	{
 		menu.add(Menu.NONE, 1, Menu.NONE, "Boletines guardados").setIcon(R.drawable.abrir);
@@ -179,17 +204,17 @@ public class Boletines extends Activity{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		//Abrir boletin guardado
+		//Abrir boletines guardados
 		case 1:
 			Intent intent = new Intent();
 	    	intent.setComponent(new ComponentName(this, ListaBoletines.class));
 			startActivityForResult(intent, 1);
 			return true;
-		//DEscargar boletin
+		//Descargar boletin
 		case 2:
 			descargarBoletin();
 			return true;
-		//Opciones
+		//Mostrar opciones
 		case 3:
 			Intent in = new Intent();
 			in.setComponent(new ComponentName(this, Preferencias.class));
@@ -204,15 +229,17 @@ public class Boletines extends Activity{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if ((requestCode == 1) && (resultCode == Activity.RESULT_OK)) {
 			try {
+				//Obtiene el boletín enviado desde la otra activity
 				Boletin b = data.getParcelableExtra("boletin");
 				File files = this.getFilesDir();
 				File bol = new File(files.getAbsolutePath(), b.getNombre());
 				if(bol.exists()){
 					String texto = leerBoletinGuardado(b);
+					//Carga boletín en el navegador
 					boletin.loadDataWithBaseURL("", texto, "", "utf-8", "");
 	            }
 			} catch (Exception e) {
-			e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 	}

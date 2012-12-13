@@ -6,8 +6,11 @@ import android.webkit.WebView;
 
 import com.cuepoint.actividades.R;
 
-public class Ayuda extends Activity{
-	
+/**
+ * Clase que carga el archivo de ayuda en el navegador
+ */
+public class Ayuda extends Activity
+{
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -17,6 +20,5 @@ public class Ayuda extends Activity{
         WebView ayuda = (WebView) findViewById(R.id.webViewAyuda);
         ayuda.loadUrl("file:///android_asset/AyudaCP.html");
     }
-	
 }
 	

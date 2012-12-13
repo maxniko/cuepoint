@@ -25,6 +25,9 @@ import com.cuepoint.datos.ItemMensajeAdapter;
 import com.cuepoint.datos.MensajesSQLite;
 import com.cuepoint.datos.PlanosSQLite;
 
+/**
+ * Clase encargada de gestionar la pestaña de mensajes recibidos
+ */
 public class MensajesRecibidos extends Activity{
 	ArrayList<Mensaje> itemsR;
 	ListView recibidos;
@@ -40,6 +43,10 @@ public class MensajesRecibidos extends Activity{
 		actualizarListaMensajes();
 	}
 	
+	/**
+	 * Refresca el contenido de la lista de mensajes
+	 * Implementa el método onItemClic para realizar una acción al seleccionar un mensaje
+	 */
 	private void actualizarListaMensajes()
 	{
 		MensajesSQLite m = new MensajesSQLite();
@@ -89,6 +96,9 @@ public class MensajesRecibidos extends Activity{
 		actualizarListaMensajes();
 	}
 	
+	/**
+	 * Inicia una nueva actividad y muestra un plano
+	 */
 	private void iniciarActividadImagen()
 	{
 		//Obtengo los datos del plano desde la base de datos
@@ -198,6 +208,10 @@ public class MensajesRecibidos extends Activity{
     	return dialogo;
     }
 	
+	/**
+	 * Cuadro de diálogo para confirmar la respuesta a un mensaje
+	 * @return
+	 */
 	private Dialog crearDialogoResponder() {
 		
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -217,6 +231,10 @@ public class MensajesRecibidos extends Activity{
     	return builder.create();
 	}
 
+	/**
+	 * Cuadro de diálogo para confirmar la eliminación de todos los mensajes
+	 * @return
+	 */
 	protected Dialog crearDialogoEliminarMensaje()
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -244,6 +262,10 @@ public class MensajesRecibidos extends Activity{
     	return builder.create();
 	}
 	
+	/**
+	 * Cuadro de diálogo para mostrar un mensaje adicional que tenga el sms
+	 * @return
+	 */
 	protected Dialog crearDialogoMensaje()
     {
     	AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -14,15 +14,19 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import com.cuepoint.actividades.R;
 
+/**
+ * Se encarga de mostrar la lista de contactos que tiene el telefono
+ */
 public class ListaContactos extends ListActivity
 {
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+	{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p03_contactos);
         setTitle("Elija un teléfono");
         
-		// Query: contacts with phone shorted by name
+		//Consulta: Contactos con el numero de telefono listados por nombre
 		Cursor mCursor = getContentResolver().query(
 		Data.CONTENT_URI,
 		new String[] { BaseColumns._ID, Data.DISPLAY_NAME, Phone.NUMBER,Phone.TYPE },
@@ -32,12 +36,11 @@ public class ListaContactos extends ListActivity
 
 		startManagingCursor(mCursor);
 
-		// Setup the list
-		ListAdapter adapter = new SimpleCursorAdapter(this, // context
-				android.R.layout.simple_list_item_2, // Layout for the rows
-				mCursor, // cursor
-				new String[] { Data.DISPLAY_NAME, Phone.NUMBER }, // cursor
-				new int[] { android.R.id.text1, android.R.id.text2 } // view
+		ListAdapter adapter = new SimpleCursorAdapter(this,
+				android.R.layout.simple_list_item_2,
+				mCursor,
+				new String[] { Data.DISPLAY_NAME, Phone.NUMBER },
+				new int[] { android.R.id.text1, android.R.id.text2 }
 				);
 			setListAdapter(adapter);
 		}
@@ -46,7 +49,6 @@ public class ListaContactos extends ListActivity
 		protected void onListItemClick(ListView l, View v, int position, long id) {
 			Intent result = new Intent();
 
-			// Get the data
 			Cursor c = (Cursor) getListAdapter().getItem(position);
 			int numId = c.getColumnIndex(Phone.NUMBER);
 			int nomId = c.getColumnIndex(Phone.DISPLAY_NAME);
@@ -54,12 +56,11 @@ public class ListaContactos extends ListActivity
 			String numero = c.getString(numId);
 			String nombre = c.getString(nomId);
 
-			// Save the phone to return it to the caller
+			//Guardar los datos para enviarlos a la activity que llamo
 			result.putExtra("numero", numero);
 			result.putExtra("nombre", nombre);
 			setResult(Activity.RESULT_OK, result);
-
-			// Close this activity (return to caller)
+			
 			finish();
 		}
 	}

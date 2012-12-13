@@ -14,10 +14,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class ListaPlanos extends Activity {
-    /** Called when the activity is first created. */
+/**
+ * Gestiona la lista de planos y la muestra en pantalla para que el usuario seleccione uno
+ */
+public class ListaPlanos extends Activity
+{
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p09_planos);
         
@@ -32,7 +36,6 @@ public class ListaPlanos extends Activity {
         lv.setAdapter(adapter);
         
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        	
         	  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         		Plano plano = lista.get(position);
         	    Intent intent = new Intent(view.getContext(), Imagen.class);

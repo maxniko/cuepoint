@@ -3,12 +3,9 @@ package com.cuepoint.controladores;
 import java.util.Date;
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,11 +14,15 @@ import com.cuepoint.actividades.R;
 import com.cuepoint.clases.EditText_SMS;
 import com.cuepoint.clases.Mensaje;
 import com.cuepoint.clases.Util;
-import com.cuepoint.datos.ConexionSQLite;
 import com.cuepoint.datos.MensajesSQLite;
 
-public class EnviarSMS extends Activity {
-	
+/**
+ * Clase que gestiona el envío de un SMS con el tag correspondiente a nuestra aplicacion
+ *
+ */
+public class EnviarSMS extends Activity
+{
+	//Variables globales
 	private String numero;
 	private static final int REQUEST_CHOOSE_PHONE = 1;
 	
@@ -30,7 +31,8 @@ public class EnviarSMS extends Activity {
 	private int idPlano = 0;
 	
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+	{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.p05_enviar);
         
@@ -73,7 +75,9 @@ public class EnviarSMS extends Activity {
 	{
 		boolean coordenadas = false;
 		EditText_SMS et = (EditText_SMS) findViewById(R.id.mensaje);
+		//Obtiene el mensaje opcional escrito por el usuario
 		String msj = et.getText().toString();
+		//Se arma un string con los datos a enviar en el sms
 		StringBuilder sb = new StringBuilder();
 		sb.append("<cuepoint");
 		if(idPlano > 0)
@@ -85,7 +89,7 @@ public class EnviarSMS extends Activity {
 		}
 		sb.append("/>" + msj);
     	
-		Log.d("CODIGO", sb.toString());
+		//Envío del mensaje
     	SmsManager sms = SmsManager.getDefault();
     	sms.sendTextMessage(numero, null, sb.toString(), null, null);
     	
@@ -101,6 +105,7 @@ public class EnviarSMS extends Activity {
 			m.setTipo(0);
 		}
 		m.setTexto(msj);
+		//Extraemos del número los simbolos que no sean dígitos
 		m.setNumeroOrigenDestino(Util.extraerNumero(numero));
 		Date d = new Date();
 		Util u = new Util();
@@ -113,10 +118,8 @@ public class EnviarSMS extends Activity {
 		}
 		m.setEstado(1); //Mensaje leido
 		msql.nuevoMensaje(this, m);
-		
-		//Guardar el SMS en la base de datos de Android para que sea accesible desde el SO
-		//nuevoMensajeDBAndroid(this, m);
-		
+
+		//Reseteo de variables
 		d = null;
 		u = null;
 		m = null;
@@ -126,44 +129,6 @@ public class EnviarSMS extends Activity {
     	
     	Toast toast = Toast.makeText(this, "SMS Enviado", Toast.LENGTH_LONG);
 		toast.show();
-	}
-	
-	public void nuevoMensajeDBAndroid(Context contexto, Mensaje mensaje)
-	{
-    	//Abrimos la base de datos 'Planos'
-		ConexionSQLite pdb = new ConexionSQLite(contexto, "mmssms", null, 1);
-         
-        // Insertar datos en la base de datos
-        SQLiteDatabase db = pdb.getWritableDatabase();
-        StringBuilder sb = new StringBuilder();
-        Date date = new Date();
-        
-        sb.append("INSERT INTO sms (_id, thread_id, address, person, date, protocol, read, status, type, reply_path_present, subject, body, service_center, locked, error_code, seen) values (");
-        sb.append("NULL" + ",");
-        sb.append("555" + ",");
-        sb.append("'" + mensaje.getNumeroOrigenDestino() + "'" + ",");
-        sb.append("NULL" + ",");
-        sb.append(date.getTime() + ",");
-        sb.append("0" + ",");
-        sb.append("0" + ",");
-        sb.append("-1" + ",");
-        sb.append("1" + ",");
-        sb.append("0" + ",");
-        sb.append("NULL" + ",");
-        sb.append("'" + mensaje.getTexto() + "'" + ",");
-        sb.append("NULL" + ",");
-        sb.append("0" + ",");
-        sb.append("0" + ",");
-        sb.append("0");
-        sb.append(");");
-        //Si hemos abierto correctamente la base de datos
-        if(db != null)
-        {
-        	Log.d("Insert", sb.toString());
-            db.execSQL(sb.toString());
-            //Cerramos la base de datos
-            db.close();
-        }
 	}
 	
 	public void cancelarClick(View v)
