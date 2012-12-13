@@ -8,5 +8,11 @@
         android:id="@+id/msjsEnviados"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    
+<TextView
+    android:id="@+id/noSmsEnviados"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:text="No hay mensajes enviados" />
 
 </LinearLayout>

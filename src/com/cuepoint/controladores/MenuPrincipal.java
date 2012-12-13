@@ -6,9 +6,13 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -26,6 +30,7 @@ public class MenuPrincipal extends Activity {
 	String res = "";
 	String nombre = "";
 	String numero = "";
+	String hora = "";
 	private ProgressDialog pd;
 	
 	@Override
@@ -109,7 +114,7 @@ public class MenuPrincipal extends Activity {
 	public void verBoletinClick(View v)
 	{
 		Intent intent = new Intent();
-    	intent.setComponent(new ComponentName(this, Boletin.class));
+    	intent.setComponent(new ComponentName(this, Boletines.class));
     	startActivity(intent);
 	}
 	
@@ -140,8 +145,74 @@ public class MenuPrincipal extends Activity {
 		pd = ProgressDialog.show(this, "Por favor espere","Consultando Base de Datos", true, false);
 	}
 	
+	@Override
+	protected Dialog onCreateDialog(int id) 
+	{
+    	Dialog dialogo = null;
+
+    	switch(id)
+    	{
+    		//No se notifico el usuario
+    		case 1:
+    			dialogo = crearDialogoNegativo();
+    			break;
+    		//Se notifico el usuario
+    		case 2:
+    			dialogo = crearDialogoPositivo();
+    			break;
+    		default:
+    			dialogo = null;
+    			break;
+    	}
+    	return dialogo;
+    }
+	
+	private Dialog crearDialogoNegativo()
+    {
+    	AlertDialog.Builder builder = new AlertDialog.Builder(MenuPrincipal.this);
+    	
+    	builder.setTitle("Estado de usuario");
+    	builder.setMessage(nombre);
+    	builder.setPositiveButton("Cerrar", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+    	return builder.create();
+    }
+	
+	private Dialog crearDialogoPositivo()
+    {
+    	AlertDialog.Builder builder = new AlertDialog.Builder(MenuPrincipal.this);
+    	
+    	builder.setTitle("Estado de usuario");
+    	builder.setMessage(nombre);
+    	builder.setPositiveButton("Cerrar", new OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+    	return builder.create();
+    }
+	
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog)
+	{
+		((AlertDialog)dialog).setTitle("Estado de " + nombre);
+		if(id == 1)
+		{
+			((AlertDialog)dialog).setMessage(nombre + " no se ha notificado");
+		}
+		else
+		{
+			((AlertDialog)dialog).setMessage(nombre + " se ha notificado a la hora " + hora);
+		}
+		super.onPrepareDialog(id, dialog);
+	}
+	
 	//Tarea en Background
 	private class DownloadTask2 extends AsyncTask<String, Void, Object> {
+		
 		@Override
 		protected Integer doInBackground(String... args) {
 			CargaDatosWS cd = new CargaDatosWS();
@@ -155,7 +226,7 @@ public class MenuPrincipal extends Activity {
 			pd.dismiss();
 			if(res.equals("false"))
 			{
-				Toast.makeText(MenuPrincipal.this, nombre + " no se ha notificado", Toast.LENGTH_LONG).show();
+				showDialog(1);
 			}
 			else
 			{
@@ -166,7 +237,7 @@ public class MenuPrincipal extends Activity {
 					fechaDate = formato.parse(res);
 					Calendar cal = Calendar.getInstance();
 					cal.setTime(fechaDate);
-					String hora = "";
+					hora = "";
 					if(cal.get(Calendar.HOUR_OF_DAY) < 10)
 					{
 						hora = "0" + cal.get(Calendar.HOUR_OF_DAY);
@@ -183,7 +254,7 @@ public class MenuPrincipal extends Activity {
 					{
 						hora = hora + ":" + cal.get(Calendar.MINUTE);
 					}
-					Toast.makeText(MenuPrincipal.this, nombre + " se ha notificado a la hora " + hora, Toast.LENGTH_LONG).show();
+					showDialog(2);
 				}
 				catch(Exception e)
 				{

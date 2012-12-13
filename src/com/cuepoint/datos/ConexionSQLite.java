@@ -21,7 +21,8 @@ public class ConexionSQLite extends SQLiteOpenHelper{
 				"idPlano INTEGER  NULL, " +
 				"estado INTEGER  NULL " +
 				");" +
-			"CREATE TABLE Marcadores (x FLOAT NOT NULL, y FLOAT NOT NULL, idPlano INTEGER NOT NULL PRIMARY KEY);";
+			"CREATE TABLE Marcadores (x FLOAT NOT NULL, y FLOAT NOT NULL, idPlano INTEGER NOT NULL PRIMARY KEY);" + 
+			"CREATE TABLE Boletines (idBoletin INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT, nombre TEXT  NOT NULL);";
 	
 	public ConexionSQLite(Context context, String name, CursorFactory factory,
 			int version) {

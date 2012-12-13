@@ -8,5 +8,12 @@
         android:id="@+id/msjsRecibidos"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    
+    <TextView
+    android:id="@+id/noSmsRecibidos"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:text="No hay mensajes recibidos" />
+    
 
 </LinearLayout>
