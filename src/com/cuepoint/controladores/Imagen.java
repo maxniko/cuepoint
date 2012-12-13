@@ -319,6 +319,7 @@ public class Imagen extends Activity implements OnTouchListener{
 			Intent in = new Intent();
 			in.setComponent(new ComponentName(this, Preferencias.class));
 			startActivity(in);
+			return true;
 		//Insertar marcador favorito
 		case 6:
 			if(marcador.getX() != -1)
